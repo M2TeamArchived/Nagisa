@@ -9,13 +9,17 @@
 
 namespace Nagisa
 {
-	/// <summary>
-	/// 可用于自身或导航至 Frame 内部的空白页。
-	/// </summary>
+	using Assassin::TransferManager;
+	using Platform::Object;
+	using Windows::UI::Xaml::RoutedEventArgs;
+
 	public ref class MainPage sealed
 	{
 	public:
 		MainPage();
-
+	internal:
+		TransferManager ^ m_TransferManager = nullptr;
+	private:
+		void AppBarButton_Click(Object^ sender, RoutedEventArgs^ e);
 	};
 }

@@ -8,6 +8,44 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock x:Uid="/MainPage/Tips"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Uid="/MainPage/Tips" Text="Test"/>
+        
+        <CommandBar Grid.Row="2">
+            <CommandBar.Content>
+                <StackPanel Orientation="Horizontal" Padding="0" Margin="0,13,0,0">
+                    <StackPanel x:Uid="TotalDownloadBandwidthStackPanel" Margin="8,0" Orientation="Horizontal" ToolTipService.ToolTip="[Total Download Bandwidth]">
+                        <FontIcon Margin="0,0,8,0" VerticalAlignment="Center" FontSize="16" Glyph="&#xE74B;"/>
+                        <TextBlock VerticalAlignment="Center" FontSize="16" Text="2.4"/>
+                        <TextBlock VerticalAlignment="Center" FontSize="16" Text=" MB/s"/>
+                    </StackPanel>
+                    <StackPanel x:Uid="TotalUploadBandwidthStackPanel" Margin="8,0" Orientation="Horizontal"  ToolTipService.ToolTip="[Total Upload Bandwidth]">
+                        <FontIcon Margin="0,0,8,0"  VerticalAlignment="Center" FontSize="16" Glyph="&#xE74A;"/>
+                        <TextBlock VerticalAlignment="Center" FontSize="16" Text="128"/>
+                        <TextBlock VerticalAlignment="Center" FontSize="16" Text=" KB/s"/>
+                    </StackPanel>
+                </StackPanel>
+            </CommandBar.Content>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton x:Uid="NewTaskAppBarButton" Icon="Add" Label="[New Task]" ToolTipService.ToolTip="[New Task]"/>
+            </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton x:Uid="StartAllAppBarButton" Icon="Play" Label="[Start All]"/>
+                <AppBarButton x:Uid="PauseAllAppBarButton" Icon="Pause" Label="[Pause All]"/>
+                <AppBarSeparator/>
+                <AppBarButton x:Uid="CancelAppBarButton" Icon="Remove" Label="[Cancel]"/>
+                <AppBarSeparator/>
+                <AppBarButton x:Uid="OpenDownloadsFolderAppBarButton" Icon="OpenLocal" Label="[Open Downloads Folder]"/>
+                <AppBarSeparator/>
+                <AppBarButton x:Uid="SettingsAppBarButton" Icon="Setting" Label="[Settings]"/>
+                <AppBarSeparator/>
+                <AppBarButton x:Uid="AboutAppBarButton" Icon="Help" Label="[About]" Click="AppBarButton_Click"/>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
     </Grid>
 </Page>

@@ -3,5 +3,14 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Nagisa">
-
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="XamlResources\CustomContentDialogStyle.xaml"/>
+                <ResourceDictionary Source="XamlResources\CustomListViewItemStyle.xaml"/>
+                <ResourceDictionary Source="XamlResources\CustomIconButtonStyle.xaml"/>
+                <ResourceDictionary Source="XamlResources\CustomConverters.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>

@@ -1,12 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Common">
-      <UniqueIdentifier>cd858cad-04d9-4a81-8c75-26cb74323398</UniqueIdentifier>
-    </Filter>
     <Filter Include="Assets">
       <UniqueIdentifier>b7750694-1e2b-44fa-872d-d5353e4ebf2d</UniqueIdentifier>
       <Extensions>bmp;fbx;gif;jpg;jpeg;tga;tiff;tif;png</Extensions>
+    </Filter>
+    <Filter Include="XamlResources">
+      <UniqueIdentifier>cd858cad-04d9-4a81-8c75-26cb74323398</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LogoAssets">
+      <UniqueIdentifier>{3e7da930-5d21-490e-a5b0-96f1a9bde088}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Strings">
+      <UniqueIdentifier>{be59f757-83aa-44ad-8bb3-602bb5a650a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Strings\en">
+      <UniqueIdentifier>{9d4f4c8c-a3b4-49e5-84e4-55d3457efaf4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -16,12 +25,16 @@
     <ClCompile Include="App.xaml.cpp" />
     <ClCompile Include="MainPage.xaml.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="AboutDialog.xaml.cpp" />
+    <ClCompile Include="XamlResources\CustomConverters.xaml.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h" />
     <ClInclude Include="MainPage.xaml.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="AboutDialog.xaml.h" />
+    <ClInclude Include="XamlResources\CustomConverters.xaml.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">
@@ -162,6 +175,12 @@
     <Image Include="Assets\StoreLogo.scale-400.png">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="LogoAssets\Nagisa.png">
+      <Filter>LogoAssets</Filter>
+    </Image>
+    <Image Include="LogoAssets\Project-Nagisa.png">
+      <Filter>LogoAssets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
@@ -169,11 +188,35 @@
   <ItemGroup>
     <None Include="Package.StoreAssociation.xml" />
     <None Include="Nagisa_StoreKey.pfx" />
+    <None Include="LogoAssets\Nagisa.xcf">
+      <Filter>LogoAssets</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Page Include="MainPage.xaml" />
+    <Page Include="XamlResources\CustomContentDialogStyle.xaml">
+      <Filter>XamlResources</Filter>
+    </Page>
+    <Page Include="XamlResources\CustomIconButtonStyle.xaml">
+      <Filter>XamlResources</Filter>
+    </Page>
+    <Page Include="XamlResources\CustomListViewItemStyle.xaml">
+      <Filter>XamlResources</Filter>
+    </Page>
+    <Page Include="AboutDialog.xaml" />
+    <Page Include="XamlResources\CustomConverters.xaml">
+      <Filter>XamlResources</Filter>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Nagisa.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Strings\en\MainPage.resw">
+      <Filter>Strings\en</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\en\AboutDialog.resw">
+      <Filter>Strings\en</Filter>
+    </PRIResource>
   </ItemGroup>
 </Project>

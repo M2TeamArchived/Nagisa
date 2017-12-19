@@ -1,35 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="LogoAssets">
-      <UniqueIdentifier>{2b506673-d24c-4917-a930-aea8d4eb8147}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Strings">
-      <UniqueIdentifier>{5eb19b67-8540-4003-b0fa-ff9428461267}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Strings\en">
-      <UniqueIdentifier>{a8e1ee58-eb84-4ca8-81f5-697555cb0471}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="$(MSBuildThisFileDirectory)LogoAssets\Nagisa.png">
-      <Filter>LogoAssets</Filter>
-    </Image>
-    <Image Include="$(MSBuildThisFileDirectory)LogoAssets\Project-Nagisa.png">
-      <Filter>LogoAssets</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)LogoAssets\Nagisa.xcf">
-      <Filter>LogoAssets</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)NagisaVersion.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\MainPage.resw">
-      <Filter>Strings\en</Filter>
-    </PRIResource>
   </ItemGroup>
 </Project>

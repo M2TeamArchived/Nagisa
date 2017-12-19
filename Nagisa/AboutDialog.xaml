@@ -1,0 +1,33 @@
+﻿<ContentDialog
+    x:Uid="/AboutDialog/Dialog"
+    x:Class="Nagisa.AboutDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Nagisa"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="[About]"
+    Style="{StaticResource CustomContentDialogStyle}"
+    PrimaryButtonText="[GitHub Repository]"
+    SecondaryButtonText="[OK]"
+    PrimaryButtonClick="GitHubButtonClick"
+    Loaded="ContentDialog_Loaded">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        
+
+        <StackPanel  Grid.Row="0" Orientation="Horizontal">
+            <TextBlock Text="M2-Team Nagisa"/>
+            <TextBlock x:Name="VersionText"/>
+        </StackPanel>
+        
+        
+        <TextBlock Grid.Row="1" Text="© M2-Team. All rights reserved."/>
+    </Grid>
+</ContentDialog>

@@ -14,16 +14,6 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="$(MSBuildThisFileDirectory)LogoAssets\Nagisa.png" />
-    <Image Include="$(MSBuildThisFileDirectory)LogoAssets\Project-Nagisa.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)LogoAssets\Nagisa.xcf" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)NagisaVersion.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\MainPage.resw" />
   </ItemGroup>
 </Project>
