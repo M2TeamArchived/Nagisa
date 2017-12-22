@@ -9,11 +9,13 @@
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="TransferManager.cpp" />
+    <ClCompile Include="TransferTask.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="TransferManager.h" />
+    <ClInclude Include="TransferTask.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Assassin.rc">

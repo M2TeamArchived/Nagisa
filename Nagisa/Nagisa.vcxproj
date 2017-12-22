@@ -235,6 +235,9 @@
     <ClInclude Include="AboutDialog.xaml.h">
       <DependentUpon>AboutDialog.xaml</DependentUpon>
     </ClInclude>
+    <ClInclude Include="NewTaskDialog.xaml.h">
+      <DependentUpon>NewTaskDialog.xaml</DependentUpon>
+    </ClInclude>
     <ClInclude Include="XamlResources\CustomConverters.xaml.h">
       <DependentUpon>XamlResources\CustomConverters.xaml</DependentUpon>
     </ClInclude>
@@ -252,6 +255,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="AboutDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="NewTaskDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Include="XamlResources\CustomConverters.xaml">
@@ -332,6 +338,9 @@
     <ClCompile Include="App.xaml.cpp">
       <DependentUpon>App.xaml</DependentUpon>
     </ClCompile>
+    <ClCompile Include="NewTaskDialog.xaml.cpp">
+      <DependentUpon>NewTaskDialog.xaml</DependentUpon>
+    </ClCompile>
     <ClCompile Include="XamlResources\CustomConverters.xaml.cpp">
       <DependentUpon>XamlResources\CustomConverters.xaml</DependentUpon>
     </ClCompile>
@@ -363,6 +372,7 @@
   <ItemGroup>
     <PRIResource Include="Strings\en\AboutDialog.resw" />
     <PRIResource Include="Strings\en\MainPage.resw" />
+    <PRIResource Include="Strings\en\NewTaskDialog.resw" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

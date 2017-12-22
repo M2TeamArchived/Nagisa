@@ -20,6 +20,7 @@ namespace Nagisa
 	internal:
 		TransferManager ^ m_TransferManager = nullptr;
 	private:
-		void AppBarButton_Click(Object^ sender, RoutedEventArgs^ e);
+		void AboutButtonClick(Object^ sender, RoutedEventArgs^ e);
+		void NewTaskButtonClick(Object^ sender, RoutedEventArgs^ e);
 	};
 }

@@ -1,0 +1,47 @@
+﻿<ContentDialog
+    x:Uid="/NewTaskDialog/Dialog"
+    x:Class="Nagisa.NewTaskDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Nagisa"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Style="{StaticResource CustomContentDialogStyle}" 
+    Title="[New Task]"
+    PrimaryButtonText="[Download]"
+    SecondaryButtonText="[Cancel]"
+    PrimaryButtonClick="DownloadButtonClick">
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Vertical">
+            <TextBlock x:Uid="/NewTaskDialog/DownloadSourceTitle" 
+                       Style="{StaticResource SubtitleTextBlockStyle}" 
+                       Text="[Download Source]"/>
+            <TextBox x:Uid="/NewTaskDialog/DownloadSourceTextBox"
+                     x:Name="DownloadSourceTextBox" 
+                     PlaceholderText="[Please input the download source here.]" 
+                     LostFocus="DownloadSourceTextBox_LostFocus"/>
+        </StackPanel>
+        <StackPanel Orientation="Vertical">
+            <TextBlock x:Uid="/NewTaskDialog/FileNameTitle" 
+                       Style="{StaticResource SubtitleTextBlockStyle}" 
+                       Text="[File Name]"/>
+            <TextBox x:Uid="/NewTaskDialog/FileNameTextBox" 
+                     x:Name="FileNameTextBox" 
+                     PlaceholderText="[Please input the file name here.]" 
+                     LostFocus="FileNameTextBox_LostFocus"/>
+        </StackPanel>
+        <StackPanel Orientation="Vertical">
+            <TextBlock x:Uid="/NewTaskDialog/SaveFolderTitle"
+                       Style="{StaticResource SubtitleTextBlockStyle}"
+                       Text="[Save Folder]"/>
+            <TextBox x:Uid="/NewTaskDialog/SaveFolderTextBox" 
+                     x:Name="SaveFolderTextBox" 
+                     IsReadOnly="True" 
+                     PlaceholderText="[Please click the Browse button to change.]"/>
+            <Button x:Uid="/NewTaskDialog/SaveFolderBrowseButton"
+                    Content="[Browse]"
+                    Click="BrowseButtonClick"/>
+        </StackPanel>
+    </StackPanel>
+</ContentDialog>

@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
+    
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -14,8 +14,148 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock x:Uid="/MainPage/Tips" Text="Test"/>
-        
+        <AutoSuggestBox x:Uid="SearchAutoSuggestBox" Grid.Row="0" QueryIcon="Find" PlaceholderText="[Search Downloads]"/>
+
+        <ListView x:Name="TaskList" Grid.Row="1" SelectionMode="Multiple"
+                  ItemContainerStyle="{StaticResource CustomListViewItemStyle}">
+            <ListView.Header>
+                <TextBlock x:Uid="TaskListNoItemsTextBlock"
+                           TextAlignment="Center" 
+                           Margin="16"
+                           Text="[No Downloads]"
+                           Visibility="Collapsed"/>
+            </ListView.Header>
+            <!--
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="48"/>
+                            <ColumnDefinition Width="48"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="48"/>
+                            <RowDefinition Height="6"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,4,8,4" VerticalAlignment="Stretch">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="{x:Bind Description, Mode=OneWay}"/>
+                            <TextBlock Grid.Row="1" Padding="0,2,0,0" FontSize="12" Text="100 KB/s  13.24 MB / 16.36 MB  00:00:32"/>
+                        </Grid>
+
+                        <Button Grid.Row="0"
+                        Grid.Column="1"
+                        Style="{StaticResource NagisaListViewItemButtonStyle}"
+                        Content="{x:Bind Status, Mode=OneWay, Converter={StaticResource NagisaStatusToOperationButtonIconConverter}}"
+                        ToolTipService.ToolTip="{x:Bind Status, Mode=OneWay, Converter={StaticResource NagisaStatusToOperationButtonToolTipConverter}}"
+                        Visibility="{x:Bind Status, Mode=OneWay, Converter={StaticResource NagisaStatusCompletedToCollapsedConverter}}"/>
+                        <Button x:Uid="TaskItemMoreButton" 
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Style="{StaticResource NagisaListViewItemButtonStyle}"
+                        Content="&#xE10C;">
+                            <Button.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem x:Uid="TaskItemOpenFolderMenuItem" Click="MenuFlyoutItem_Click"/>
+                                    <MenuFlyoutItem x:Uid="TaskItemCopyLinkMenuItem"/>
+                                    <MenuFlyoutSeparator/>
+                                    <MenuFlyoutItem x:Uid="TaskItemRemoveMenuItem"/>
+                                    <MenuFlyoutSeparator/>
+                                    <MenuFlyoutItem x:Uid="TaskItemPropertiesMenuItem"/>
+                                </MenuFlyout>
+                            </Button.Flyout>
+                        </Button>
+
+                        <ProgressBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="-48,0,0,0" VerticalAlignment="Stretch" 
+                             Value="{x:Bind Progress, Mode=OneWay}"
+                             Foreground="{x:Bind Status, Mode=OneWay, Converter={StaticResource NagisaStatusToForegroundConverter}}"
+                             Visibility="{x:Bind Status, Mode=OneWay, Converter={StaticResource NagisaStatusCompletedToCollapsedConverter}}">
+                            <ProgressBar.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.1"/>
+                            </ProgressBar.Background>
+                        </ProgressBar>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="48"/>
+                    <ColumnDefinition Width="48"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="48"/>
+                    <RowDefinition Height="6"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,4,8,4" VerticalAlignment="Stretch">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Description.exe"/>
+                    <TextBlock Grid.Row="1" Padding="0,2,0,0" FontSize="12" Text="100 KB/s&#x20;13.24 MB&#x20;/&#x20;16.36 MB&#x20;00:00:32"/>
+                </Grid>
+
+                <Grid Grid.Row="0" Grid.Column="1">
+                    <Grid.Resources>
+                        <x:String x:Key="RetryIcon">&#xE72C;</x:String>
+                        <x:String x:Key="ResumeIcon">&#xE768;</x:String>
+                        <x:String x:Key="PauseIcon">&#xE769;</x:String>
+                    </Grid.Resources>
+                    
+                    <Button Style="{StaticResource CustomIconButtonStyle}"
+                            Content="{StaticResource RetryIcon}"
+                            ToolTipService.ToolTip="[Retry]"/>
+                    <Button Style="{StaticResource CustomIconButtonStyle}"
+                            Content="{StaticResource ResumeIcon}"
+                            ToolTipService.ToolTip="[Resume]"/>
+                    <Button Style="{StaticResource CustomIconButtonStyle}"
+                            Content="{StaticResource PauseIcon}"
+                            ToolTipService.ToolTip="[Pause]"/>
+                </Grid>
+                
+                <Button x:Uid="TaskItemMoreButton" 
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Style="{StaticResource CustomIconButtonStyle}"
+                        Content="&#xE10C;">
+                    <Button.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem x:Uid="TaskItemOpenFolderMenuItem" Text="[Open Folder]"/>
+                            <MenuFlyoutItem x:Uid="TaskItemCopyLinkMenuItem" Text="[Copy Link]"/>
+                            <MenuFlyoutSeparator/>
+                            <MenuFlyoutItem x:Uid="TaskItemRemoveMenuItem" Text="[Remove]"/>
+                            <MenuFlyoutSeparator/>
+                            <MenuFlyoutItem x:Uid="TaskItemPropertiesMenuItem" Text="[Properties]"/>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+
+                <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="-48,0,0,0">
+                    <Grid.Resources>
+                        <SolidColorBrush x:Key="ProgressBarBackgroundColor" Color="Black" Opacity="0.1"/>
+                        <SolidColorBrush x:Key="ProgressBarErrorForegroundColor" Color="Red" Opacity="0.8"/>
+                        <SolidColorBrush x:Key="ProgressBarPausedForegroundColor" Color="Orange" Opacity="0.8"/>
+                        <SolidColorBrush x:Key="ProgressBarRunningForegroundColor" Color="Green" Opacity="0.8"/>
+                    </Grid.Resources>
+
+                    <ProgressBar VerticalAlignment="Stretch" Background="{StaticResource ProgressBarBackgroundColor}" Foreground="{StaticResource ProgressBarErrorForegroundColor}" Maximum="1003445" Value="345254"/>
+                    <ProgressBar VerticalAlignment="Stretch" Background="{StaticResource ProgressBarBackgroundColor}" Foreground="{StaticResource ProgressBarPausedForegroundColor}" Maximum="1003445" Value="345254"/>
+                    <ProgressBar VerticalAlignment="Stretch" Background="{StaticResource ProgressBarBackgroundColor}" Foreground="{StaticResource ProgressBarRunningForegroundColor}" Maximum="1003445" Value="345254"/>
+
+                </Grid>
+
+               
+            </Grid>
+        </ListView>
+
         <CommandBar Grid.Row="2">
             <CommandBar.Content>
                 <StackPanel Orientation="Horizontal" Padding="0" Margin="0,13,0,0">
@@ -32,9 +172,10 @@
                 </StackPanel>
             </CommandBar.Content>
             <CommandBar.PrimaryCommands>
-                <AppBarButton x:Uid="NewTaskAppBarButton" Icon="Add" Label="[New Task]" ToolTipService.ToolTip="[New Task]"/>
+                <AppBarButton x:Uid="NewTaskAppBarButton" Icon="Add" Label="[New Task]" ToolTipService.ToolTip="[New Task]" Click="NewTaskButtonClick"/>
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
+                <!--
                 <AppBarButton x:Uid="StartAllAppBarButton" Icon="Play" Label="[Start All]"/>
                 <AppBarButton x:Uid="PauseAllAppBarButton" Icon="Pause" Label="[Pause All]"/>
                 <AppBarSeparator/>
@@ -44,7 +185,8 @@
                 <AppBarSeparator/>
                 <AppBarButton x:Uid="SettingsAppBarButton" Icon="Setting" Label="[Settings]"/>
                 <AppBarSeparator/>
-                <AppBarButton x:Uid="AboutAppBarButton" Icon="Help" Label="[About]" Click="AppBarButton_Click"/>
+                -->          
+                <AppBarButton x:Uid="AboutAppBarButton" Icon="Help" Label="[About]" Click="AboutButtonClick"/>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Grid>

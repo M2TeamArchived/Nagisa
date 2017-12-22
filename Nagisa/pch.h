@@ -8,3 +8,5 @@
 #include <ppltasks.h>
 
 #include "App.xaml.h"
+
+#include "M2AsyncHelpers.h"

@@ -6,6 +6,7 @@
 #include "pch.h"
 #include "MainPage.xaml.h"
 #include "AboutDialog.xaml.h"
+#include "NewTaskDialog.xaml.h"
 
 using namespace Nagisa;
 using namespace Assassin;
@@ -31,9 +32,43 @@ MainPage::MainPage()
 }
 
 
-void MainPage::AppBarButton_Click(Object^ sender, RoutedEventArgs^ e)
+void MainPage::AboutButtonClick(Object^ sender, RoutedEventArgs^ e)
 {
 	AboutDialog^ dialog = ref new AboutDialog();
 	dialog->m_TransferManager = this->m_TransferManager;
 	dialog->ShowAsync();
+}
+
+void MainPage::NewTaskButtonClick(Object^ sender, RoutedEventArgs^ e)
+{
+	NewTaskDialog^ dialog = ref new NewTaskDialog();
+	dialog->m_TransferManager = this->m_TransferManager;
+
+	M2SetAsyncCompletedHandler(
+		dialog->ShowAsync(),
+		[this, dialog](
+			IAsyncOperation<ContentDialogResult>^ asyncInfo,
+			AsyncStatus asyncStatus)
+	{
+		if (AsyncStatus::Completed == asyncStatus)
+		{
+			if (ContentDialogResult::Primary == asyncInfo->GetResults())
+			{
+				using Windows::Storage::CreationCollisionOption;
+				using Windows::Storage::StorageFile;
+
+				StorageFile^ SaveFile = M2AsyncWait(
+					dialog->m_SaveFolder->CreateFileAsync(
+						dialog->m_FileName,
+						CreationCollisionOption::GenerateUniqueName));
+
+				if (nullptr != SaveFile)
+				{
+					this->m_TransferManager->AddTask(
+						dialog->m_DownloadSource, 
+						SaveFile);
+				}		
+			}
+		}
+	});
 }

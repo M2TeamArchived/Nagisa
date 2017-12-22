@@ -27,6 +27,7 @@
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="AboutDialog.xaml.cpp" />
     <ClCompile Include="XamlResources\CustomConverters.xaml.cpp" />
+    <ClCompile Include="NewTaskDialog.xaml.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -35,6 +36,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="AboutDialog.xaml.h" />
     <ClInclude Include="XamlResources\CustomConverters.xaml.h" />
+    <ClInclude Include="NewTaskDialog.xaml.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">
@@ -207,6 +209,7 @@
     <Page Include="XamlResources\CustomConverters.xaml">
       <Filter>XamlResources</Filter>
     </Page>
+    <Page Include="NewTaskDialog.xaml" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Nagisa.rc" />
@@ -216,6 +219,9 @@
       <Filter>Strings\en</Filter>
     </PRIResource>
     <PRIResource Include="Strings\en\AboutDialog.resw">
+      <Filter>Strings\en</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\en\NewTaskDialog.resw">
       <Filter>Strings\en</Filter>
     </PRIResource>
   </ItemGroup>

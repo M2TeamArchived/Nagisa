@@ -4,3 +4,4 @@
 #include <ppltasks.h>
 
 #include "NagisaVersion.h"
+#include "M2AsyncHelpers.h"
