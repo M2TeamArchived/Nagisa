@@ -20,8 +20,6 @@ using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 
-// https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
-
 NewTaskDialog::NewTaskDialog()
 {
 	InitializeComponent();
@@ -97,50 +95,43 @@ void NewTaskDialog::BrowseButtonClick(
 	});
 }
 
-LPWSTR WINAPI PathFindFileNameW(LPCWSTR lpszPath)
+template<typename CharType>
+CharType M2PathFindFileName(CharType Path)
 {
-	LPCWSTR lastSlash = lpszPath;
+	CharType FileName = Path;
 
-	while (lpszPath && *lpszPath)
+	while (Path && *Path)
 	{
-		if ((*lpszPath == '\\' || *lpszPath == '/' || *lpszPath == ':') &&
-			lpszPath[1] && lpszPath[1] != '\\' && lpszPath[1] != '/')
-			lastSlash = lpszPath + 1;
-		lpszPath++;
-	}
-	return (LPWSTR)lastSlash;
-}
+		if (L'\\' == *Path || L'/' == *Path)
+		{
+			FileName = Path + 1;
+		}
 
-const wchar_t* GetPathFileName(const wchar_t* Path)
-{
-	const wchar_t* result = nullptr;
-
-	result = wcsrchr(Path, L'\\') + 1;
-	if (nullptr == result)
-	{
-
+		++Path;
 	}
 
-	return result;
+	return FileName;
 }
 
 void NewTaskDialog::DownloadSourceTextBox_LostFocus(
 	Object^ sender,
 	RoutedEventArgs^ e)
 {
+	Uri^ DownloadSource = nullptr;
+	
 	try
 	{
-		Uri^ DownloadSource = ref new Uri(DownloadSourceTextBox->Text);
-		this->FileNameTextBox->Text = ref new String(
-			PathFindFileNameW(DownloadSource->Path->Data()));
-		this->m_DownloadSource = DownloadSource;
+		DownloadSource = ref new Uri(DownloadSourceTextBox->Text);	
 	}
 	catch (Exception^ ex)
 	{
-		
+		DownloadSource = ref new Uri(L"http://" + DownloadSourceTextBox->Text);
 	}
-}
 
+	this->FileNameTextBox->Text = ref new String(
+		M2PathFindFileName(DownloadSource->Path->Data()));
+	this->m_DownloadSource = DownloadSource;
+}
 
 void Nagisa::NewTaskDialog::FileNameTextBox_LostFocus(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {

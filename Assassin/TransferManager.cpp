@@ -40,11 +40,10 @@ IAsyncOperation<IVectorView<TransferTask^>^>^ TransferManager::GetTasksAsync()
 	});
 }
 
-void Assassin::TransferManager::AddTask(Uri ^ SourceUri, IStorageFile ^ DestinationFile)
+void TransferManager::AddTask(
+	Uri ^ SourceUri,
+	IStorageFile ^ DestinationFile)
 {
-	this->m_Downloader->CreateDownload(SourceUri, DestinationFile);
-		//->Pause()
-		//->Resume()
-		//->AttachAsync()
-		//->StartAsync()
+	this->m_Downloader->CreateDownload(
+		SourceUri, DestinationFile)->StartAsync();
 }

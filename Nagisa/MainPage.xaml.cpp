@@ -22,13 +22,9 @@ using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 
-// https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
-
 MainPage::MainPage()
 {
 	InitializeComponent();
-
-	m_TransferManager = ref new TransferManager();
 }
 
 
@@ -67,8 +63,79 @@ void MainPage::NewTaskButtonClick(Object^ sender, RoutedEventArgs^ e)
 					this->m_TransferManager->AddTask(
 						dialog->m_DownloadSource, 
 						SaveFile);
+
+					M2SetAsyncCompletedHandler(
+						this->m_TransferManager->GetTasksAsync(),
+						[this](
+							IAsyncOperation<IVectorView<TransferTask^>^>^ asyncInfo,
+							AsyncStatus asyncStatus)
+					{
+						M2ExecuteOnUIThread([this, asyncInfo, asyncStatus]()
+						{
+							if (AsyncStatus::Completed == asyncStatus)
+							{
+								if (IVectorView<TransferTask^>^ Tasks = asyncInfo->GetResults())
+								{
+									this->TaskList->ItemsSource = Tasks;
+								}
+							}
+						});
+					});
 				}		
 			}
 		}
 	});
+}
+
+
+void MainPage::Page_Loaded(Object^ sender, RoutedEventArgs^ e)
+{
+	/*GUID guid = { 0 };
+	HRESULT hr = CoCreateGuid(&guid);
+	if (FAILED(hr))
+	throw ref new Platform::Exception(hr);
+
+	String^ x = (ref new Platform::Guid(guid))->ToString();*/
+
+	m_TransferManager = ref new TransferManager();
+
+	M2SetAsyncCompletedHandler(
+		this->m_TransferManager->GetTasksAsync(),
+		[this](
+			IAsyncOperation<IVectorView<TransferTask^>^>^ asyncInfo,
+			AsyncStatus asyncStatus)
+	{
+		M2ExecuteOnUIThread([this, asyncInfo, asyncStatus]()
+		{
+			if (AsyncStatus::Completed == asyncStatus)
+			{
+				if (IVectorView<TransferTask^>^ Tasks = asyncInfo->GetResults())
+				{
+					this->TaskList->ItemsSource = Tasks;
+				}
+			}
+		});
+	});
+}
+
+
+void MainPage::CopyLinkMenuItem_Click(Object^ sender, RoutedEventArgs^ e)
+{
+	try
+	{
+		TransferTask^ Task = dynamic_cast<TransferTask^>(
+			dynamic_cast<FrameworkElement^>(sender)->DataContext);
+
+		using Windows::ApplicationModel::DataTransfer::Clipboard;
+		using Windows::ApplicationModel::DataTransfer::DataPackage;
+
+		DataPackage^ data = ref new DataPackage();
+		data->SetText(Task->RequestedUri->RawUri);
+
+		Clipboard::SetContent(data);
+	}
+	catch (Exception^ ex)
+	{
+		
+	}
 }

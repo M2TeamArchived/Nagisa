@@ -2,5 +2,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Nagisa">
-
+    <local:Uint64ToDoubleConverter x:Name="Uint64ToDoubleConverter"/>
+    <local:Uint64ToByteSizeStringConverter x:Name="Uint64ToByteSizeStringConverter"/>
+    <local:StorageFileToFileNameConverter x:Name="StorageFileToFileNameConverter"/>
 </ResourceDictionary>

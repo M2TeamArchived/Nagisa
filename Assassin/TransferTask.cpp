@@ -58,3 +58,18 @@ uint64 TransferTask::TotalBytesToReceive::get()
 {
 	return this->m_Operation->Progress.TotalBytesToReceive;
 }
+
+void TransferTask::Pause()
+{
+	this->m_Operation->Pause();
+}
+
+void TransferTask::Resume()
+{
+	this->m_Operation->Resume();
+}
+
+void TransferTask::Cancel()
+{
+	this->m_Operation->AttachAsync()->Cancel();
+}

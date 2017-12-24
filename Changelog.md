@@ -6,12 +6,20 @@
   People.md.
 
 ## Changelog
+**Nagisa 0.1 Preview 1 [Build 4]**
+- Improve the "New Task" Dialog.
+- Add Pause, Resume and Cancel methods in TransferTask class.
+- Add Uint64ToDoubleConverter, Uint64ToByteSizeStringConverter and 
+  StorageFileToFileNameConverter.
+- Continue to implement the "MainPage" UI.
+
 **Nagisa 0.1 Preview 1 [Build 3]**
 - Adjust the git exclude list.
 - Add M2RemoveReference struct template; M2SetAsyncCompletedHandler, 
   M2AsyncWait, M2SetAsyncProgressHandler and M2ExecuteOnUIThread functions.
 - Add TransferTask class; TransferTaskStatus enum; RequestedUri, ResultFile, 
-  Status, BytesReceived TotalBytesToReceive properties in TransferTask class.
+  Status, BytesReceived and TotalBytesToReceive properties in TransferTask 
+  class.
 - Add GetTasksAsync and AddTask methods in TransferManager class.
 - Add "New Task" Dialog.
 - Improve the "About" Dialog.

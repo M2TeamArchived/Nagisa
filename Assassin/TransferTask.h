@@ -49,5 +49,12 @@ namespace Assassin
 		{
 			uint64 get();
 		}
+
+		void Pause();
+
+		void Resume();
+
+		void Cancel();
+
 	};
 }
