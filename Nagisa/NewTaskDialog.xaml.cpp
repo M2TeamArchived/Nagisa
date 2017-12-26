@@ -133,7 +133,9 @@ void NewTaskDialog::DownloadSourceTextBox_LostFocus(
 	this->m_DownloadSource = DownloadSource;
 }
 
-void Nagisa::NewTaskDialog::FileNameTextBox_LostFocus(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+void NewTaskDialog::FileNameTextBox_LostFocus(
+	Object^ sender, 
+	RoutedEventArgs^ e)
 {
 	this->m_FileName = this->FileNameTextBox->Text;
 }

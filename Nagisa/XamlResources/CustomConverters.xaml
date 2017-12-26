@@ -5,4 +5,7 @@
     <local:Uint64ToDoubleConverter x:Name="Uint64ToDoubleConverter"/>
     <local:Uint64ToByteSizeStringConverter x:Name="Uint64ToByteSizeStringConverter"/>
     <local:StorageFileToFileNameConverter x:Name="StorageFileToFileNameConverter"/>
+    <local:StatusErrorToVisibleConverter x:Name="StatusErrorToVisibleConverter"/>
+    <local:StatusPausedToVisibleConverter x:Name="StatusPausedToVisibleConverter"/>
+    <local:StatusRunningToVisibleConverter x:Name="StatusRunningToVisibleConverter"/>
 </ResourceDictionary>

@@ -6,6 +6,18 @@
   People.md.
 
 ## Changelog
+**Nagisa 0.1 Preview 1 [Build 5]**
+- Improve the implement of M2ExecuteOnUIThread, M2SetAsyncCompletedHandler, 
+  M2SetAsyncProgressHandler and M2AsyncWait functions.
+- Add StatusErrorToVisibleConverter, StatusPausedToVisibleConverter and 
+  StatusRunningToVisibleConverter.
+- Add ITransferTask interface and M2::Object class. 
+- Using TransferTask instaead of ITransferTask.
+- Add M2GetInspectable and M2AsyncHandleCompleted functions.
+- Adjust the project settings for reducing the binary size.
+- Add GetTasks method in TransferManager class.
+- Continue to implement the "MainPage" UI.
+
 **Nagisa 0.1 Preview 1 [Build 4]**
 - Improve the "New Task" Dialog.
 - Add Pause, Resume and Cancel methods in TransferTask class.

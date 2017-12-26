@@ -7,8 +7,9 @@ using namespace Platform;
 using namespace Windows::Networking::BackgroundTransfer;
 
 TransferTask::TransferTask(DownloadOperation^ Operations)
+	: m_Operation(Operations)
 {
-	this->m_Operation = Operations;
+	
 }
 
 Uri^ TransferTask::RequestedUri::get()

@@ -11,9 +11,7 @@
 namespace Nagisa
 {
 	using Assassin::TransferManager;
-	using Assassin::TransferTask;
 	using Platform::Object;
-	using Platform::Collections::Vector;
 	using Windows::UI::Xaml::RoutedEventArgs;
 
 	public ref class MainPage sealed

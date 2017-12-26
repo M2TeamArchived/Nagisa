@@ -27,7 +27,6 @@ MainPage::MainPage()
 	InitializeComponent();
 }
 
-
 void MainPage::AboutButtonClick(Object^ sender, RoutedEventArgs^ e)
 {
 	AboutDialog^ dialog = ref new AboutDialog();
@@ -67,14 +66,14 @@ void MainPage::NewTaskButtonClick(Object^ sender, RoutedEventArgs^ e)
 					M2SetAsyncCompletedHandler(
 						this->m_TransferManager->GetTasksAsync(),
 						[this](
-							IAsyncOperation<IVectorView<TransferTask^>^>^ asyncInfo,
+							IAsyncOperation<IVectorView<ITransferTask^>^>^ asyncInfo,
 							AsyncStatus asyncStatus)
 					{
 						M2ExecuteOnUIThread([this, asyncInfo, asyncStatus]()
 						{
 							if (AsyncStatus::Completed == asyncStatus)
 							{
-								if (IVectorView<TransferTask^>^ Tasks = asyncInfo->GetResults())
+								if (IVectorView<ITransferTask^>^ Tasks = asyncInfo->GetResults())
 								{
 									this->TaskList->ItemsSource = Tasks;
 								}
@@ -102,14 +101,14 @@ void MainPage::Page_Loaded(Object^ sender, RoutedEventArgs^ e)
 	M2SetAsyncCompletedHandler(
 		this->m_TransferManager->GetTasksAsync(),
 		[this](
-			IAsyncOperation<IVectorView<TransferTask^>^>^ asyncInfo,
+			IAsyncOperation<IVectorView<ITransferTask^>^>^ asyncInfo,
 			AsyncStatus asyncStatus)
 	{
 		M2ExecuteOnUIThread([this, asyncInfo, asyncStatus]()
 		{
 			if (AsyncStatus::Completed == asyncStatus)
 			{
-				if (IVectorView<TransferTask^>^ Tasks = asyncInfo->GetResults())
+				if (IVectorView<ITransferTask^>^ Tasks = asyncInfo->GetResults())
 				{
 					this->TaskList->ItemsSource = Tasks;
 				}
@@ -123,7 +122,7 @@ void MainPage::CopyLinkMenuItem_Click(Object^ sender, RoutedEventArgs^ e)
 {
 	try
 	{
-		TransferTask^ Task = dynamic_cast<TransferTask^>(
+		ITransferTask^ Task = dynamic_cast<ITransferTask^>(
 			dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
 		using Windows::ApplicationModel::DataTransfer::Clipboard;

@@ -29,7 +29,7 @@
             </ListView.Header>
 
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="Assassin:TransferTask">
+                <DataTemplate x:DataType="Assassin:ITransferTask">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -78,13 +78,16 @@
 
                             <Button Style="{StaticResource CustomIconButtonStyle}"
                                     Content="{StaticResource RetryIcon}"
-                                    ToolTipService.ToolTip="[Retry]"/>
+                                    ToolTipService.ToolTip="[Retry]"
+                                    Visibility="{x:Bind Status, Converter={StaticResource StatusErrorToVisibleConverter}, Mode=OneWay}"/>
                             <Button Style="{StaticResource CustomIconButtonStyle}"
                                     Content="{StaticResource ResumeIcon}"
-                                    ToolTipService.ToolTip="[Resume]"/>
+                                    ToolTipService.ToolTip="[Resume]"
+                                    Visibility="{x:Bind Status, Converter={StaticResource StatusPausedToVisibleConverter}, Mode=OneWay}"/>
                             <Button Style="{StaticResource CustomIconButtonStyle}"
                                     Content="{StaticResource PauseIcon}"
-                                    ToolTipService.ToolTip="[Pause]"/>
+                                    ToolTipService.ToolTip="[Pause]"
+                                    Visibility="{x:Bind Status, Converter={StaticResource StatusRunningToVisibleConverter}, Mode=OneWay}"/>
                         </Grid>
 
                         <Button x:Uid="TaskItemMoreButton" 
@@ -124,17 +127,20 @@
                                          Background="{StaticResource ProgressBarBackgroundColor}"
                                          Foreground="{StaticResource ProgressBarErrorForegroundColor}" 
                                          Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource Uint64ToDoubleConverter}, Mode=OneWay}"
-                                         Value="{x:Bind BytesReceived, Converter={StaticResource Uint64ToDoubleConverter}, Mode=OneWay}"/>
+                                         Value="{x:Bind BytesReceived, Converter={StaticResource Uint64ToDoubleConverter}, Mode=OneWay}"
+                                         Visibility="{x:Bind Status, Converter={StaticResource StatusErrorToVisibleConverter}, Mode=OneWay}"/>
                             <ProgressBar VerticalAlignment="Stretch" 
                                          Background="{StaticResource ProgressBarBackgroundColor}"
                                          Foreground="{StaticResource ProgressBarPausedForegroundColor}"
                                          Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource Uint64ToDoubleConverter}, Mode=OneWay}"
-                                         Value="{x:Bind BytesReceived, Converter={StaticResource Uint64ToDoubleConverter}, Mode=OneWay}"/>
+                                         Value="{x:Bind BytesReceived, Converter={StaticResource Uint64ToDoubleConverter}, Mode=OneWay}"
+                                         Visibility="{x:Bind Status, Converter={StaticResource StatusPausedToVisibleConverter}, Mode=OneWay}"/>
                             <ProgressBar VerticalAlignment="Stretch" 
                                          Background="{StaticResource ProgressBarBackgroundColor}"
                                          Foreground="{StaticResource ProgressBarRunningForegroundColor}"
                                          Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource Uint64ToDoubleConverter}, Mode=OneWay}"
-                                         Value="{x:Bind BytesReceived, Converter={StaticResource Uint64ToDoubleConverter}, Mode=OneWay}"/>
+                                         Value="{x:Bind BytesReceived, Converter={StaticResource Uint64ToDoubleConverter}, Mode=OneWay}"
+                                         Visibility="{x:Bind Status, Converter={StaticResource StatusRunningToVisibleConverter}, Mode=OneWay}"/>
                         </Grid>
 
                     </Grid>

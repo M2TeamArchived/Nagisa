@@ -36,7 +36,7 @@ Object^ Uint64ToDoubleConverter::ConvertBack(
 	Object^ parameter,
 	String^ language)
 {
-	throw ref new Platform::NotImplementedException();
+	throw ref new NotImplementedException();
 }
 
 Object^ Uint64ToByteSizeStringConverter::Convert(
@@ -86,7 +86,7 @@ Object^ Uint64ToByteSizeStringConverter::ConvertBack(
 	Object^ parameter,
 	String^ language)
 {
-	throw ref new Platform::NotImplementedException();
+	throw ref new NotImplementedException();
 }
 
 Object^ StorageFileToFileNameConverter::Convert(
@@ -106,5 +106,86 @@ Object^ StorageFileToFileNameConverter::ConvertBack(
 	Object^ parameter,
 	String^ language)
 {
-	throw ref new Platform::NotImplementedException();
+	throw ref new NotImplementedException();
+}
+
+Object^ StatusErrorToVisibleConverter::Convert(
+	Object^ value,
+	TypeName targetType,
+	Object^ parameter,
+	String^ language)
+{
+	using Assassin::TransferTaskStatus;
+	IBox<TransferTaskStatus>^ status = 
+		dynamic_cast<IBox<TransferTaskStatus>^>(value);
+
+	if (status != nullptr && TransferTaskStatus::Error == status->Value)
+	{
+		return Visibility::Visible;
+	}
+
+	return Visibility::Collapsed;
+}
+
+Object^ StatusErrorToVisibleConverter::ConvertBack(
+	Object^ value,
+	TypeName targetType,
+	Object^ parameter,
+	String^ language)
+{
+	throw ref new NotImplementedException();
+}
+
+Object^ StatusPausedToVisibleConverter::Convert(
+	Object^ value,
+	TypeName targetType,
+	Object^ parameter,
+	String^ language)
+{
+	using Assassin::TransferTaskStatus;
+	IBox<TransferTaskStatus>^ status =
+		dynamic_cast<IBox<TransferTaskStatus>^>(value);
+
+	if (status != nullptr && TransferTaskStatus::Paused == status->Value)
+	{
+		return Visibility::Visible;
+	}
+
+	return Visibility::Collapsed;
+}
+
+Object^ StatusPausedToVisibleConverter::ConvertBack(
+	Object^ value,
+	TypeName targetType,
+	Object^ parameter,
+	String^ language)
+{
+	throw ref new NotImplementedException();
+}
+
+Object^ StatusRunningToVisibleConverter::Convert(
+	Object^ value,
+	TypeName targetType,
+	Object^ parameter,
+	String^ language)
+{
+	using Assassin::TransferTaskStatus;
+	IBox<TransferTaskStatus>^ status =
+		dynamic_cast<IBox<TransferTaskStatus>^>(value);
+
+	if (status != nullptr && TransferTaskStatus::Running == status->Value)
+	{
+		return Visibility::Visible;
+	}
+
+	return Visibility::Collapsed;
+}
+
+Object^ StatusRunningToVisibleConverter::ConvertBack(
+	Object^ value,
+	TypeName targetType,
+	Object^ parameter,
+	String^ language)
+{
+	throw ref new NotImplementedException();
 }

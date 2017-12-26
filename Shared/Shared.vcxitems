@@ -15,7 +15,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)M2AsyncHelpers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)M2Object.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)M2RemoveReference.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)NagisaVersion.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)M2AsyncHelpers.cpp" />
   </ItemGroup>
 </Project>

@@ -16,15 +16,8 @@ namespace Assassin
 	using Windows::Storage::IStorageFile;
 	using Windows::Networking::BackgroundTransfer::DownloadOperation;
 
-	public ref class TransferTask sealed
+	public interface class ITransferTask
 	{
-	private:
-		DownloadOperation^ m_Operation;
-
-	internal:
-		TransferTask(DownloadOperation^ Operation);
-
-	public:
 		property Uri^ RequestedUri
 		{
 			Uri^ get();
@@ -55,6 +48,47 @@ namespace Assassin
 		void Resume();
 
 		void Cancel();
+	};
+
+	ref class TransferTask sealed : public ITransferTask
+	{
+	private:
+		DownloadOperation^ m_Operation;
+
+	internal:
+		TransferTask(DownloadOperation^ Operation);
+
+	public:
+		virtual property Uri^ RequestedUri
+		{
+			Uri^ get();
+		}
+
+		virtual property IStorageFile^ ResultFile
+		{
+			IStorageFile^ get();
+		}
+
+		virtual property TransferTaskStatus Status
+		{
+			TransferTaskStatus get();
+		}
+
+		virtual property uint64 BytesReceived
+		{
+			uint64 get();
+		}
+
+		virtual property uint64 TotalBytesToReceive
+		{
+			uint64 get();
+		}
+
+		virtual void Pause();
+
+		virtual void Resume();
+
+		virtual void Cancel();
 
 	};
 }

@@ -15,28 +15,33 @@ String^ TransferManager::Version::get()
 	return NAGISA_VERSION_STRING;
 }
 
-IAsyncOperation<IVectorView<TransferTask^>^>^ TransferManager::GetTasksAsync()
+IVectorView<ITransferTask^>^ TransferManager::GetTasks()
+{
+	using Platform::Collections::Vector;
+
+	Vector<ITransferTask^>^ TaskList = ref new Vector<ITransferTask^>();
+
+	using Windows::Foundation::Collections::IVectorView;
+	using Windows::Networking::BackgroundTransfer::DownloadOperation;
+
+	IVectorView<DownloadOperation^>^ downloads = M2AsyncWait(
+		this->m_Downloader->GetCurrentDownloadsAsync());
+
+	for (DownloadOperation^ download : downloads)
+	{
+		TaskList->Append(ref new TransferTask(download));
+	}
+
+	return TaskList->GetView();
+}
+
+IAsyncOperation<IVectorView<ITransferTask^>^>^ TransferManager::GetTasksAsync()
 {
 	using concurrency::create_async;
 
-	return create_async([this]() ->IVectorView<TransferTask^>^
+	return create_async([this]() -> IVectorView<ITransferTask^>^
 	{
-		using Platform::Collections::Vector;
-
-		Vector<TransferTask^>^ result = ref new Vector<TransferTask^>();
-
-		using Windows::Foundation::Collections::IVectorView;
-		using Windows::Networking::BackgroundTransfer::DownloadOperation;
-
-		IVectorView<DownloadOperation^>^ downloads = M2AsyncWait(
-			this->m_Downloader->GetCurrentDownloadsAsync());
-
-		for (DownloadOperation^ download : downloads)
-		{
-			result->Append(ref new TransferTask(download));
-		}
-
-		return result->GetView();
+		return this->GetTasks();
 	});
 }
 

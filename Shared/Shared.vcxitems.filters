@@ -4,5 +4,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)NagisaVersion.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)M2AsyncHelpers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)M2RemoveReference.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)M2Object.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)M2AsyncHelpers.cpp" />
   </ItemGroup>
 </Project>

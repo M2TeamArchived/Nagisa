@@ -25,7 +25,8 @@ namespace Assassin
 			String^ get();
 		}
 
-		IAsyncOperation<IVectorView<TransferTask^>^>^ GetTasksAsync();
+		IVectorView<ITransferTask^>^ GetTasks();
+		IAsyncOperation<IVectorView<ITransferTask^>^>^ GetTasksAsync();
 
 		void AddTask(Uri^ SourceUri, IStorageFile^ DestinationFile);
 		
