@@ -34,12 +34,13 @@ void MainPage::AboutButtonClick(Object^ sender, RoutedEventArgs^ e)
 	dialog->ShowAsync();
 }
 
+
 void MainPage::NewTaskButtonClick(Object^ sender, RoutedEventArgs^ e)
 {
 	NewTaskDialog^ dialog = ref new NewTaskDialog();
 	dialog->m_TransferManager = this->m_TransferManager;
 
-	M2SetAsyncCompletedHandler(
+	M2AsyncSetCompletedHandler(
 		dialog->ShowAsync(),
 		[this, dialog](
 			IAsyncOperation<ContentDialogResult>^ asyncInfo,
@@ -63,22 +64,21 @@ void MainPage::NewTaskButtonClick(Object^ sender, RoutedEventArgs^ e)
 						dialog->m_DownloadSource, 
 						SaveFile);
 
-					M2SetAsyncCompletedHandler(
-						this->m_TransferManager->GetTasksAsync(),
-						[this](
-							IAsyncOperation<IVectorView<ITransferTask^>^>^ asyncInfo,
-							AsyncStatus asyncStatus)
+
+
+
+
+					M2::CThread([this]()
 					{
-						M2ExecuteOnUIThread([this, asyncInfo, asyncStatus]()
+						auto Tasks = M2AsyncWait(this->m_TransferManager->GetTasksAsync());
+
+						if (nullptr != Tasks)
 						{
-							if (AsyncStatus::Completed == asyncStatus)
+							M2ExecuteOnUIThread([this, Tasks]()
 							{
-								if (IVectorView<ITransferTask^>^ Tasks = asyncInfo->GetResults())
-								{
-									this->TaskList->ItemsSource = Tasks;
-								}
-							}
-						});
+								this->TaskList->ItemsSource = Tasks;
+							});
+						}
 					});
 				}		
 			}
@@ -96,24 +96,19 @@ void MainPage::Page_Loaded(Object^ sender, RoutedEventArgs^ e)
 
 	String^ x = (ref new Platform::Guid(guid))->ToString();*/
 
-	m_TransferManager = ref new TransferManager();
+	this->m_TransferManager = ref new TransferManager();
 
-	M2SetAsyncCompletedHandler(
-		this->m_TransferManager->GetTasksAsync(),
-		[this](
-			IAsyncOperation<IVectorView<ITransferTask^>^>^ asyncInfo,
-			AsyncStatus asyncStatus)
+	M2::CThread([this]()
 	{
-		M2ExecuteOnUIThread([this, asyncInfo, asyncStatus]()
+		auto Tasks = M2AsyncWait(this->m_TransferManager->GetTasksAsync());
+
+		if (nullptr != Tasks)
 		{
-			if (AsyncStatus::Completed == asyncStatus)
+			M2ExecuteOnUIThread([this, Tasks]()
 			{
-				if (IVectorView<ITransferTask^>^ Tasks = asyncInfo->GetResults())
-				{
-					this->TaskList->ItemsSource = Tasks;
-				}
-			}
-		});
+				this->TaskList->ItemsSource = Tasks;
+			});		
+		}
 	});
 }
 

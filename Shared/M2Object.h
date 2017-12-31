@@ -14,7 +14,7 @@ License: The MIT License
 
 namespace M2
 {
-	// The M2::CObject class, the implementation of smart object.
+	// The implementation of smart object.
 	template<typename TObject, typename TObjectDefiner>
 	class CObject
 	{
@@ -52,11 +52,13 @@ namespace M2
 			return this->m_Object;
 		}
 
+		// Check the object is vaild or not.
 		bool IsInvalid()
 		{
 			return (this->m_Object == TObjectDefiner::GetInvalidValue());
 		}
 
+		// Detach the object.
 		TObject Detach()
 		{
 			TObject Object = this->m_Object;
@@ -64,6 +66,7 @@ namespace M2
 			return Object;
 		}
 
+		// Close the object.
 		void Close()
 		{
 			if (!this->IsInvalid())

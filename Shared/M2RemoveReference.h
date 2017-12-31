@@ -10,7 +10,6 @@ License: The MIT License
 #ifndef _M2_REMOVE_REFERENCE_
 #define _M2_REMOVE_REFERENCE_
 
-// The M2RemoveReference struct template.
 // If the type T is a reference type, provides the member typedef type which is
 // the type referred to by T. Otherwise type is T.
 template<class T> struct M2RemoveReference { typedef T Type; };

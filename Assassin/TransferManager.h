@@ -11,15 +11,9 @@ namespace Assassin
 	using Windows::Foundation::Collections::IVectorView;
 	using Windows::Networking::BackgroundTransfer::BackgroundDownloader;
 	using Windows::Storage::IStorageFile;
-	
-	public ref class TransferManager sealed
+
+	public interface class ITransferManager
 	{
-	private:
-		BackgroundDownloader ^ m_Downloader = nullptr;
-
-	public:
-		TransferManager();
-
 		property String^ Version
 		{
 			String^ get();
@@ -29,6 +23,25 @@ namespace Assassin
 		IAsyncOperation<IVectorView<ITransferTask^>^>^ GetTasksAsync();
 
 		void AddTask(Uri^ SourceUri, IStorageFile^ DestinationFile);
-		
+	};
+	
+	public ref class TransferManager sealed : public ITransferManager
+	{
+	private:
+		BackgroundDownloader ^ m_Downloader = nullptr;
+
+	public:
+		TransferManager();
+
+		virtual property String^ Version
+		{
+			String^ get();
+		}
+
+		virtual IVectorView<ITransferTask^>^ GetTasks();
+		virtual IAsyncOperation<IVectorView<ITransferTask^>^>^ GetTasksAsync();
+
+		virtual void AddTask(Uri^ SourceUri, IStorageFile^ DestinationFile);
+
 	};
 }

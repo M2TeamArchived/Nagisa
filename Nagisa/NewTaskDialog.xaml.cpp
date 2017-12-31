@@ -75,7 +75,7 @@ void NewTaskDialog::BrowseButtonClick(
 	picker->SuggestedStartLocation = PickerLocationId::ComputerFolder;
 	picker->FileTypeFilter->Append(L"*");
 
-	M2SetAsyncCompletedHandler(
+	M2AsyncSetCompletedHandler(
 		picker->PickSingleFolderAsync(),
 		[this](
 			IAsyncOperation<StorageFolder^>^ asyncInfo,

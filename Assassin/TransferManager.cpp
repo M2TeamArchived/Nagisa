@@ -37,9 +37,7 @@ IVectorView<ITransferTask^>^ TransferManager::GetTasks()
 
 IAsyncOperation<IVectorView<ITransferTask^>^>^ TransferManager::GetTasksAsync()
 {
-	using concurrency::create_async;
-
-	return create_async([this]() -> IVectorView<ITransferTask^>^
+	return M2AsyncCreate([this](IM2AsyncController^ AsyncController) -> IVectorView<ITransferTask^>^
 	{
 		return this->GetTasks();
 	});

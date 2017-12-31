@@ -6,6 +6,17 @@
   People.md.
 
 ## Changelog
+**Nagisa 0.1 Preview 1 [Build 6]**
+- Add ITransferManager interface.
+- Add M2ThrowPlatformExceptionIfFailed, M2ThrowPlatformException and 
+  M2ThrownPlatformExceptionToHResult functions.
+- Rename M2SetAsyncCompletedHandler and M2SetAsyncProgressHandler as
+  M2AsyncSetCompletedHandler and M2AsyncSetProgressHandler.
+- Add M2::CThread class.
+- Add M2AsyncCreate function; IM2AsyncController and IM2AsyncControllerEx 
+  interfaces.
+- Improve the implement of GetTasksAsync method in TransferManager class.
+
 **Nagisa 0.1 Preview 1 [Build 5]**
 - Improve the implement of M2ExecuteOnUIThread, M2SetAsyncCompletedHandler, 
   M2SetAsyncProgressHandler and M2AsyncWait functions.

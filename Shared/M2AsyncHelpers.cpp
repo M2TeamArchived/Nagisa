@@ -8,21 +8,16 @@ License: The MIT License
 #include "pch.h"
 
 #include <Windows.h>
+
 #include <windows.foundation.h>
 
 #include "M2AsyncHelpers.h"
 
-// The M2AsyncHandleCompleted function handles the completed asynchronous call.
-//
+// Handle the completed asynchronous call.
 // Parameters:
-//
-// Async
-//     The completed asynchronous call you want to handle.
-//
+//   Async: The completed asynchronous call you want to handle.
 // Return value:
-//
-// The return value is determined by the asynchronous call.
-// The function will return error code if the function fails. 
+//   Return the HRESULT determined by the asynchronous call.
 HRESULT M2AsyncHandleCompleted(Platform::Object^ Async)
 {
 	HRESULT hr = S_OK;
@@ -70,17 +65,11 @@ HRESULT M2AsyncHandleCompleted(Platform::Object^ Async)
 	return hr;
 }
 
-// The M2ExecuteOnUIThread function executes function on the UI thread with 
-// normal priority.
-//
+// Execute function on the UI thread with normal priority.
 // Parameters:
-//
-// agileCallback
-//     The function you want to execute.
-//
+//   agileCallback: The function you want to execute.
 // Return value:
-//
-// The return value is Windows::Foundation::IAsyncAction^.
+//   The return value is Windows::Foundation::IAsyncAction^.
 Windows::Foundation::IAsyncAction^ M2ExecuteOnUIThread(
 	Windows::UI::Core::DispatchedHandler^ agileCallback)
 {
