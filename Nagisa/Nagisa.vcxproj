@@ -381,6 +381,9 @@
     <PRIResource Include="Strings\en\AboutDialog.resw" />
     <PRIResource Include="Strings\en\MainPage.resw" />
     <PRIResource Include="Strings\en\NewTaskDialog.resw" />
+    <PRIResource Include="Strings\zh-Hans\AboutDialog.resw" />
+    <PRIResource Include="Strings\zh-Hans\MainPage.resw" />
+    <PRIResource Include="Strings\zh-Hans\NewTaskDialog.resw" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

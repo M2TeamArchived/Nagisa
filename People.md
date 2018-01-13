@@ -4,11 +4,11 @@
 - Mouri_Naruto (https://github.com/MouriNaruto)
 
 ## Contributors
-- 边宇琨 (https://github.com/bianyukun1213)
 
 ## Sponsors
 
 ## Thanks
+- 边宇琨 (https://github.com/bianyukun1213)
 - Force.Charlie-I (https://github.com/fcharlie)
 - MichaelSuen (https://github.com/MichaelSuen-thePointer)
 - Zihan Chen (https://github.com/vczh)

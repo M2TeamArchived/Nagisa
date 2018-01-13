@@ -1,7 +1,7 @@
 ﻿/******************************************************************************
 Project: M2-Team Common Library
 Description: Implemention for the C++/CX helper functions.
-File Name: M2CXHelpers
+File Name: M2CXHelpers.cpp
 License: The MIT License
 ******************************************************************************/
 
@@ -59,3 +59,29 @@ HRESULT M2ThrownPlatformExceptionToHResult()
 		return E_UNEXPECTED;
 	}
 }
+
+// Finds a sub string from a source string. 
+// Parameters:
+//   SourceString: The source string.
+//   SubString: The sub string.
+//   IgnoreCase: Determines whether to ignore case.
+// Return value:
+//   Returns true if successful, or false otherwise.
+bool M2FindSubString(
+	Platform::String^ SourceString,
+	Platform::String^ SubString,
+	bool IgnoreCase)
+{
+	return (::FindNLSStringEx(
+		nullptr,
+		(IgnoreCase ? NORM_IGNORECASE : 0) | FIND_FROMSTART,
+		SourceString->Data(),
+		SourceString->Length(),
+		SubString->Data(),
+		SubString->Length(),
+		nullptr,
+		nullptr,
+		nullptr,
+		0) >= 0);
+}
+

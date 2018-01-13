@@ -4,9 +4,11 @@
     xmlns:local="using:Nagisa">
     <local:Uint64ToDoubleConverter x:Name="Uint64ToDoubleConverter"/>
     <local:Uint64ToByteSizeStringConverter x:Name="Uint64ToByteSizeStringConverter"/>
+    <local:Uint64ToByteSpeedStringConverter x:Name="Uint64ToByteSpeedStringConverter"/>
     <local:StorageFileToFileNameConverter x:Name="StorageFileToFileNameConverter"/>
     <local:StatusErrorToVisibleConverter x:Name="StatusErrorToVisibleConverter"/>
     <local:StatusPausedToVisibleConverter x:Name="StatusPausedToVisibleConverter"/>
     <local:StatusRunningToVisibleConverter x:Name="StatusRunningToVisibleConverter"/>
     <local:RemainTimeToTimeStringConverter x:Name="RemainTimeToTimeStringConverter"/>
+    <local:TaskListEmptyToVisibilityConverter x:Name="TaskListEmptyToVisibilityConverter"/>
 </ResourceDictionary>

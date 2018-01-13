@@ -117,48 +117,44 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutAppBarButton.Label" xml:space="preserve">
-    <value>About</value>
-    <comment>About</comment>
+  <data name="Dialog.PrimaryButtonText" xml:space="preserve">
+    <value>下载</value>
+    <comment>Download</comment>
   </data>
-  <data name="NewTaskAppBarButton.Label" xml:space="preserve">
-    <value>New Task</value>
+  <data name="Dialog.SecondaryButtonText" xml:space="preserve">
+    <value>取消</value>
+    <comment>Cancel</comment>
+  </data>
+  <data name="Dialog.Title" xml:space="preserve">
+    <value>新建任务</value>
     <comment>New Task</comment>
   </data>
-  <data name="NewTaskAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>New Task</value>
-    <comment>New Task</comment>
+  <data name="DownloadSourceTextBox.PlaceholderText" xml:space="preserve">
+    <value>请在这里输入下载源</value>
+    <comment>Please input the download source here.</comment>
   </data>
-  <data name="PauseButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Pause</value>
-    <comment>Pause</comment>
+  <data name="DownloadSourceTitle.Text" xml:space="preserve">
+    <value>下载源</value>
+    <comment>Download Source</comment>
   </data>
-  <data name="ResumeButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Resume</value>
-    <comment>Resume</comment>
+  <data name="FileNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>请在这里输入文件名</value>
+    <comment>Please input the file name here.</comment>
   </data>
-  <data name="RetryButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Retry</value>
-    <comment>Retry</comment>
+  <data name="FileNameTitle.Text" xml:space="preserve">
+    <value>文件名</value>
+    <comment>File Name</comment>
   </data>
-  <data name="SearchAutoSuggestBox.PlaceholderText" xml:space="preserve">
-    <value>Search Downloads</value>
-    <comment>Search Downloads</comment>
+  <data name="SaveFolderBrowseButton.Content" xml:space="preserve">
+    <value>浏览</value>
+    <comment>Browse</comment>
   </data>
-  <data name="TaskItemCopyLinkMenuItem.Text" xml:space="preserve">
-    <value>Copy Link</value>
-    <comment>Copy Link</comment>
+  <data name="SaveFolderTextBox.PlaceholderText" xml:space="preserve">
+    <value>请点击浏览按钮修改</value>
+    <comment>Please click the Browse button to change.</comment>
   </data>
-  <data name="TaskItemMoreButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>More</value>
-    <comment>More</comment>
-  </data>
-  <data name="TaskItemRemoveMenuItem.Text" xml:space="preserve">
-    <value>Remove</value>
-    <comment>Remove</comment>
-  </data>
-  <data name="TaskListNoItemsTextBlock.Text" xml:space="preserve">
-    <value>No Downloads</value>
-    <comment>No Downloads</comment>
+  <data name="SaveFolderTitle.Text" xml:space="preserve">
+    <value>保存目录</value>
+    <comment>Save Folder</comment>
   </data>
 </root>

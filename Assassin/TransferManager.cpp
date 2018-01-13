@@ -4,21 +4,6 @@
 using namespace Assassin;
 using namespace Platform;
 
-ULONGLONG M2GetTickCount()
-{
-	LARGE_INTEGER Frequency = { 0 }, PerformanceCount = { 0 };
-
-	if (QueryPerformanceFrequency(&Frequency))
-	{
-		if (QueryPerformanceCounter(&PerformanceCount))
-		{
-			return (PerformanceCount.QuadPart * 1000 / Frequency.QuadPart);
-		}
-	}
-
-	return GetTickCount64();
-}
-
 TransferManager::TransferManager()
 {
 	this->m_Downloader = ref new BackgroundDownloader();
@@ -66,30 +51,44 @@ String^ TransferManager::Version::get()
 	return NAGISA_VERSION_STRING;
 }
 
-ITransferTaskVector^ TransferManager::GetTasks()
-{
-	this->m_TaskList->Clear();
-
-	using Windows::Foundation::Collections::IVectorView;
-	using Windows::Networking::BackgroundTransfer::DownloadOperation;
-
-	IVectorView<DownloadOperation^>^ downloads = M2AsyncWait(
-		this->m_Downloader->GetCurrentDownloadsAsync());
-
-	for (DownloadOperation^ download : downloads)
-	{
-		this->m_TaskList->Append(ref new TransferTask(download));
-	}
-	
-	return this->m_TaskList->GetView();
-}
-
 IAsyncOperation<ITransferTaskVector^>^ TransferManager::GetTasksAsync()
 {
 	return M2AsyncCreate(
-		[this](IM2AsyncController^ AsyncController) -> ITransferTaskVector^
+		[this](IM2AsyncController^ AsyncController)
+			-> ITransferTaskVector^
 	{
-		return this->GetTasks();
+		this->m_TaskList->Clear();
+
+		using Windows::Foundation::Collections::IVectorView;
+		using Windows::Networking::BackgroundTransfer::DownloadOperation;
+
+		String^ CurrentSearchFilter = this->SearchFilter;
+
+		bool NeedSearchFilter =
+			(CurrentSearchFilter == nullptr || CurrentSearchFilter->IsEmpty());
+
+		IVectorView<DownloadOperation^>^ downloads = M2AsyncWait(
+			this->m_Downloader->GetCurrentDownloadsAsync());
+
+		for (DownloadOperation^ download : downloads)
+		{
+			ITransferTask^ Task = ref new TransferTask(download);
+
+			if (NeedSearchFilter)
+			{
+				if (!M2FindSubString(
+					Task->ResultFile->Name,
+					CurrentSearchFilter,
+					true))
+				{
+					continue;
+				}
+			}
+
+			this->m_TaskList->Append(Task);
+		}
+
+		return this->m_TaskList->GetView();
 	});
 }
 

@@ -12,6 +12,6 @@
     <PackageLogoSource>F:\NagisaRepositories\Nagisa\Shared\LogoAssets\Nagisa.png</PackageLogoSource>
     <AppxPackageIsForStore>False</AppxPackageIsForStore>
     <AppxBuildConfigurationSelection>x86|x64|arm|arm64</AppxBuildConfigurationSelection>
-    <PackageOptionalProjectsInIdeBuilds>True</PackageOptionalProjectsInIdeBuilds>
+    <PackageOptionalProjectsInIdeBuilds>False</PackageOptionalProjectsInIdeBuilds>
   </PropertyGroup>
 </Project>

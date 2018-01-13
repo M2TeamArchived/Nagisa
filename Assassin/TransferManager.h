@@ -4,7 +4,6 @@
 
 namespace Assassin
 {
-	using Assassin::TransferTask;
 	using Platform::String;
 	using Platform::Collections::Vector;
 	using Windows::Foundation::IAsyncOperation;
@@ -22,7 +21,8 @@ namespace Assassin
 			String^ get();
 		}
 
-		ITransferTaskVector^ GetTasks();
+		property String^ SearchFilter;
+
 		IAsyncOperation<ITransferTaskVector^>^ GetTasksAsync();
 
 		void AddTask(Uri^ SourceUri, IStorageFile^ DestinationFile);
@@ -45,7 +45,8 @@ namespace Assassin
 			String^ get();
 		}
 
-		virtual ITransferTaskVector^ GetTasks();
+		virtual property String^ SearchFilter;
+
 		virtual IAsyncOperation<ITransferTaskVector^>^ GetTasksAsync();
 
 		virtual void AddTask(Uri^ SourceUri, IStorageFile^ DestinationFile);

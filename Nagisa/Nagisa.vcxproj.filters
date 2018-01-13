@@ -17,6 +17,9 @@
     <Filter Include="Strings\en">
       <UniqueIdentifier>{9d4f4c8c-a3b4-49e5-84e4-55d3457efaf4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Strings\zh-Hans">
+      <UniqueIdentifier>{4c722a55-5ee9-43cd-8caf-e081143d0ebd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml" />
@@ -223,6 +226,15 @@
     </PRIResource>
     <PRIResource Include="Strings\en\NewTaskDialog.resw">
       <Filter>Strings\en</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\zh-Hans\AboutDialog.resw">
+      <Filter>Strings\zh-Hans</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\zh-Hans\MainPage.resw">
+      <Filter>Strings\zh-Hans</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\zh-Hans\NewTaskDialog.resw">
+      <Filter>Strings\zh-Hans</Filter>
     </PRIResource>
   </ItemGroup>
 </Project>

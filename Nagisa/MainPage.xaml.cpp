@@ -27,7 +27,32 @@ MainPage::MainPage()
 	InitializeComponent();
 }
 
-void MainPage::AboutButtonClick(Object^ sender, RoutedEventArgs^ e)
+void MainPage::RefreshTaskList()
+{
+	M2::CThread([this]()
+	{
+		auto Tasks = M2AsyncWait(this->m_TransferManager->GetTasksAsync());
+
+		if (nullptr != Tasks)
+		{
+			M2ExecuteOnUIThread([this, Tasks]()
+			{
+				this->TaskList->ItemsSource = Tasks;
+			});
+		}
+	});
+}
+
+void Nagisa::MainPage::SearchTaskList(String^ SearchFilter)
+{
+	this->m_TransferManager->SearchFilter = SearchFilter;
+
+	this->RefreshTaskList();
+}
+
+void MainPage::AboutButton_Click(
+	Object^ sender, 
+	RoutedEventArgs^ e)
 {
 	AboutDialog^ dialog = ref new AboutDialog();
 	dialog->m_TransferManager = this->m_TransferManager;
@@ -35,7 +60,9 @@ void MainPage::AboutButtonClick(Object^ sender, RoutedEventArgs^ e)
 }
 
 
-void MainPage::NewTaskButtonClick(Object^ sender, RoutedEventArgs^ e)
+void MainPage::NewTaskButton_Click(
+	Object^ sender, 
+	RoutedEventArgs^ e)
 {
 	NewTaskDialog^ dialog = ref new NewTaskDialog();
 	dialog->m_TransferManager = this->m_TransferManager;
@@ -64,29 +91,16 @@ void MainPage::NewTaskButtonClick(Object^ sender, RoutedEventArgs^ e)
 						dialog->m_DownloadSource, 
 						SaveFile);
 
-
-
-
-
-					M2::CThread([this]()
-					{
-						auto Tasks = M2AsyncWait(this->m_TransferManager->GetTasksAsync());
-
-						if (nullptr != Tasks)
-						{
-							M2ExecuteOnUIThread([this, Tasks]()
-							{
-								this->TaskList->ItemsSource = Tasks;
-							});
-						}
-					});
+					this->RefreshTaskList();
 				}		
 			}
 		}
 	});
 }
 
-void MainPage::Page_Loaded(Object^ sender, RoutedEventArgs^ e)
+void MainPage::Page_Loaded(
+	Object^ sender, 
+	RoutedEventArgs^ e)
 {
 	/*GUID guid = { 0 };
 	HRESULT hr = CoCreateGuid(&guid);
@@ -98,22 +112,12 @@ void MainPage::Page_Loaded(Object^ sender, RoutedEventArgs^ e)
 
 	this->m_TransferManager = ref new TransferManager();
 
-	M2::CThread([this]()
-	{
-		auto Tasks = M2AsyncWait(this->m_TransferManager->GetTasksAsync());
-
-		if (nullptr != Tasks)
-		{
-			M2ExecuteOnUIThread([this, Tasks]()
-			{
-				this->TaskList->ItemsSource = Tasks;
-			});		
-		}
-	});
+	this->RefreshTaskList();
 }
 
-
-void MainPage::CopyLinkMenuItem_Click(Object^ sender, RoutedEventArgs^ e)
+void MainPage::CopyLinkMenuItem_Click(
+	Object^ sender,
+	RoutedEventArgs^ e)
 {
 	try
 	{
@@ -128,8 +132,98 @@ void MainPage::CopyLinkMenuItem_Click(Object^ sender, RoutedEventArgs^ e)
 
 		Clipboard::SetContent(data);
 	}
-	catch (Exception^ ex)
+	catch (...)
 	{
 		
 	}
+}
+
+void MainPage::SearchAutoSuggestBox_QuerySubmitted(
+	AutoSuggestBox^ sender, 
+	AutoSuggestBoxQuerySubmittedEventArgs^ args)
+{
+	this->SearchTaskList(sender->Text);
+}
+
+void MainPage::SearchAutoSuggestBox_TextChanged(
+	AutoSuggestBox^ sender, 
+	AutoSuggestBoxTextChangedEventArgs^ args)
+{
+	using Windows::System::Threading::ThreadPoolTimer;
+	using Windows::System::Threading::TimerElapsedHandler;
+	
+	if (nullptr != sender->DataContext)
+	{
+		dynamic_cast<ThreadPoolTimer^>(sender->DataContext)->Cancel();
+		delete sender->DataContext;
+		sender->DataContext = nullptr;
+	}
+
+	TimeSpan delay;
+	// 10,000,000 ticks per second (10,000 ticks per millisecond)
+	delay.Duration = 250 * 10000;
+
+	sender->DataContext = ThreadPoolTimer::CreateTimer(
+		ref new TimerElapsedHandler([this, sender](ThreadPoolTimer^ source)
+	{
+		M2ExecuteOnUIThread([this, sender]()
+		{		
+			this->SearchTaskList(sender->Text);
+		});
+	}), delay);
+}
+
+void MainPage::RetryButton_Click(
+	Object^ sender, 
+	RoutedEventArgs^ e)
+{
+	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
+		dynamic_cast<FrameworkElement^>(sender)->DataContext);
+
+	using Windows::Storage::IStorageFile;
+
+	Uri^ SourceUri = Task->RequestedUri;
+	IStorageFile^ DestinationFile = Task->ResultFile;
+
+	Task->Cancel();
+
+	this->m_TransferManager->AddTask(SourceUri, DestinationFile);
+
+	this->RefreshTaskList();
+}
+
+void MainPage::ResumeButton_Click(
+	Object^ sender,
+	RoutedEventArgs^ e)
+{
+	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
+		dynamic_cast<FrameworkElement^>(sender)->DataContext);
+
+	Task->Resume();
+
+	this->RefreshTaskList();
+}
+
+void MainPage::PauseButton_Click(
+	Object^ sender,
+	RoutedEventArgs^ e)
+{
+	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
+		dynamic_cast<FrameworkElement^>(sender)->DataContext);
+
+	Task->Pause();
+
+	this->RefreshTaskList();
+}
+
+void MainPage::TaskItemRemoveMenuItem_Click(
+	Object^ sender,
+	RoutedEventArgs^ e)
+{
+	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
+		dynamic_cast<FrameworkElement^>(sender)->DataContext);
+
+	Task->Cancel();
+
+	this->RefreshTaskList();
 }

@@ -95,24 +95,6 @@ void NewTaskDialog::BrowseButtonClick(
 	});
 }
 
-template<typename CharType>
-CharType M2PathFindFileName(CharType Path)
-{
-	CharType FileName = Path;
-
-	while (Path && *Path)
-	{
-		if (L'\\' == *Path || L'/' == *Path)
-		{
-			FileName = Path + 1;
-		}
-
-		++Path;
-	}
-
-	return FileName;
-}
-
 void NewTaskDialog::DownloadSourceTextBox_LostFocus(
 	Object^ sender,
 	RoutedEventArgs^ e)

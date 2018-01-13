@@ -16,16 +16,21 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <AutoSuggestBox x:Uid="SearchAutoSuggestBox" Grid.Row="0" QueryIcon="Find" PlaceholderText="[Search Downloads]"/>
+        <AutoSuggestBox x:Uid="/MainPage/SearchAutoSuggestBox" 
+                        Grid.Row="0" 
+                        QueryIcon="Find" 
+                        PlaceholderText="[Search Downloads]"
+                        QuerySubmitted="SearchAutoSuggestBox_QuerySubmitted"
+                        TextChanged="SearchAutoSuggestBox_TextChanged"/>
 
         <ListView x:Name="TaskList" Grid.Row="1" SelectionMode="Multiple"
                   ItemContainerStyle="{StaticResource CustomListViewItemStyle}">
             <ListView.Header>
-                <TextBlock x:Uid="TaskListNoItemsTextBlock"
+                <TextBlock x:Uid="/MainPage/TaskListNoItemsTextBlock"
                            TextAlignment="Center" 
                            Margin="16"
                            Text="[No Downloads]"
-                           Visibility="Collapsed"/>
+                           Visibility="{x:Bind TaskList.ItemsSource,  Converter={StaticResource TaskListEmptyToVisibilityConverter}, Mode=OneWay}"/>
             </ListView.Header>
 
             <ListView.ItemTemplate>
@@ -55,7 +60,7 @@
                             <TextBlock Grid.Row="1" 
                                        Padding="0,2,0,0" 
                                        FontSize="12">
-                                <Run Text="{x:Bind BytesReceivedSpeed, Converter={StaticResource Uint64ToByteSizeStringConverter}, Mode=OneWay}"/>
+                                <Run Text="{x:Bind BytesReceivedSpeed, Converter={StaticResource Uint64ToByteSpeedStringConverter}, Mode=OneWay}"/>
                                 <Run CharacterSpacing="100" Text=" "/>
                                 <Run Text="{x:Bind BytesReceived, Converter={StaticResource Uint64ToByteSizeStringConverter}, Mode=OneWay}"/>
                                 <Run Text=" / "/>
@@ -72,38 +77,49 @@
                                 <x:String x:Key="PauseIcon">&#xE769;</x:String>
                             </Grid.Resources>
 
-                            <Button Style="{StaticResource CustomIconButtonStyle}"
+                            <Button x:Uid="/MainPage/RetryButton" 
+                                    Style="{StaticResource CustomIconButtonStyle}"
                                     Content="{StaticResource RetryIcon}"
                                     ToolTipService.ToolTip="[Retry]"
-                                    Visibility="{x:Bind Status, Converter={StaticResource StatusErrorToVisibleConverter}, Mode=OneWay}"/>
-                            <Button Style="{StaticResource CustomIconButtonStyle}"
+                                    Visibility="{x:Bind Status, Converter={StaticResource StatusErrorToVisibleConverter}, Mode=OneWay}"
+                                    Click="RetryButton_Click"/>
+                            <Button x:Uid="/MainPage/ResumeButton" 
+                                    Style="{StaticResource CustomIconButtonStyle}"
                                     Content="{StaticResource ResumeIcon}"
                                     ToolTipService.ToolTip="[Resume]"
-                                    Visibility="{x:Bind Status, Converter={StaticResource StatusPausedToVisibleConverter}, Mode=OneWay}"/>
-                            <Button Style="{StaticResource CustomIconButtonStyle}"
+                                    Visibility="{x:Bind Status, Converter={StaticResource StatusPausedToVisibleConverter}, Mode=OneWay}"
+                                    Click="ResumeButton_Click"/>
+                            <Button x:Uid="/MainPage/PauseButton" 
+                                    Style="{StaticResource CustomIconButtonStyle}"
                                     Content="{StaticResource PauseIcon}"
                                     ToolTipService.ToolTip="[Pause]"
-                                    Visibility="{x:Bind Status, Converter={StaticResource StatusRunningToVisibleConverter}, Mode=OneWay}"/>
+                                    Visibility="{x:Bind Status, Converter={StaticResource StatusRunningToVisibleConverter}, Mode=OneWay}"
+                                    Click="PauseButton_Click"/>
                         </Grid>
 
-                        <Button x:Uid="TaskItemMoreButton" 
+                        <Button x:Uid="/MainPage/TaskItemMoreButton" 
                                 Grid.Row="0"
                                 Grid.Column="2"
                                 Style="{StaticResource CustomIconButtonStyle}"
-                                Content="&#xE10C;">
+                                Content="&#xE10C;"
+                                ToolTipService.ToolTip="[More]">
                             <Button.Flyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem x:Uid="TaskItemOpenFolderMenuItem" Text="[Open Folder]" />
-                                    <MenuFlyoutItem x:Uid="TaskItemCopyLinkMenuItem" Text="[Copy Link]" Click="CopyLinkMenuItem_Click"/>
+                                    <MenuFlyoutItem x:Uid="/MainPage/TaskItemCopyLinkMenuItem"
+                                                    Text="[Copy Link]" 
+                                                    Click="CopyLinkMenuItem_Click"/>
                                     <MenuFlyoutSeparator/>
-                                    <MenuFlyoutItem x:Uid="TaskItemRemoveMenuItem" Text="[Remove]"/>
-                                    <MenuFlyoutSeparator/>
-                                    <MenuFlyoutItem x:Uid="TaskItemPropertiesMenuItem" Text="[Properties]"/>
+                                    <MenuFlyoutItem x:Uid="/MainPage/TaskItemRemoveMenuItem" 
+                                                    Text="[Remove]"
+                                                    Click="TaskItemRemoveMenuItem_Click"/>
                                 </MenuFlyout>
                             </Button.Flyout>
                         </Button>
 
-                        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="-48,0,0,0">
+                        <Grid Grid.Row="1" 
+                              Grid.Column="0" 
+                              Grid.ColumnSpan="3"
+                              Margin="-48,0,0,0">
                             <Grid.Resources>
                                 <SolidColorBrush x:Key="ProgressBarBackgroundColor" 
                                                  Color="Black" 
@@ -145,39 +161,19 @@
 
         </ListView>
 
-        
-
         <CommandBar Grid.Row="2">
-            <CommandBar.Content>
-                <StackPanel Orientation="Horizontal" Padding="0" Margin="0,13,0,0">
-                    <StackPanel x:Uid="TotalDownloadBandwidthStackPanel" Margin="8,0" Orientation="Horizontal" ToolTipService.ToolTip="[Total Download Bandwidth]">
-                        <FontIcon Margin="0,0,8,0" VerticalAlignment="Center" FontSize="16" Glyph="&#xE74B;"/>
-                        <TextBlock VerticalAlignment="Center" FontSize="16" Text="2.4"/>
-                        <TextBlock VerticalAlignment="Center" FontSize="16" Text=" MB/s"/>
-                    </StackPanel>
-                    <StackPanel x:Uid="TotalUploadBandwidthStackPanel" Margin="8,0" Orientation="Horizontal"  ToolTipService.ToolTip="[Total Upload Bandwidth]">
-                        <FontIcon Margin="0,0,8,0"  VerticalAlignment="Center" FontSize="16" Glyph="&#xE74A;"/>
-                        <TextBlock VerticalAlignment="Center" FontSize="16" Text="128"/>
-                        <TextBlock VerticalAlignment="Center" FontSize="16" Text=" KB/s"/>
-                    </StackPanel>
-                </StackPanel>
-            </CommandBar.Content>
             <CommandBar.PrimaryCommands>
-                <AppBarButton x:Uid="NewTaskAppBarButton" Icon="Add" Label="[New Task]" ToolTipService.ToolTip="[New Task]" Click="NewTaskButtonClick"/>
+                <AppBarButton x:Uid="/MainPage/NewTaskAppBarButton"
+                              Icon="Add"
+                              Label="[New Task]" 
+                              ToolTipService.ToolTip="[New Task]" 
+                              Click="NewTaskButton_Click"/>
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
-                <!--
-                <AppBarButton x:Uid="StartAllAppBarButton" Icon="Play" Label="[Start All]"/>
-                <AppBarButton x:Uid="PauseAllAppBarButton" Icon="Pause" Label="[Pause All]"/>
-                <AppBarSeparator/>
-                <AppBarButton x:Uid="CancelAppBarButton" Icon="Remove" Label="[Cancel]"/>
-                <AppBarSeparator/>
-                <AppBarButton x:Uid="OpenDownloadsFolderAppBarButton" Icon="OpenLocal" Label="[Open Downloads Folder]"/>
-                <AppBarSeparator/>
-                <AppBarButton x:Uid="SettingsAppBarButton" Icon="Setting" Label="[Settings]"/>
-                <AppBarSeparator/>
-                -->          
-                <AppBarButton x:Uid="AboutAppBarButton" Icon="Help" Label="[About]" Click="AboutButtonClick"/>
+                <AppBarButton x:Uid="/MainPage/AboutAppBarButton"
+                              Icon="Help" 
+                              Label="[About]"
+                              Click="AboutButton_Click"/>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Grid>

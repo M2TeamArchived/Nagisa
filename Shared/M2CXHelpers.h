@@ -12,6 +12,8 @@ License: The MIT License
 
 #include <Windows.h>
 
+#include "M2BaseHelpers.h"
+
 // Retrieve the IInspectable interface from the provided C++/CX object.
 // Parameters:
 //   object: The C++/CX object you want to retrieve the raw pointer.
@@ -43,5 +45,17 @@ void M2ThrowPlatformExceptionIfFailed(HRESULT hr);
 // Return value:
 //   The function will return HRESULT.
 HRESULT M2ThrownPlatformExceptionToHResult();
+
+// Finds a sub string from a source string. 
+// Parameters:
+//   SourceString: The source string.
+//   SubString: The sub string.
+//   IgnoreCase: Determines whether to ignore case.
+// Return value:
+//   Returns true if successful, or false otherwise.
+bool M2FindSubString(
+	Platform::String^ SourceString,
+	Platform::String^ SubString,
+	bool IgnoreCase);
 
 #endif // _M2_CX_HELPERS_

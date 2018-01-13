@@ -15,6 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)M2AsyncHelpers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)M2BaseHelpers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)M2CXHelpers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)M2Object.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)M2RemoveReference.h" />
@@ -23,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)M2AsyncHelpers.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)M2BaseHelpers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)M2CXHelpers.cpp" />
   </ItemGroup>
 </Project>

@@ -6,6 +6,16 @@
   People.md.
 
 ## Changelog
+**Nagisa 0.1 Preview 1 [Build 8]**
+- Update documents.
+- Add M2FindSubString, M2PathFindFileName, M2FormatString and M2GetTickCount 
+  functions.
+- Add TaskListEmptyToVisibilityConverter and Uint64ToByteSpeedStringConverter.
+- Add Simplified Chinese translation.
+- Remove GetTasks method in TransferManager class.
+- Improve GetTasksAsync method in TransferManager class.
+- Implement the "MainPage" UI.
+
 **Nagisa 0.1 Preview 1 [Build 7]**
 - Improve the implement of M2ThrowPlatformException function.
 - Improve the implement of XAML converters.

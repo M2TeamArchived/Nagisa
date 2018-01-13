@@ -84,6 +84,51 @@ Object^ Uint64ToByteSizeStringConverter::ConvertBack(
 	M2ThrowPlatformException(E_NOTIMPL);
 }
 
+Object^ Uint64ToByteSpeedStringConverter::Convert(
+	Object^ value,
+	TypeName targetType,
+	Object^ parameter,
+	String^ language)
+{
+	IBox<uint64>^ status = dynamic_cast<IBox<uint64>^>(value);
+
+	if (status != nullptr)
+	{
+		double result = static_cast<double>(status->Value);
+
+		if (0.0 == result)
+		{
+			return L"0 Byte/s";
+		}
+
+		StringReference Systems[] = { L"Bytes/s", L"KiB/s", L"MiB/s", L"GiB/s", L"TiB/s" };
+		size_t i = 0;
+		for (; i < sizeof(Systems) / sizeof(*Systems); ++i)
+		{
+			if (1024.0 > result)
+				break;
+
+			result /= 1024.0;
+		}
+
+		uint64 temp = static_cast<uint64>(result * 100);
+		return (temp / 100.0).ToString() + Systems[i];
+	}
+	else
+	{
+		return L"0 Byte/s";
+	}
+}
+
+Object^ Uint64ToByteSpeedStringConverter::ConvertBack(
+	Object^ value,
+	TypeName targetType,
+	Object^ parameter,
+	String^ language)
+{
+	M2ThrowPlatformException(E_NOTIMPL);
+}
+
 Object^ StorageFileToFileNameConverter::Convert(
 	Object^ value,
 	TypeName targetType,
@@ -185,57 +230,6 @@ Object^ StatusRunningToVisibleConverter::ConvertBack(
 	M2ThrowPlatformException(E_NOTIMPL);
 }
 
-
-
-// Write formatted data to a string. 
-// Parameters:
-//   Format: Format-control string.
-//   ...: Optional arguments to be formatted.
-// Return value:
-//   Tf succeed, returns the formatted string.
-//   If failed, returns an empty string.
-std::wstring M2FormatString(
-	_In_z_ _Printf_format_string_ wchar_t const* const Format,
-	...)
-{
-	// Check the argument list.
-	if (nullptr != Format)
-	{
-		va_list ArgList = nullptr;
-		va_start(ArgList, Format);
-
-		// Get the length of rhe format result.
-		size_t nLength = _vscwprintf(Format, ArgList) + 1;
-
-		// Allocate for the format result.
-		std::wstring Buffer(nLength + 1, L'\0');
-
-		// Format the string
-		int nWritten = _vsnwprintf_s(
-			&Buffer[0],
-			Buffer.size(),
-			nLength,
-			Format,
-			ArgList);
-		if (nWritten > 0)
-		{
-			// If succeed, resize to fit and return result.
-			Buffer.resize(nWritten);
-			return Buffer;
-		}
-
-		va_end(ArgList);
-	}
-
-	// If failed, return empty string.
-	return L"";
-}
-
-
-
-
-
-
 Object^ RemainTimeToTimeStringConverter::Convert(
 	Object^ value,
 	TypeName targetType,
@@ -268,3 +262,33 @@ Object^ RemainTimeToTimeStringConverter::ConvertBack(
 {
 	M2ThrowPlatformException(E_NOTIMPL);
 }
+
+Object^ TaskListEmptyToVisibilityConverter::Convert(
+	Object^ value,
+	TypeName targetType,
+	Object^ parameter,
+	String^ language)
+{
+	using Assassin::ITransferTask;
+	using Windows::Foundation::Collections::IVectorView;
+	
+	IVectorView<ITransferTask^>^ ItemSource = 
+		dynamic_cast<IVectorView<ITransferTask^>^>(value);
+
+	if (ItemSource == nullptr || ItemSource->Size == 0)
+	{
+		return Visibility::Visible;
+	}
+
+	return Visibility::Collapsed;
+}
+
+Object^ TaskListEmptyToVisibilityConverter::ConvertBack(
+	Object^ value,
+	TypeName targetType,
+	Object^ parameter,
+	String^ language)
+{
+	M2ThrowPlatformException(E_NOTIMPL);
+}
+

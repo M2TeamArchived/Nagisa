@@ -7,9 +7,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)M2Object.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)M2CXHelpers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)M2Thread.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)M2BaseHelpers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)M2AsyncHelpers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)M2CXHelpers.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)M2BaseHelpers.cpp" />
   </ItemGroup>
 </Project>

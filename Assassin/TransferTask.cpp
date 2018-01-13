@@ -6,8 +6,6 @@ using namespace Assassin;
 using namespace Platform;
 using namespace Windows::Networking::BackgroundTransfer;
 
-extern ULONGLONG M2GetTickCount();
-
 void Assassin::TransferTask::RaisePropertyChanged(String ^ PropertyName)
 {
 	using Windows::UI::Xaml::Data::PropertyChangedEventArgs;
@@ -118,6 +116,7 @@ void TransferTask::Resume()
 	if (TransferTaskStatus::Paused == this->Status)
 	{
 		this->m_Operation->Resume();
+		this->m_Operation->AttachAsync();
 	}
 }
 
