@@ -6,11 +6,14 @@ namespace Assassin
 {
 	using Assassin::TransferTask;
 	using Platform::String;
+	using Platform::Collections::Vector;
 	using Windows::Foundation::IAsyncOperation;
 	using Windows::Foundation::Uri;
 	using Windows::Foundation::Collections::IVectorView;
 	using Windows::Networking::BackgroundTransfer::BackgroundDownloader;
 	using Windows::Storage::IStorageFile;
+
+	using ITransferTaskVector = IVectorView<ITransferTask^>;
 
 	public interface class ITransferManager
 	{
@@ -19,8 +22,8 @@ namespace Assassin
 			String^ get();
 		}
 
-		IVectorView<ITransferTask^>^ GetTasks();
-		IAsyncOperation<IVectorView<ITransferTask^>^>^ GetTasksAsync();
+		ITransferTaskVector^ GetTasks();
+		IAsyncOperation<ITransferTaskVector^>^ GetTasksAsync();
 
 		void AddTask(Uri^ SourceUri, IStorageFile^ DestinationFile);
 	};
@@ -28,18 +31,22 @@ namespace Assassin
 	public ref class TransferManager sealed : public ITransferManager
 	{
 	private:
-		BackgroundDownloader ^ m_Downloader = nullptr;
+		BackgroundDownloader^ m_Downloader = nullptr;
+		Vector<ITransferTask^>^ m_TaskList = nullptr;
+
+		M2::CThread m_UpdateThread;
 
 	public:
 		TransferManager();
+		virtual ~TransferManager();
 
 		virtual property String^ Version
 		{
 			String^ get();
 		}
 
-		virtual IVectorView<ITransferTask^>^ GetTasks();
-		virtual IAsyncOperation<IVectorView<ITransferTask^>^>^ GetTasksAsync();
+		virtual ITransferTaskVector^ GetTasks();
+		virtual IAsyncOperation<ITransferTaskVector^>^ GetTasksAsync();
 
 		virtual void AddTask(Uri^ SourceUri, IStorageFile^ DestinationFile);
 

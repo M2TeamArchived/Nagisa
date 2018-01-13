@@ -27,13 +27,14 @@ inline IInspectable* M2GetInspectable(Platform::Object^ object) throw()
 //   hr: The error HRESULT that is represented by the exception. 
 // Return value:
 //   This function does not return a value, but will throw Platform::Exception.
-void M2ThrowPlatformException(HRESULT hr);
+__declspec(noreturn) void M2ThrowPlatformException(HRESULT hr);
 
 // Throw the appropriate Platform::Exception for the given HRESULT.
 // Parameters:
 //   hr: The error HRESULT that is represented by the exception. 
 // Return value:
-//   This function does not return a value.
+//   This function does not return a value, but will throw Platform::Exception
+//   if it is a failed HRESULT value.
 void M2ThrowPlatformExceptionIfFailed(HRESULT hr);
 
 // Convert C++/CX exceptions in the callable code into HRESULTs.

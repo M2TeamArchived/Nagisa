@@ -8,4 +8,5 @@
     <local:StatusErrorToVisibleConverter x:Name="StatusErrorToVisibleConverter"/>
     <local:StatusPausedToVisibleConverter x:Name="StatusPausedToVisibleConverter"/>
     <local:StatusRunningToVisibleConverter x:Name="StatusRunningToVisibleConverter"/>
+    <local:RemainTimeToTimeStringConverter x:Name="RemainTimeToTimeStringConverter"/>
 </ResourceDictionary>

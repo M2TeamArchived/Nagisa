@@ -12,11 +12,14 @@ namespace Assassin
 		Running
 	};
 
+	using Platform::String;
 	using Windows::Foundation::Uri;
 	using Windows::Storage::IStorageFile;
 	using Windows::Networking::BackgroundTransfer::DownloadOperation;
+	using Windows::UI::Xaml::Data::INotifyPropertyChanged;
+	using Windows::UI::Xaml::Data::PropertyChangedEventHandler;
 
-	public interface class ITransferTask
+	public interface class ITransferTask : INotifyPropertyChanged
 	{
 		property Uri^ RequestedUri
 		{
@@ -38,6 +41,16 @@ namespace Assassin
 			uint64 get();
 		}
 
+		property uint64 BytesReceivedSpeed
+		{
+			uint64 get();
+		}
+
+		property uint64 RemainTime
+		{
+			uint64 get();
+		}
+
 		property uint64 TotalBytesToReceive
 		{
 			uint64 get();
@@ -48,17 +61,28 @@ namespace Assassin
 		void Resume();
 
 		void Cancel();
+
+		void NotifyPropertyChanged();
 	};
 
 	ref class TransferTask sealed : public ITransferTask
 	{
 	private:
-		DownloadOperation^ m_Operation;
+		DownloadOperation^ m_Operation = nullptr;
+
+		ULONGLONG m_LastUpdated = 0;
+		uint64 m_LastBytesReceived = 0;
+		uint64 m_BytesReceivedSpeed = 0;
+
+	protected:
+		void RaisePropertyChanged(String^ PropertyName);
 
 	internal:
 		TransferTask(DownloadOperation^ Operation);
 
 	public:
+		virtual event PropertyChangedEventHandler^ PropertyChanged;
+
 		virtual property Uri^ RequestedUri
 		{
 			Uri^ get();
@@ -79,6 +103,16 @@ namespace Assassin
 			uint64 get();
 		}
 
+		virtual property uint64 BytesReceivedSpeed
+		{
+			uint64 get();
+		}
+
+		virtual property uint64 RemainTime
+		{
+			uint64 get();
+		}
+
 		virtual property uint64 TotalBytesToReceive
 		{
 			uint64 get();
@@ -90,5 +124,6 @@ namespace Assassin
 
 		virtual void Cancel();
 
+		virtual void NotifyPropertyChanged();
 	};
 }

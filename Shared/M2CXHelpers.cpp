@@ -16,7 +16,7 @@ License: The MIT License
 //   hr: The error HRESULT that is represented by the exception. 
 // Return value:
 //   This function does not return a value, but will throw Platform::Exception.
-void M2ThrowPlatformException(HRESULT hr)
+__declspec(noreturn) void M2ThrowPlatformException(HRESULT hr)
 {
 	throw Platform::Exception::CreateException(hr);
 }

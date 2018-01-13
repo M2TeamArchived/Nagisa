@@ -4,10 +4,61 @@
 using namespace Assassin;
 using namespace Platform;
 
+ULONGLONG M2GetTickCount()
+{
+	LARGE_INTEGER Frequency = { 0 }, PerformanceCount = { 0 };
+
+	if (QueryPerformanceFrequency(&Frequency))
+	{
+		if (QueryPerformanceCounter(&PerformanceCount))
+		{
+			return (PerformanceCount.QuadPart * 1000 / Frequency.QuadPart);
+		}
+	}
+
+	return GetTickCount64();
+}
+
 TransferManager::TransferManager()
 {
-	using Windows::Networking::BackgroundTransfer::BackgroundDownloader;
 	this->m_Downloader = ref new BackgroundDownloader();
+	this->m_TaskList = ref new Vector<ITransferTask^>();
+	
+	this->m_UpdateThread = M2::CThread([this]()
+	{		
+		for (;;)
+		{
+			ULONGLONG StartTime = M2GetTickCount();
+
+			Vector<ITransferTask^>^ TaskList = this->m_TaskList;
+
+			if (nullptr == TaskList)
+				break;
+
+			for (ITransferTask^ Task : TaskList)
+			{
+				M2ExecuteOnUIThread([Task]()
+				{
+					Task->NotifyPropertyChanged();
+				});
+			}
+
+			DWORD RunningTime = static_cast<DWORD>(
+				M2GetTickCount() - StartTime);
+
+			if (RunningTime < 1000)
+			{
+				SleepEx(1000 - RunningTime, FALSE);
+			}		
+		}
+	});
+
+}
+
+TransferManager::~TransferManager()
+{
+	this->m_TaskList = nullptr;
+	this->m_UpdateThread.Wait();
 }
 
 String^ TransferManager::Version::get()
@@ -15,11 +66,9 @@ String^ TransferManager::Version::get()
 	return NAGISA_VERSION_STRING;
 }
 
-IVectorView<ITransferTask^>^ TransferManager::GetTasks()
+ITransferTaskVector^ TransferManager::GetTasks()
 {
-	using Platform::Collections::Vector;
-
-	Vector<ITransferTask^>^ TaskList = ref new Vector<ITransferTask^>();
+	this->m_TaskList->Clear();
 
 	using Windows::Foundation::Collections::IVectorView;
 	using Windows::Networking::BackgroundTransfer::DownloadOperation;
@@ -29,15 +78,16 @@ IVectorView<ITransferTask^>^ TransferManager::GetTasks()
 
 	for (DownloadOperation^ download : downloads)
 	{
-		TaskList->Append(ref new TransferTask(download));
+		this->m_TaskList->Append(ref new TransferTask(download));
 	}
-
-	return TaskList->GetView();
+	
+	return this->m_TaskList->GetView();
 }
 
-IAsyncOperation<IVectorView<ITransferTask^>^>^ TransferManager::GetTasksAsync()
+IAsyncOperation<ITransferTaskVector^>^ TransferManager::GetTasksAsync()
 {
-	return M2AsyncCreate([this](IM2AsyncController^ AsyncController) -> IVectorView<ITransferTask^>^
+	return M2AsyncCreate(
+		[this](IM2AsyncController^ AsyncController) -> ITransferTaskVector^
 	{
 		return this->GetTasks();
 	});

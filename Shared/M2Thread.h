@@ -52,6 +52,11 @@ namespace M2
 		CHandle m_Thread;
 
 	public:
+		CThread()
+		{
+
+		}
+		
 		// Create the thread.
 		template<class TFunction>
 		CThread(

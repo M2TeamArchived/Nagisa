@@ -122,4 +122,22 @@ namespace Nagisa
 			String^ language);
 	};
 
+	[Windows::UI::Xaml::Data::Bindable]
+	[Windows::Foundation::Metadata::WebHostHidden]
+	public ref class RemainTimeToTimeStringConverter sealed : IValueConverter
+	{
+	public:
+		// Inherited via IValueConverter
+		virtual Object^ Convert(
+			Object^ value,
+			TypeName targetType,
+			Object^ parameter,
+			String^ language);
+		virtual Object^ ConvertBack(
+			Object^ value,
+			TypeName targetType,
+			Object ^parameter,
+			String^ language);
+	};
+
 }

@@ -6,6 +6,15 @@
   People.md.
 
 ## Changelog
+**Nagisa 0.1 Preview 1 [Build 7]**
+- Improve the implement of M2ThrowPlatformException function.
+- Improve the implement of XAML converters.
+- Add BytesReceivedSpeed ans RemainTime properties in ITransferTask interface.
+- Continue to implement the "MainPage" UI.
+- Improve M2::CThread class.
+- Improve CustomContentDialogStyle style.
+- Add RemainTimeToTimeStringConverter.
+
 **Nagisa 0.1 Preview 1 [Build 6]**
 - Add ITransferManager interface.
 - Add M2ThrowPlatformExceptionIfFailed, M2ThrowPlatformException and 

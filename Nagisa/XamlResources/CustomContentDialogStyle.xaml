@@ -74,15 +74,17 @@
                                                     </ControlTemplate>
                                                 </ContentControl.Template>
                                             </ContentControl>
-                                            <ContentPresenter x:Name="Content"
-                                                              ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                              Content="{TemplateBinding Content}"
-                                                              FontSize="{ThemeResource ControlContentThemeFontSize}"
-                                                              FontFamily="XamlAutoFontFamily"
-                                                              Margin="0,0,0,0"
-                                                              Foreground="{TemplateBinding Foreground}"
-                                                              Grid.Row="1"
-                                                              TextWrapping="Wrap" />
+                                            <ScrollViewer Grid.Row="1"
+                                                          VerticalScrollBarVisibility="Auto"
+                                                          Padding="0,0,16,0">
+                                                <ContentPresenter x:Name="Content"
+                                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                                  Content="{TemplateBinding Content}"
+                                                                  FontSize="{ThemeResource ControlContentThemeFontSize}"
+                                                                  FontFamily="{ThemeResource ContentControlThemeFontFamily}"
+                                                                  Foreground="{TemplateBinding Foreground}"
+                                                                  TextWrapping="Wrap" />
+                                            </ScrollViewer>
                                         </Grid>
                                     </ScrollViewer>
                                     <Grid x:Name="CommandSpace"

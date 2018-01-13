@@ -461,7 +461,7 @@ namespace M2AsyncCreateInternal
 
 		virtual typename AsyncType::ProgressHandlerType^ GetOnProgress()
 		{
-			throw Platform::Exception::CreateException(E_UNEXPECTED);
+			M2ThrowPlatformException(E_UNEXPECTED);
 		}
 
 		virtual void PutOnProgress(
@@ -621,7 +621,7 @@ namespace M2AsyncCreateInternal
 
 		virtual typename AsyncType::ReturnType GetResults()
 		{
-			throw Platform::Exception::CreateException(E_UNEXPECTED);
+			M2ThrowPlatformException(E_UNEXPECTED);
 		}
 
 		virtual void CancelCurrentTask()

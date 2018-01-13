@@ -55,18 +55,14 @@
                             <TextBlock Grid.Row="1" 
                                        Padding="0,2,0,0" 
                                        FontSize="12">
-                                <Run Text="100 KB/s"/>
+                                <Run Text="{x:Bind BytesReceivedSpeed, Converter={StaticResource Uint64ToByteSizeStringConverter}, Mode=OneWay}"/>
                                 <Run CharacterSpacing="100" Text=" "/>
-                                
                                 <Run Text="{x:Bind BytesReceived, Converter={StaticResource Uint64ToByteSizeStringConverter}, Mode=OneWay}"/>
                                 <Run Text=" / "/>
-                                <Run Text="{x:Bind TotalBytesToReceive, Converter={StaticResource Uint64ToByteSizeStringConverter}, Mode=OneWay}"/>
-                                
+                                <Run Text="{x:Bind TotalBytesToReceive, Converter={StaticResource Uint64ToByteSizeStringConverter}, Mode=OneWay}"/>  
                                 <Run CharacterSpacing="100" Text=" "/>
-                                <Run Text="00:00:32"/>
-                                
+                                <Run Text="{x:Bind RemainTime, Converter={StaticResource RemainTimeToTimeStringConverter}, Mode=OneWay}"/>
                             </TextBlock>
-                                       
                         </Grid>
 
                         <Grid Grid.Row="0" Grid.Column="1">
@@ -148,6 +144,8 @@
             </ListView.ItemTemplate>
 
         </ListView>
+
+        
 
         <CommandBar Grid.Row="2">
             <CommandBar.Content>

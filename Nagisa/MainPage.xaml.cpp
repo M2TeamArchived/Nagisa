@@ -86,7 +86,6 @@ void MainPage::NewTaskButtonClick(Object^ sender, RoutedEventArgs^ e)
 	});
 }
 
-
 void MainPage::Page_Loaded(Object^ sender, RoutedEventArgs^ e)
 {
 	/*GUID guid = { 0 };
@@ -95,6 +94,7 @@ void MainPage::Page_Loaded(Object^ sender, RoutedEventArgs^ e)
 	throw ref new Platform::Exception(hr);
 
 	String^ x = (ref new Platform::Guid(guid))->ToString();*/
+	
 
 	this->m_TransferManager = ref new TransferManager();
 

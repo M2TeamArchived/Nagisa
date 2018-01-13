@@ -36,7 +36,7 @@ Object^ Uint64ToDoubleConverter::ConvertBack(
 	Object^ parameter,
 	String^ language)
 {
-	throw ref new NotImplementedException();
+	M2ThrowPlatformException(E_NOTIMPL);
 }
 
 Object^ Uint64ToByteSizeStringConverter::Convert(
@@ -56,23 +56,18 @@ Object^ Uint64ToByteSizeStringConverter::Convert(
 			return L"0 Byte";
 		}
 
-		StringReference Systems[] = { L"Bytes", L"KiB", L"MiB", L"GiB" };
-
-		for (size_t i = 0; i < sizeof(Systems) / sizeof(*Systems); ++i)
+		StringReference Systems[] = { L"Bytes", L"KiB", L"MiB", L"GiB", L"TiB" };
+		size_t i = 0;
+		for (; i < sizeof(Systems) / sizeof(*Systems); ++i)
 		{
 			if (1024.0 > result)
-			{				
-				uint64 temp = static_cast<uint64>(result * 100);
-				
-				return (temp / 100.0).ToString() + Systems[i];
-			}
-			else
-			{
-				result /= 1024.0;
-			}	
+				break;
+			
+			result /= 1024.0;	
 		}
 		
-		return result.ToString() + L"TiB";
+		uint64 temp = static_cast<uint64>(result * 100);
+		return (temp / 100.0).ToString() + Systems[i];
 	}
 	else
 	{
@@ -86,7 +81,7 @@ Object^ Uint64ToByteSizeStringConverter::ConvertBack(
 	Object^ parameter,
 	String^ language)
 {
-	throw ref new NotImplementedException();
+	M2ThrowPlatformException(E_NOTIMPL);
 }
 
 Object^ StorageFileToFileNameConverter::Convert(
@@ -106,7 +101,7 @@ Object^ StorageFileToFileNameConverter::ConvertBack(
 	Object^ parameter,
 	String^ language)
 {
-	throw ref new NotImplementedException();
+	M2ThrowPlatformException(E_NOTIMPL);
 }
 
 Object^ StatusErrorToVisibleConverter::Convert(
@@ -133,7 +128,7 @@ Object^ StatusErrorToVisibleConverter::ConvertBack(
 	Object^ parameter,
 	String^ language)
 {
-	throw ref new NotImplementedException();
+	M2ThrowPlatformException(E_NOTIMPL);
 }
 
 Object^ StatusPausedToVisibleConverter::Convert(
@@ -160,7 +155,7 @@ Object^ StatusPausedToVisibleConverter::ConvertBack(
 	Object^ parameter,
 	String^ language)
 {
-	throw ref new NotImplementedException();
+	M2ThrowPlatformException(E_NOTIMPL);
 }
 
 Object^ StatusRunningToVisibleConverter::Convert(
@@ -187,5 +182,89 @@ Object^ StatusRunningToVisibleConverter::ConvertBack(
 	Object^ parameter,
 	String^ language)
 {
-	throw ref new NotImplementedException();
+	M2ThrowPlatformException(E_NOTIMPL);
+}
+
+
+
+// Write formatted data to a string. 
+// Parameters:
+//   Format: Format-control string.
+//   ...: Optional arguments to be formatted.
+// Return value:
+//   Tf succeed, returns the formatted string.
+//   If failed, returns an empty string.
+std::wstring M2FormatString(
+	_In_z_ _Printf_format_string_ wchar_t const* const Format,
+	...)
+{
+	// Check the argument list.
+	if (nullptr != Format)
+	{
+		va_list ArgList = nullptr;
+		va_start(ArgList, Format);
+
+		// Get the length of rhe format result.
+		size_t nLength = _vscwprintf(Format, ArgList) + 1;
+
+		// Allocate for the format result.
+		std::wstring Buffer(nLength + 1, L'\0');
+
+		// Format the string
+		int nWritten = _vsnwprintf_s(
+			&Buffer[0],
+			Buffer.size(),
+			nLength,
+			Format,
+			ArgList);
+		if (nWritten > 0)
+		{
+			// If succeed, resize to fit and return result.
+			Buffer.resize(nWritten);
+			return Buffer;
+		}
+
+		va_end(ArgList);
+	}
+
+	// If failed, return empty string.
+	return L"";
+}
+
+
+
+
+
+
+Object^ RemainTimeToTimeStringConverter::Convert(
+	Object^ value,
+	TypeName targetType,
+	Object^ parameter,
+	String^ language)
+{
+	IBox<uint64>^ status = dynamic_cast<IBox<uint64>^>(value);
+	if (status != nullptr)
+	{
+		uint64 Seconds = status->Value;
+		if (-1 != Seconds)
+		{
+			int Hour = static_cast<int>(Seconds / 3600);
+			int Minute = static_cast<int>(Seconds / 60 % 60);
+			int Second = static_cast<int>(Seconds % 60);
+
+			return ref new String(
+				M2FormatString(L"%d:%02d:%02d", Hour, Minute, Second).c_str());
+		}
+	}
+
+	return L"N/A";
+}
+
+Object^ RemainTimeToTimeStringConverter::ConvertBack(
+	Object^ value,
+	TypeName targetType,
+	Object^ parameter,
+	String^ language)
+{
+	M2ThrowPlatformException(E_NOTIMPL);
 }
