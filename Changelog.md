@@ -7,26 +7,7 @@
 
 ## Changelog
 
-**Nagisa 0.1 [Build 9]**
-- Merge the changelog and update the readme.
-- Add M2ConvertByteSizeToString function.
-- Improve the Implemention of TransferManager.
-- Fix a bug about searching tasks from the task list.
-- Remove Uint64ToByteSpeedStringConverter.
-- Remove ITransferTask::Cancel method.
-- Add ITransferTask::CancelAsync method.
-- Fix a bug when using M2AsyncCreate function. (Thanks to MichaelSuen)
-- Fix a bug when cancelling the task.
-- Fix a bug when changing the task status.
-- Rename Uint64ToByteSizeStringConverter as Uint64ByteSizeToStringConverter.
-- Rename RemainTimeToTimeStringConverter as Uint64RemainTimeToStringConverter.
-- Add TaskStatusToVisibleConverter.
-- Remove StatusErrorToVisibleConverter.
-- Remove StatusPausedToVisibleConverter.
-- Remove StatusRunningToVisibleConverter.
-- Remove unused assets.
-
-### Nagisa 0.1 [Build 8]
+### Nagisa 0.1 [Build 10]
 **New Features**
 - Supported Transfer Protocols: HTTP, HTTPS, FTP, FTPS, WebSocket and WebSocket
   Secure.
@@ -58,7 +39,7 @@
 	- TotalBytesToReceive property.
 	- Pause method.
 	- Resume method.
-	- Cancel method.
+	- CancelAsync method.
 	- NotifyPropertyChanged method.
 - M2-Team Common Library
   - M2RemoveReference trait.
@@ -74,6 +55,7 @@
   - M2ThrowPlatformExceptionIfFailed function.
   - M2ThrownPlatformExceptionToHResult function.
   - M2FindSubString function.
+  - M2ConvertByteSizeToString function.
   - M2FormatString function.
   - M2GetTickCount function.
   - M2PathFindFileName function.
@@ -83,13 +65,10 @@
   - M2::CComObject class.
 - XAML
   - Uint64ToDoubleConverter converter.
-  - Uint64ToByteSizeStringConverter converter.
-  - Uint64ToByteSpeedStringConverter converter.
+  - Uint64ByteSizeToStringConverter converter.
   - StorageFileToFileNameConverter converter.
-  - StatusErrorToVisibleConverter converter.
-  - StatusPausedToVisibleConverter converter
-  - StatusRunningToVisibleConverter converter.
-  - RemainTimeToTimeStringConverter converter.
+  - TaskStatusToVisibleConverter converter.
+  - Uint64RemainTimeToStringConverter converter.
   - TaskListEmptyToVisibilityConverter converter.
   - CustomContentDialogStyle style.
   - CustomIconButtonStyle style.
