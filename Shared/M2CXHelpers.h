@@ -58,4 +58,13 @@ bool M2FindSubString(
 	Platform::String^ SubString,
 	bool IgnoreCase);
 
+// Converts a numeric value into a string that represents the number expressed 
+// as a size value in byte, bytes, kibibytes, mebibytes, gibibytes, tebibytes,
+// pebibytes or exbibytes, depending on the size.
+// Parameters:
+//   ByteSize: The numeric byte size value to be converted.
+// Return value:
+//   Returns a Platform::String object to the converted string.
+Platform::String^ M2ConvertByteSizeToString(uint64 ByteSize);
+
 #endif // _M2_CX_HELPERS_

@@ -13,28 +13,10 @@ namespace Nagisa
 	using Platform::String;
 	using Windows::UI::Xaml::Data::IValueConverter;
 	using Windows::UI::Xaml::Interop::TypeName;
-	
-	[Windows::UI::Xaml::Data::Bindable]
-	[Windows::Foundation::Metadata::WebHostHidden]
-	public ref class Uint64ToDoubleConverter sealed : IValueConverter
-	{
-	public:
-		// Inherited via IValueConverter
-		virtual Object^ Convert(
-			Object^ value, 
-			TypeName targetType, 
-			Object^ parameter, 
-			String^ language);
-		virtual Object^ ConvertBack(
-			Object^ value, 
-			TypeName targetType, 
-			Object ^parameter, 
-			String^ language);
-	};
 
 	[Windows::UI::Xaml::Data::Bindable]
 	[Windows::Foundation::Metadata::WebHostHidden]
-	public ref class Uint64ToByteSizeStringConverter sealed : IValueConverter
+	public ref class Uint64ToDoubleConverter sealed : IValueConverter
 	{
 	public:
 		// Inherited via IValueConverter
@@ -52,7 +34,25 @@ namespace Nagisa
 
 	[Windows::UI::Xaml::Data::Bindable]
 	[Windows::Foundation::Metadata::WebHostHidden]
-	public ref class Uint64ToByteSpeedStringConverter sealed : IValueConverter
+	public ref class Uint64ByteSizeToStringConverter sealed : IValueConverter
+	{
+	public:
+		// Inherited via IValueConverter
+		virtual Object^ Convert(
+			Object^ value,
+			TypeName targetType,
+			Object^ parameter,
+			String^ language);
+		virtual Object^ ConvertBack(
+			Object^ value,
+			TypeName targetType,
+			Object ^parameter,
+			String^ language);
+	};
+
+	[Windows::UI::Xaml::Data::Bindable]
+	[Windows::Foundation::Metadata::WebHostHidden]
+	public ref class Uint64RemainTimeToStringConverter sealed : IValueConverter
 	{
 	public:
 		// Inherited via IValueConverter
@@ -88,78 +88,6 @@ namespace Nagisa
 
 	[Windows::UI::Xaml::Data::Bindable]
 	[Windows::Foundation::Metadata::WebHostHidden]
-	public ref class StatusErrorToVisibleConverter sealed : IValueConverter
-	{
-	public:
-		// Inherited via IValueConverter
-		virtual Object^ Convert(
-			Object^ value,
-			TypeName targetType,
-			Object^ parameter,
-			String^ language);
-		virtual Object^ ConvertBack(
-			Object^ value,
-			TypeName targetType,
-			Object ^parameter,
-			String^ language);
-	};
-
-	[Windows::UI::Xaml::Data::Bindable]
-	[Windows::Foundation::Metadata::WebHostHidden]
-	public ref class StatusPausedToVisibleConverter sealed : IValueConverter
-	{
-	public:
-		// Inherited via IValueConverter
-		virtual Object^ Convert(
-			Object^ value,
-			TypeName targetType,
-			Object^ parameter,
-			String^ language);
-		virtual Object^ ConvertBack(
-			Object^ value,
-			TypeName targetType,
-			Object ^parameter,
-			String^ language);
-	};
-
-	[Windows::UI::Xaml::Data::Bindable]
-	[Windows::Foundation::Metadata::WebHostHidden]
-	public ref class StatusRunningToVisibleConverter sealed : IValueConverter
-	{
-	public:
-		// Inherited via IValueConverter
-		virtual Object^ Convert(
-			Object^ value,
-			TypeName targetType,
-			Object^ parameter,
-			String^ language);
-		virtual Object^ ConvertBack(
-			Object^ value,
-			TypeName targetType,
-			Object ^parameter,
-			String^ language);
-	};
-
-	[Windows::UI::Xaml::Data::Bindable]
-	[Windows::Foundation::Metadata::WebHostHidden]
-	public ref class RemainTimeToTimeStringConverter sealed : IValueConverter
-	{
-	public:
-		// Inherited via IValueConverter
-		virtual Object^ Convert(
-			Object^ value,
-			TypeName targetType,
-			Object^ parameter,
-			String^ language);
-		virtual Object^ ConvertBack(
-			Object^ value,
-			TypeName targetType,
-			Object ^parameter,
-			String^ language);
-	};
-
-	[Windows::UI::Xaml::Data::Bindable]
-	[Windows::Foundation::Metadata::WebHostHidden]
 	public ref class TaskListEmptyToVisibilityConverter sealed
 		: IValueConverter
 	{
@@ -177,4 +105,21 @@ namespace Nagisa
 			String^ language);
 	};
 
+	[Windows::UI::Xaml::Data::Bindable]
+	[Windows::Foundation::Metadata::WebHostHidden]
+	public ref class TaskStatusToVisibleConverter sealed : IValueConverter
+	{
+	public:
+		// Inherited via IValueConverter
+		virtual Object^ Convert(
+			Object^ value,
+			TypeName targetType,
+			Object^ parameter,
+			String^ language);
+		virtual Object^ ConvertBack(
+			Object^ value,
+			TypeName targetType,
+			Object ^parameter,
+			String^ language);
+	};
 }

@@ -6,26 +6,19 @@
 #include "pch.h"
 #include "CustomConverters.xaml.h"
 
+#include <map>
+#include <string>
+
 using namespace Nagisa;
 
-using namespace Platform;
-using namespace Windows::Foundation;
-using namespace Windows::Foundation::Collections;
-using namespace Windows::UI::Xaml;
-using namespace Windows::UI::Xaml::Controls;
-using namespace Windows::UI::Xaml::Controls::Primitives;
-using namespace Windows::UI::Xaml::Data;
-using namespace Windows::UI::Xaml::Input;
-using namespace Windows::UI::Xaml::Interop;
-using namespace Windows::UI::Xaml::Media;
-using namespace Windows::UI::Xaml::Navigation;
+using Platform::IBox;
 
 Object^ Uint64ToDoubleConverter::Convert(
-	Object^ value, 
-	TypeName targetType, 
-	Object^ parameter, 
+	Object^ value,
+	TypeName targetType,
+	Object^ parameter,
 	String^ language)
-{	
+{
 	IBox<uint64>^ status = dynamic_cast<IBox<uint64>^>(value);
 	return static_cast<double>((status != nullptr) ? status->Value : 0);
 }
@@ -39,7 +32,7 @@ Object^ Uint64ToDoubleConverter::ConvertBack(
 	M2ThrowPlatformException(E_NOTIMPL);
 }
 
-Object^ Uint64ToByteSizeStringConverter::Convert(
+Object^ Uint64ByteSizeToStringConverter::Convert(
 	Object^ value,
 	TypeName targetType,
 	Object^ parameter,
@@ -47,35 +40,11 @@ Object^ Uint64ToByteSizeStringConverter::Convert(
 {
 	IBox<uint64>^ status = dynamic_cast<IBox<uint64>^>(value);
 
-	if (status != nullptr)
-	{
-		double result = static_cast<double>(status->Value);
-
-		if (0.0 == result)
-		{
-			return L"0 Byte";
-		}
-
-		StringReference Systems[] = { L"Bytes", L"KiB", L"MiB", L"GiB", L"TiB" };
-		size_t i = 0;
-		for (; i < sizeof(Systems) / sizeof(*Systems); ++i)
-		{
-			if (1024.0 > result)
-				break;
-			
-			result /= 1024.0;	
-		}
-		
-		uint64 temp = static_cast<uint64>(result * 100);
-		return (temp / 100.0).ToString() + Systems[i];
-	}
-	else
-	{
-		return L"0 Byte";
-	}
+	return M2ConvertByteSizeToString(
+		(status != nullptr) ? status->Value : 0);
 }
 
-Object^ Uint64ToByteSizeStringConverter::ConvertBack(
+Object^ Uint64ByteSizeToStringConverter::ConvertBack(
 	Object^ value,
 	TypeName targetType,
 	Object^ parameter,
@@ -84,153 +53,7 @@ Object^ Uint64ToByteSizeStringConverter::ConvertBack(
 	M2ThrowPlatformException(E_NOTIMPL);
 }
 
-Object^ Uint64ToByteSpeedStringConverter::Convert(
-	Object^ value,
-	TypeName targetType,
-	Object^ parameter,
-	String^ language)
-{
-	IBox<uint64>^ status = dynamic_cast<IBox<uint64>^>(value);
-
-	if (status != nullptr)
-	{
-		double result = static_cast<double>(status->Value);
-
-		if (0.0 == result)
-		{
-			return L"0 Byte/s";
-		}
-
-		StringReference Systems[] = { L"Bytes/s", L"KiB/s", L"MiB/s", L"GiB/s", L"TiB/s" };
-		size_t i = 0;
-		for (; i < sizeof(Systems) / sizeof(*Systems); ++i)
-		{
-			if (1024.0 > result)
-				break;
-
-			result /= 1024.0;
-		}
-
-		uint64 temp = static_cast<uint64>(result * 100);
-		return (temp / 100.0).ToString() + Systems[i];
-	}
-	else
-	{
-		return L"0 Byte/s";
-	}
-}
-
-Object^ Uint64ToByteSpeedStringConverter::ConvertBack(
-	Object^ value,
-	TypeName targetType,
-	Object^ parameter,
-	String^ language)
-{
-	M2ThrowPlatformException(E_NOTIMPL);
-}
-
-Object^ StorageFileToFileNameConverter::Convert(
-	Object^ value,
-	TypeName targetType,
-	Object^ parameter,
-	String^ language)
-{
-	using Windows::Storage::IStorageFile;	
-	IStorageFile^ result = dynamic_cast<IStorageFile^>(value);
-	return ((result != nullptr) ? result->Name : L"N/A");
-}
-
-Object^ StorageFileToFileNameConverter::ConvertBack(
-	Object^ value,
-	TypeName targetType,
-	Object^ parameter,
-	String^ language)
-{
-	M2ThrowPlatformException(E_NOTIMPL);
-}
-
-Object^ StatusErrorToVisibleConverter::Convert(
-	Object^ value,
-	TypeName targetType,
-	Object^ parameter,
-	String^ language)
-{
-	using Assassin::TransferTaskStatus;
-	IBox<TransferTaskStatus>^ status = 
-		dynamic_cast<IBox<TransferTaskStatus>^>(value);
-
-	if (status != nullptr && TransferTaskStatus::Error == status->Value)
-	{
-		return Visibility::Visible;
-	}
-
-	return Visibility::Collapsed;
-}
-
-Object^ StatusErrorToVisibleConverter::ConvertBack(
-	Object^ value,
-	TypeName targetType,
-	Object^ parameter,
-	String^ language)
-{
-	M2ThrowPlatformException(E_NOTIMPL);
-}
-
-Object^ StatusPausedToVisibleConverter::Convert(
-	Object^ value,
-	TypeName targetType,
-	Object^ parameter,
-	String^ language)
-{
-	using Assassin::TransferTaskStatus;
-	IBox<TransferTaskStatus>^ status =
-		dynamic_cast<IBox<TransferTaskStatus>^>(value);
-
-	if (status != nullptr && TransferTaskStatus::Paused == status->Value)
-	{
-		return Visibility::Visible;
-	}
-
-	return Visibility::Collapsed;
-}
-
-Object^ StatusPausedToVisibleConverter::ConvertBack(
-	Object^ value,
-	TypeName targetType,
-	Object^ parameter,
-	String^ language)
-{
-	M2ThrowPlatformException(E_NOTIMPL);
-}
-
-Object^ StatusRunningToVisibleConverter::Convert(
-	Object^ value,
-	TypeName targetType,
-	Object^ parameter,
-	String^ language)
-{
-	using Assassin::TransferTaskStatus;
-	IBox<TransferTaskStatus>^ status =
-		dynamic_cast<IBox<TransferTaskStatus>^>(value);
-
-	if (status != nullptr && TransferTaskStatus::Running == status->Value)
-	{
-		return Visibility::Visible;
-	}
-
-	return Visibility::Collapsed;
-}
-
-Object^ StatusRunningToVisibleConverter::ConvertBack(
-	Object^ value,
-	TypeName targetType,
-	Object^ parameter,
-	String^ language)
-{
-	M2ThrowPlatformException(E_NOTIMPL);
-}
-
-Object^ RemainTimeToTimeStringConverter::Convert(
+Object^ Uint64RemainTimeToStringConverter::Convert(
 	Object^ value,
 	TypeName targetType,
 	Object^ parameter,
@@ -254,7 +77,27 @@ Object^ RemainTimeToTimeStringConverter::Convert(
 	return L"N/A";
 }
 
-Object^ RemainTimeToTimeStringConverter::ConvertBack(
+Object^ Uint64RemainTimeToStringConverter::ConvertBack(
+	Object^ value,
+	TypeName targetType,
+	Object^ parameter,
+	String^ language)
+{
+	M2ThrowPlatformException(E_NOTIMPL);
+}
+
+Object^ StorageFileToFileNameConverter::Convert(
+	Object^ value,
+	TypeName targetType,
+	Object^ parameter,
+	String^ language)
+{
+	using Windows::Storage::IStorageFile;
+	IStorageFile^ result = dynamic_cast<IStorageFile^>(value);
+	return ((result != nullptr) ? result->Name : L"N/A");
+}
+
+Object^ StorageFileToFileNameConverter::ConvertBack(
 	Object^ value,
 	TypeName targetType,
 	Object^ parameter,
@@ -271,8 +114,9 @@ Object^ TaskListEmptyToVisibilityConverter::Convert(
 {
 	using Assassin::ITransferTask;
 	using Windows::Foundation::Collections::IVectorView;
-	
-	IVectorView<ITransferTask^>^ ItemSource = 
+	using Windows::UI::Xaml::Visibility;
+
+	IVectorView<ITransferTask^>^ ItemSource =
 		dynamic_cast<IVectorView<ITransferTask^>^>(value);
 
 	if (ItemSource == nullptr || ItemSource->Size == 0)
@@ -284,6 +128,62 @@ Object^ TaskListEmptyToVisibilityConverter::Convert(
 }
 
 Object^ TaskListEmptyToVisibilityConverter::ConvertBack(
+	Object^ value,
+	TypeName targetType,
+	Object^ parameter,
+	String^ language)
+{
+	M2ThrowPlatformException(E_NOTIMPL);
+}
+
+Object^ TaskStatusToVisibleConverter::Convert(
+	Object^ value,
+	TypeName targetType,
+	Object^ parameter,
+	String^ language)
+{
+	using Assassin::TransferTaskStatus;
+	using Windows::UI::Xaml::Visibility;
+	using std::map;
+	using std::wstring;
+	using std::make_pair;
+
+	IBox<TransferTaskStatus>^ StatusObject =
+		dynamic_cast<IBox<TransferTaskStatus>^>(value);
+	String^ ParameterObject = dynamic_cast<String^>(parameter);
+
+	if (StatusObject != nullptr && ParameterObject != nullptr)
+	{
+		struct { const wchar_t* Key; TransferTaskStatus Value; } List[] =
+		{
+			{ L"Canceled", TransferTaskStatus::Canceled },
+			{ L"Completed", TransferTaskStatus::Completed },
+			{ L"Error", TransferTaskStatus::Error },
+			{ L"Paused", TransferTaskStatus::Paused },
+			{ L"Queued", TransferTaskStatus::Queued },
+			{ L"Running", TransferTaskStatus::Running }
+		};
+
+		const wchar_t* Parameter = ParameterObject->Data();
+		TransferTaskStatus Status = StatusObject->Value;
+
+		for (size_t i = 0; i < sizeof(List) / sizeof(*List); ++i)
+		{
+			if (0 == _wcsicmp(Parameter, List[i].Key))
+			{			
+				if (List[i].Value == Status)
+					return Visibility::Visible;
+
+				return Visibility::Collapsed;
+			}
+
+		}
+	}
+
+	M2ThrowPlatformException(E_INVALIDARG);
+}
+
+Object^ TaskStatusToVisibleConverter::ConvertBack(
 	Object^ value,
 	TypeName targetType,
 	Object^ parameter,

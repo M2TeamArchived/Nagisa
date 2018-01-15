@@ -1,6 +1,15 @@
-﻿#pragma once
+﻿/******************************************************************************
+Project: Assassin
+Description: Definition for the TransferManager.
+File Name: TransferManager.h
+License: The MIT License
+******************************************************************************/
+
+#pragma once
 
 #include "TransferTask.h"
+
+#include <vector>
 
 namespace Assassin
 {
@@ -32,8 +41,9 @@ namespace Assassin
 	{
 	private:
 		BackgroundDownloader^ m_Downloader = nullptr;
-		Vector<ITransferTask^>^ m_TaskList = nullptr;
 
+		bool ExitSignal = false;
+		std::vector<ITransferTask^> m_TaskList;
 		M2::CThread m_UpdateThread;
 
 	public:

@@ -1,4 +1,11 @@
-﻿#include "pch.h"
+﻿/******************************************************************************
+Project: Assassin
+Description: Implemention for TransferTask.
+File Name: TransferTask.cpp
+License: The MIT License
+******************************************************************************/
+
+#include "pch.h"
 #include "TransferManager.h"
 #include "TransferTask.h"
 
@@ -6,7 +13,7 @@ using namespace Assassin;
 using namespace Platform;
 using namespace Windows::Networking::BackgroundTransfer;
 
-void Assassin::TransferTask::RaisePropertyChanged(String ^ PropertyName)
+void TransferTask::RaisePropertyChanged(String ^ PropertyName)
 {
 	using Windows::UI::Xaml::Data::PropertyChangedEventArgs;
 	this->PropertyChanged(
@@ -120,16 +127,34 @@ void TransferTask::Resume()
 	}
 }
 
-void TransferTask::Cancel()
+IAsyncAction^ TransferTask::CancelAsync()
 {
-	if (TransferTaskStatus::Canceled != this->Status)
+	return M2AsyncCreate(
+		[this](IM2AsyncController^ AsyncController) -> void
 	{
-		this->m_Operation->AttachAsync()->Cancel();
-	}
+		if (TransferTaskStatus::Canceled != this->Status)
+		{
+			auto Operation = this->m_Operation->AttachAsync();		
+			Operation->Cancel();
+
+			try
+			{
+				M2AsyncWait(Operation);
+			}
+			catch (...)
+			{
+
+			}
+
+			// Wait for the BackgroundTransfer to update the task list.
+			SleepEx(2000, FALSE);
+		}
+	});
 }
 
 void Assassin::TransferTask::NotifyPropertyChanged()
 {
+	this->RaisePropertyChanged(L"Status");
 	this->RaisePropertyChanged(L"BytesReceived");
 	this->RaisePropertyChanged(L"BytesReceivedSpeed");
 	this->RaisePropertyChanged(L"RemainTime");

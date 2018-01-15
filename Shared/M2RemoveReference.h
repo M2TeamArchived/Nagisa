@@ -1,6 +1,6 @@
 ﻿/******************************************************************************
 Project: M2-Team Common Library
-Description: Definition for the M2RemoveReference struct template
+Description: Definition for the M2RemoveReference struct template.
 File Name: M2RemoveReference.h
 License: The MIT License
 ******************************************************************************/

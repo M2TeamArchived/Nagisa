@@ -16,7 +16,7 @@ License: The MIT License
 //   Format: Format-control string.
 //   ...: Optional arguments to be formatted.
 // Return value:
-//   Returns a formatted string if successful, or an empty string otherwise.
+//   Returns a formatted string if successful, or "N/A" otherwise.
 std::wstring M2FormatString(
 	_In_z_ _Printf_format_string_ wchar_t const* const Format,
 	...)
@@ -50,8 +50,8 @@ std::wstring M2FormatString(
 		va_end(ArgList);
 	}
 
-	// If failed, return empty string.
-	return L"";
+	// If failed, return "N/A".
+	return L"N/A";
 }
 
 // Retrieves the number of milliseconds that have elapsed since the system was

@@ -6,82 +6,91 @@
   People.md.
 
 ## Changelog
-**Nagisa 0.1 Preview 1 [Build 8]**
-- Update documents.
-- Add M2FindSubString, M2PathFindFileName, M2FormatString and M2GetTickCount 
-  functions.
-- Add TaskListEmptyToVisibilityConverter and Uint64ToByteSpeedStringConverter.
-- Add Simplified Chinese translation.
-- Remove GetTasks method in TransferManager class.
-- Improve GetTasksAsync method in TransferManager class.
-- Implement the "MainPage" UI.
 
-**Nagisa 0.1 Preview 1 [Build 7]**
-- Improve the implement of M2ThrowPlatformException function.
-- Improve the implement of XAML converters.
-- Add BytesReceivedSpeed ans RemainTime properties in ITransferTask interface.
-- Continue to implement the "MainPage" UI.
-- Improve M2::CThread class.
-- Improve CustomContentDialogStyle style.
-- Add RemainTimeToTimeStringConverter.
+**Nagisa 0.1 [Build 9]**
+- Merge the changelog and update the readme.
+- Add M2ConvertByteSizeToString function.
+- Improve the Implemention of TransferManager.
+- Fix a bug about searching tasks from the task list.
+- Remove Uint64ToByteSpeedStringConverter.
+- Remove ITransferTask::Cancel method.
+- Add ITransferTask::CancelAsync method.
+- Fix a bug when using M2AsyncCreate function. (Thanks to MichaelSuen)
+- Fix a bug when cancelling the task.
+- Fix a bug when changing the task status.
+- Rename Uint64ToByteSizeStringConverter as Uint64ByteSizeToStringConverter.
+- Rename RemainTimeToTimeStringConverter as Uint64RemainTimeToStringConverter.
+- Add TaskStatusToVisibleConverter.
+- Remove StatusErrorToVisibleConverter.
+- Remove StatusPausedToVisibleConverter.
+- Remove StatusRunningToVisibleConverter.
+- Remove unused assets.
 
-**Nagisa 0.1 Preview 1 [Build 6]**
-- Add ITransferManager interface.
-- Add M2ThrowPlatformExceptionIfFailed, M2ThrowPlatformException and 
-  M2ThrownPlatformExceptionToHResult functions.
-- Rename M2SetAsyncCompletedHandler and M2SetAsyncProgressHandler as
-  M2AsyncSetCompletedHandler and M2AsyncSetProgressHandler.
-- Add M2::CThread class.
-- Add M2AsyncCreate function; IM2AsyncController and IM2AsyncControllerEx 
-  interfaces.
-- Improve the implement of GetTasksAsync method in TransferManager class.
-
-**Nagisa 0.1 Preview 1 [Build 5]**
-- Improve the implement of M2ExecuteOnUIThread, M2SetAsyncCompletedHandler, 
-  M2SetAsyncProgressHandler and M2AsyncWait functions.
-- Add StatusErrorToVisibleConverter, StatusPausedToVisibleConverter and 
-  StatusRunningToVisibleConverter.
-- Add ITransferTask interface and M2::Object class. 
-- Using TransferTask instaead of ITransferTask.
-- Add M2GetInspectable and M2AsyncHandleCompleted functions.
-- Adjust the project settings for reducing the binary size.
-- Add GetTasks method in TransferManager class.
-- Continue to implement the "MainPage" UI.
-
-**Nagisa 0.1 Preview 1 [Build 4]**
-- Improve the "New Task" Dialog.
-- Add Pause, Resume and Cancel methods in TransferTask class.
-- Add Uint64ToDoubleConverter, Uint64ToByteSizeStringConverter and 
-  StorageFileToFileNameConverter.
-- Continue to implement the "MainPage" UI.
-
-**Nagisa 0.1 Preview 1 [Build 3]**
-- Adjust the git exclude list.
-- Add M2RemoveReference struct template; M2SetAsyncCompletedHandler, 
-  M2AsyncWait, M2SetAsyncProgressHandler and M2ExecuteOnUIThread functions.
-- Add TransferTask class; TransferTaskStatus enum; RequestedUri, ResultFile, 
-  Status, BytesReceived and TotalBytesToReceive properties in TransferTask 
-  class.
-- Add GetTasksAsync and AddTask methods in TransferManager class.
-- Add "New Task" Dialog.
-- Improve the "About" Dialog.
-
-**Nagisa 0.1 Preview 1 [Build 2]**
-- Create the "Assassin" sub project.
-- Associate the version info for binaries with the version definition header.
-- Adjust the solution folders for fixing the MakePri warning.
-- Add CustomContentDialogStyle, CustomConverter, CustomIconButtonStyle and 
-  CustomListViewItemStyle Xaml resources.
-- Add TransferManager class and TransferManager::Version property.
-- Add "About" Dialog.
-
-**Nagisa 0.1 Preview 1 [Build 1]**
-- Create the solution, "Nagisa" and "Shared" sub project.
-- Configure the package manifest, the project settings, and associate with my 
-  Windows Developer Account.
-- Add the logo asset, the version info for binaries, the version definition 
-  header, the documents for the project and the ARM64 platform support.
-- Remove UseDotNetNativeToolchain option to support the ARM64 platform and 
-  improve the speed of compiling.
+### Nagisa 0.1 [Build 8]
+**New Features**
+- Supported Transfer Protocols: HTTP, HTTPS, FTP, FTPS, WebSocket and WebSocket
+  Secure.
+- Muitl-language Support: English and Simplified Chinese.
+- Support background download. 
+  (Temporarily Based on Windows.Networking.BackgroundTransfer)
+- Support resume broken/dead downloads.
+  (Temporarily Based on Windows.Networking.BackgroundTransfer)
+- Support single-threaded multi-tasking download.
+  (Temporarily Based on Windows.Networking.BackgroundTransfer)
+- Support for searching tasks from the task list.
 - The color themes of Nagisa follows the options in Windows Settings.
-- Add the base of multi languages support.
+
+**Added APIs**
+- Assassin
+  - TransferManager class or ITransferManager interface.
+    - Version property.
+	- SearchFilter property.
+	- GetTasksAsync method.
+	- AddTask method.
+  - TransferTaskStatus enum.
+  - ITransferTask interface.
+    - RequestedUri property.
+	- ResultFile property.
+	- Status property.
+	- BytesReceived property.
+	- BytesReceivedSpeed property.
+	- RemainTime property.
+	- TotalBytesToReceive property.
+	- Pause method.
+	- Resume method.
+	- Cancel method.
+	- NotifyPropertyChanged method.
+- M2-Team Common Library
+  - M2RemoveReference trait.
+  - M2AsyncSetCompletedHandler function.
+  - M2AsyncSetProgressHandler function.
+  - M2AsyncWait function.
+  - M2ExecuteOnUIThread function.
+  - IM2AsyncController interface.
+  - IM2AsyncControllerEx interface.
+  - M2AsyncCreate function.
+  - M2GetInspectable function.
+  - M2ThrowPlatformException function.
+  - M2ThrowPlatformExceptionIfFailed function.
+  - M2ThrownPlatformExceptionToHResult function.
+  - M2FindSubString function.
+  - M2FormatString function.
+  - M2GetTickCount function.
+  - M2PathFindFileName function.
+  - M2::CThread class.
+  - M2::CObject template.
+  - M2::CHandle class.
+  - M2::CComObject class.
+- XAML
+  - Uint64ToDoubleConverter converter.
+  - Uint64ToByteSizeStringConverter converter.
+  - Uint64ToByteSpeedStringConverter converter.
+  - StorageFileToFileNameConverter converter.
+  - StatusErrorToVisibleConverter converter.
+  - StatusPausedToVisibleConverter converter
+  - StatusRunningToVisibleConverter converter.
+  - RemainTimeToTimeStringConverter converter.
+  - TaskListEmptyToVisibilityConverter converter.
+  - CustomContentDialogStyle style.
+  - CustomIconButtonStyle style.
+  - CustomListViewItemStyle style.

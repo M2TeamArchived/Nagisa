@@ -1,4 +1,11 @@
-﻿#include "pch.h"
+﻿/******************************************************************************
+Project: Assassin
+Description: Implemention for TransferManager.
+File Name: TransferManager.cpp
+License: The MIT License
+******************************************************************************/
+
+#include "pch.h"
 #include "TransferManager.h"
 
 using namespace Assassin;
@@ -7,7 +14,6 @@ using namespace Platform;
 TransferManager::TransferManager()
 {
 	this->m_Downloader = ref new BackgroundDownloader();
-	this->m_TaskList = ref new Vector<ITransferTask^>();
 	
 	this->m_UpdateThread = M2::CThread([this]()
 	{		
@@ -15,9 +21,9 @@ TransferManager::TransferManager()
 		{
 			ULONGLONG StartTime = M2GetTickCount();
 
-			Vector<ITransferTask^>^ TaskList = this->m_TaskList;
+			std::vector<ITransferTask^> TaskList = this->m_TaskList;
 
-			if (nullptr == TaskList)
+			if (this->ExitSignal)
 				break;
 
 			for (ITransferTask^ Task : TaskList)
@@ -42,7 +48,7 @@ TransferManager::TransferManager()
 
 TransferManager::~TransferManager()
 {
-	this->m_TaskList = nullptr;
+	this->ExitSignal = true;
 	this->m_UpdateThread.Wait();
 }
 
@@ -57,15 +63,16 @@ IAsyncOperation<ITransferTaskVector^>^ TransferManager::GetTasksAsync()
 		[this](IM2AsyncController^ AsyncController)
 			-> ITransferTaskVector^
 	{
-		this->m_TaskList->Clear();
+		this->m_TaskList.clear();
 
 		using Windows::Foundation::Collections::IVectorView;
 		using Windows::Networking::BackgroundTransfer::DownloadOperation;
 
 		String^ CurrentSearchFilter = this->SearchFilter;
 
-		bool NeedSearchFilter =
-			(CurrentSearchFilter == nullptr || CurrentSearchFilter->IsEmpty());
+		bool NeedSearchFilter =(
+			nullptr != CurrentSearchFilter && 
+			!CurrentSearchFilter->IsEmpty());
 
 		IVectorView<DownloadOperation^>^ downloads = M2AsyncWait(
 			this->m_Downloader->GetCurrentDownloadsAsync());
@@ -85,10 +92,11 @@ IAsyncOperation<ITransferTaskVector^>^ TransferManager::GetTasksAsync()
 				}
 			}
 
-			this->m_TaskList->Append(Task);
+			this->m_TaskList.push_back(Task);
 		}
 
-		return this->m_TaskList->GetView();
+		using Platform::Collections::VectorView;
+		return ref new VectorView<ITransferTask^>(this->m_TaskList);
 	});
 }
 

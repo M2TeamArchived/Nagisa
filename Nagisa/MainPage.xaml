@@ -57,17 +57,24 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" 
                                        Text="{x:Bind ResultFile, Converter={StaticResource StorageFileToFileNameConverter}, Mode=OneWay}"/>
-                            <TextBlock Grid.Row="1" 
-                                       Padding="0,2,0,0" 
-                                       FontSize="12">
-                                <Run Text="{x:Bind BytesReceivedSpeed, Converter={StaticResource Uint64ToByteSpeedStringConverter}, Mode=OneWay}"/>
-                                <Run CharacterSpacing="100" Text=" "/>
-                                <Run Text="{x:Bind BytesReceived, Converter={StaticResource Uint64ToByteSizeStringConverter}, Mode=OneWay}"/>
-                                <Run Text=" / "/>
-                                <Run Text="{x:Bind TotalBytesToReceive, Converter={StaticResource Uint64ToByteSizeStringConverter}, Mode=OneWay}"/>  
-                                <Run CharacterSpacing="100" Text=" "/>
-                                <Run Text="{x:Bind RemainTime, Converter={StaticResource RemainTimeToTimeStringConverter}, Mode=OneWay}"/>
-                            </TextBlock>
+                            <StackPanel Grid.Row="1" 
+                                        Padding="0,2,0,0"
+                                        Orientation="Horizontal">
+                                <TextBlock FontSize="12" 
+                                           Text="{x:Bind BytesReceivedSpeed, Converter={StaticResource Uint64ByteSizeToStringConverter}, Mode=OneWay}"/>
+                                <TextBlock FontSize="12">
+                                    <Run Text="/s"/>
+                                    
+                                    <Run Text="{x:Bind BytesReceived, Converter={StaticResource Uint64ByteSizeToStringConverter}, Mode=OneWay}"/>
+                                    <Run Text="/"/>
+                                    <Run Text="{x:Bind TotalBytesToReceive, Converter={StaticResource Uint64ByteSizeToStringConverter}, Mode=OneWay}"/>
+                                    
+                                    <Run Text="{x:Bind RemainTime, Converter={StaticResource Uint64RemainTimeToStringConverter}, Mode=OneWay}"/>
+                                </TextBlock>
+                            </StackPanel>
+
+
+                            
                         </Grid>
 
                         <Grid Grid.Row="0" Grid.Column="1">
@@ -81,19 +88,19 @@
                                     Style="{StaticResource CustomIconButtonStyle}"
                                     Content="{StaticResource RetryIcon}"
                                     ToolTipService.ToolTip="[Retry]"
-                                    Visibility="{x:Bind Status, Converter={StaticResource StatusErrorToVisibleConverter}, Mode=OneWay}"
+                                    Visibility="{x:Bind Status, Converter={StaticResource TaskStatusToVisibleConverter}, ConverterParameter=Error, Mode=OneWay}"
                                     Click="RetryButton_Click"/>
                             <Button x:Uid="/MainPage/ResumeButton" 
                                     Style="{StaticResource CustomIconButtonStyle}"
                                     Content="{StaticResource ResumeIcon}"
                                     ToolTipService.ToolTip="[Resume]"
-                                    Visibility="{x:Bind Status, Converter={StaticResource StatusPausedToVisibleConverter}, Mode=OneWay}"
+                                    Visibility="{x:Bind Status, Converter={StaticResource TaskStatusToVisibleConverter}, ConverterParameter=Paused, Mode=OneWay}"
                                     Click="ResumeButton_Click"/>
                             <Button x:Uid="/MainPage/PauseButton" 
                                     Style="{StaticResource CustomIconButtonStyle}"
                                     Content="{StaticResource PauseIcon}"
                                     ToolTipService.ToolTip="[Pause]"
-                                    Visibility="{x:Bind Status, Converter={StaticResource StatusRunningToVisibleConverter}, Mode=OneWay}"
+                                    Visibility="{x:Bind Status, Converter={StaticResource TaskStatusToVisibleConverter}, ConverterParameter=Running, Mode=OneWay}"
                                     Click="PauseButton_Click"/>
                         </Grid>
 
@@ -140,19 +147,19 @@
                                          Foreground="{StaticResource ProgressBarErrorForegroundColor}" 
                                          Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource Uint64ToDoubleConverter}, Mode=OneWay}"
                                          Value="{x:Bind BytesReceived, Converter={StaticResource Uint64ToDoubleConverter}, Mode=OneWay}"
-                                         Visibility="{x:Bind Status, Converter={StaticResource StatusErrorToVisibleConverter}, Mode=OneWay}"/>
+                                         Visibility="{x:Bind Status, Converter={StaticResource TaskStatusToVisibleConverter}, ConverterParameter=Error, Mode=OneWay}"/>
                             <ProgressBar VerticalAlignment="Stretch" 
                                          Background="{StaticResource ProgressBarBackgroundColor}"
                                          Foreground="{StaticResource ProgressBarPausedForegroundColor}"
                                          Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource Uint64ToDoubleConverter}, Mode=OneWay}"
                                          Value="{x:Bind BytesReceived, Converter={StaticResource Uint64ToDoubleConverter}, Mode=OneWay}"
-                                         Visibility="{x:Bind Status, Converter={StaticResource StatusPausedToVisibleConverter}, Mode=OneWay}"/>
+                                         Visibility="{x:Bind Status, Converter={StaticResource TaskStatusToVisibleConverter}, ConverterParameter=Paused, Mode=OneWay}"/>
                             <ProgressBar VerticalAlignment="Stretch" 
                                          Background="{StaticResource ProgressBarBackgroundColor}"
                                          Foreground="{StaticResource ProgressBarRunningForegroundColor}"
                                          Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource Uint64ToDoubleConverter}, Mode=OneWay}"
                                          Value="{x:Bind BytesReceived, Converter={StaticResource Uint64ToDoubleConverter}, Mode=OneWay}"
-                                         Visibility="{x:Bind Status, Converter={StaticResource StatusRunningToVisibleConverter}, Mode=OneWay}"/>
+                                         Visibility="{x:Bind Status, Converter={StaticResource TaskStatusToVisibleConverter}, ConverterParameter=Running, Mode=OneWay}"/>
                         </Grid>
 
                     </Grid>

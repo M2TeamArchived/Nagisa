@@ -85,3 +85,44 @@ bool M2FindSubString(
 		0) >= 0);
 }
 
+// Converts a numeric value into a string that represents the number expressed 
+// as a size value in byte, bytes, kibibytes, mebibytes, gibibytes, tebibytes,
+// pebibytes or exbibytes, depending on the size.
+// Parameters:
+//   ByteSize: The numeric byte size value to be converted.
+// Return value:
+//   Returns a Platform::String object to the converted string.
+Platform::String^ M2ConvertByteSizeToString(uint64 ByteSize)
+{
+	double result = static_cast<double>(ByteSize);
+
+	if (0.0 == result)
+	{
+		return L"0 Byte";
+	}
+
+	const wchar_t* Systems[] =
+	{
+		L"Bytes",
+		L"KiB",
+		L"MiB",
+		L"GiB",
+		L"TiB",
+		L"PiB",
+		L"EiB"
+	};
+
+	size_t nSystem = 0;
+	for (; nSystem < sizeof(Systems) / sizeof(*Systems); ++nSystem)
+	{
+		if (1024.0 > result)
+			break;
+
+		result /= 1024.0;
+	}
+
+	Platform::String^ ByteSizeString = 
+		(static_cast<uint64>(result * 100) / 100.0).ToString();
+
+	return ByteSizeString + Platform::StringReference(Systems[nSystem]);
+}

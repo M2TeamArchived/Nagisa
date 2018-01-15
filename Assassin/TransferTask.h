@@ -1,4 +1,11 @@
-﻿#pragma once
+﻿/******************************************************************************
+Project: Assassin
+Description: Definition for the TransferTask.
+File Name: TransferTask.h
+License: The MIT License
+******************************************************************************/
+
+#pragma once
 
 namespace Assassin
 {
@@ -14,6 +21,7 @@ namespace Assassin
 
 	using Platform::String;
 	using Windows::Foundation::Uri;
+	using Windows::Foundation::IAsyncAction;
 	using Windows::Storage::IStorageFile;
 	using Windows::Networking::BackgroundTransfer::DownloadOperation;
 	using Windows::UI::Xaml::Data::INotifyPropertyChanged;
@@ -60,7 +68,7 @@ namespace Assassin
 
 		void Resume();
 
-		void Cancel();
+		IAsyncAction^ CancelAsync();
 
 		void NotifyPropertyChanged();
 	};
@@ -122,7 +130,7 @@ namespace Assassin
 
 		virtual void Resume();
 
-		virtual void Cancel();
+		virtual IAsyncAction^ CancelAsync();
 
 		virtual void NotifyPropertyChanged();
 	};

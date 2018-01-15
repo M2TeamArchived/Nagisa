@@ -220,8 +220,8 @@ namespace M2AsyncCreateInternal
 		using ProgressHandlerType = M2EmptyRefClass;
 		using CompletedHandlerType = AsyncActionCompletedHandler;
 
-		using ReturnType = void ;
-		using ProgressType = TProgress ;
+		using ReturnType = void;
+		using ProgressType = TProgress;
 
 		static const bool NeedProgressHandler = false;
 	};
@@ -742,6 +742,68 @@ namespace M2AsyncCreateInternal
 			typename M2AsyncType<ProgressType, ReturnType, NeedProgressHandler>;
 	};
 
+	template<typename TFunction, typename TReturn>
+	class M2AsyncFunction
+	{
+	private:
+		typename TFunction m_Function;
+		std::shared_ptr<typename TReturn> m_Return;
+
+	public:
+		M2AsyncFunction() : m_Function(nullptr)
+		{
+
+		}
+
+		M2AsyncFunction(const TFunction& Function)
+			: m_Function(Function)
+		{
+
+		}
+
+		template<typename... TArg>
+		void Run(const TArg&... Arg)
+		{
+			this->m_Return = std::make_shared<typename TReturn>(
+				this->m_Function(Arg...));
+		}
+
+		TReturn Get()
+		{
+			return *this->m_Return;
+		}
+	};
+
+	template<typename TFunction>
+	class M2AsyncFunction<TFunction, void>
+	{
+	private:
+		typename TFunction m_Function;
+
+	public:
+		M2AsyncFunction() : m_Function(nullptr)
+		{
+
+		}
+
+		M2AsyncFunction(const TFunction& Function)
+			: m_Function(Function)
+		{
+
+		}
+
+		template<typename... TArg>
+		void Run(const TArg&... Arg)
+		{
+			this->m_Function(Arg...);
+		}
+
+		void Get()
+		{
+			
+		}
+	};
+
 	// Async Creation Layer
 	template<typename TFunction>
 	ref class M2AsyncGenerator sealed : M2AsyncProgressBase<
@@ -749,12 +811,10 @@ namespace M2AsyncCreateInternal
 		M2AsyncLambdaType<TFunction>::AsyncType::NeedProgressHandler>
 	{
 	internal:
-		typename TFunction m_Function;
-
 		using AsyncReturnType = 
 			typename M2AsyncLambdaType<TFunction>::AsyncType::ReturnType;
 
-		std::shared_ptr<typename AsyncReturnType> m_Return;
+		M2AsyncFunction<TFunction, AsyncReturnType> m_Function;
 
 		M2AsyncGenerator(const TFunction& Function) : m_Function(Function)
 		{
@@ -767,7 +827,7 @@ namespace M2AsyncCreateInternal
 		virtual typename AsyncReturnType GetResults() override
 		{
 			this->CheckValidStateForResultsCall();
-			return *this->m_Return;
+			return this->m_Function.Get();
 		}
 
 	internal:
@@ -789,9 +849,7 @@ namespace M2AsyncCreateInternal
 				try
 				{
 					// Run the worker function.
-					this->m_Return = 
-						std::make_shared<typename AsyncReturnType>(
-							this->m_Function(this));
+					this->m_Function.Run(this);
 
 					this->FireCompletion();
 				}

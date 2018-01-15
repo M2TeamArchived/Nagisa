@@ -59,7 +59,6 @@ void MainPage::AboutButton_Click(
 	dialog->ShowAsync();
 }
 
-
 void MainPage::NewTaskButton_Click(
 	Object^ sender, 
 	RoutedEventArgs^ e)
@@ -109,7 +108,6 @@ void MainPage::Page_Loaded(
 
 	String^ x = (ref new Platform::Guid(guid))->ToString();*/
 	
-
 	this->m_TransferManager = ref new TransferManager();
 
 	this->RefreshTaskList();
@@ -180,16 +178,22 @@ void MainPage::RetryButton_Click(
 	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
 		dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
-	using Windows::Storage::IStorageFile;
+	M2::CThread([this, Task]()
+	{
+		using Windows::Storage::IStorageFile;
 
-	Uri^ SourceUri = Task->RequestedUri;
-	IStorageFile^ DestinationFile = Task->ResultFile;
-
-	Task->Cancel();
-
-	this->m_TransferManager->AddTask(SourceUri, DestinationFile);
-
-	this->RefreshTaskList();
+		Uri^ SourceUri = Task->RequestedUri;
+		IStorageFile^ DestinationFile = Task->ResultFile;
+		
+		M2AsyncWait(Task->CancelAsync());
+		
+		M2ExecuteOnUIThread([this, SourceUri, DestinationFile]()
+		{
+			this->m_TransferManager->AddTask(SourceUri, DestinationFile);
+			
+			this->RefreshTaskList();
+		});
+	});
 }
 
 void MainPage::ResumeButton_Click(
@@ -223,7 +227,13 @@ void MainPage::TaskItemRemoveMenuItem_Click(
 	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
 		dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
-	Task->Cancel();
+	M2::CThread([this, Task]()
+	{
+		M2AsyncWait(Task->CancelAsync());
 
-	this->RefreshTaskList();
+		M2ExecuteOnUIThread([this]()
+		{
+			this->RefreshTaskList();
+		});
+	});
 }
