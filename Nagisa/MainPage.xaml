@@ -30,7 +30,7 @@
                            TextAlignment="Center" 
                            Margin="16"
                            Text="[No Downloads]"
-                           Visibility="{x:Bind TaskList.ItemsSource,  Converter={StaticResource TaskListEmptyToVisibilityConverter}, Mode=OneWay}"/>
+                           Visibility="{x:Bind TaskList.ItemsSource, Converter={StaticResource TaskListEmptyToVisibilityConverter}, Mode=OneWay}"/>
             </ListView.Header>
 
             <ListView.ItemTemplate>

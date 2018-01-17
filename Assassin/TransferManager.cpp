@@ -11,45 +11,52 @@ License: The MIT License
 using namespace Assassin;
 using namespace Platform;
 
-TransferManager::TransferManager()
+TransferManager::TransferManager(
+	bool EnableUINotify)
 {
 	this->m_Downloader = ref new BackgroundDownloader();
-	
-	this->m_UpdateThread = M2::CThread([this]()
-	{		
-		for (;;)
+
+	InitializeCriticalSection(&this->m_TaskListUpdateCS);
+
+	if (EnableUINotify)
+	{
+		using Windows::Foundation::EventHandler;
+		using Windows::Foundation::TimeSpan;
+		
+		this->m_UINotifyTimer = ref new DispatcherTimer();
+
+		TimeSpan Interval;
+		Interval.Duration = 1000 * 10000; // 10,000 ticks per millisecond.
+
+		this->m_UINotifyTimer->Interval = Interval;
+
+		this->m_UINotifyTimer->Tick += ref new EventHandler<Object^>(
+			[this](Object^ sender, Object^ args)
 		{
-			ULONGLONG StartTime = M2GetTickCount();
+			EnterCriticalSection(&this->m_TaskListUpdateCS);
 
-			std::vector<ITransferTask^> TaskList = this->m_TaskList;
-
-			if (this->ExitSignal)
-				break;
-
-			for (ITransferTask^ Task : TaskList)
+			for (ITransferTask^ Task : this->m_TaskList)
 			{
-				M2ExecuteOnUIThread([Task]()
-				{
-					Task->NotifyPropertyChanged();
-				});
+				Task->NotifyPropertyChanged();
 			}
 
-			DWORD RunningTime = static_cast<DWORD>(
-				M2GetTickCount() - StartTime);
+			LeaveCriticalSection(&this->m_TaskListUpdateCS);
+		});
 
-			if (RunningTime < 1000)
-			{
-				SleepEx(1000 - RunningTime, FALSE);
-			}		
-		}
-	});
-
+		this->m_UINotifyTimer->Start();
+	}
 }
 
 TransferManager::~TransferManager()
 {
-	this->ExitSignal = true;
-	this->m_UpdateThread.Wait();
+	delete this->m_Downloader;
+	DeleteCriticalSection(&this->m_TaskListUpdateCS);
+	
+	if (nullptr != this->m_UINotifyTimer)
+	{
+		this->m_UINotifyTimer->Stop();
+		delete this->m_UINotifyTimer;
+	}
 }
 
 String^ TransferManager::Version::get()
@@ -63,15 +70,20 @@ IAsyncOperation<ITransferTaskVector^>^ TransferManager::GetTasksAsync()
 		[this](IM2AsyncController^ AsyncController)
 			-> ITransferTaskVector^
 	{
-		this->m_TaskList.clear();
-
+		using Platform::Collections::VectorView;
 		using Windows::Foundation::Collections::IVectorView;
 		using Windows::Networking::BackgroundTransfer::DownloadOperation;
 
+		VectorView<ITransferTask^>^ Result = nullptr;
+		
+		EnterCriticalSection(&this->m_TaskListUpdateCS);
+
+		this->m_TaskList.clear();
+
 		String^ CurrentSearchFilter = this->SearchFilter;
 
-		bool NeedSearchFilter =(
-			nullptr != CurrentSearchFilter && 
+		bool NeedSearchFilter = (
+			nullptr != CurrentSearchFilter &&
 			!CurrentSearchFilter->IsEmpty());
 
 		IVectorView<DownloadOperation^>^ downloads = M2AsyncWait(
@@ -95,8 +107,11 @@ IAsyncOperation<ITransferTaskVector^>^ TransferManager::GetTasksAsync()
 			this->m_TaskList.push_back(Task);
 		}
 
-		using Platform::Collections::VectorView;
-		return ref new VectorView<ITransferTask^>(this->m_TaskList);
+		Result = ref new VectorView<ITransferTask^>(this->m_TaskList);
+
+		LeaveCriticalSection(&this->m_TaskListUpdateCS);
+	
+		return Result;
 	});
 }
 

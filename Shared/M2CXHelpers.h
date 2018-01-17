@@ -67,4 +67,12 @@ bool M2FindSubString(
 //   Returns a Platform::String object to the converted string.
 Platform::String^ M2ConvertByteSizeToString(uint64 ByteSize);
 
+// Creates a GUID, a unique 128-bit integer used for CLSIDs and interface 
+// identifiers. 
+// Parameters:
+//   The function does not have parameters.
+// Return value:
+//   The function will return Platform::Guid object.
+Platform::Guid M2CreateGuid();
+
 #endif // _M2_CX_HELPERS_

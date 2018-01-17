@@ -126,3 +126,16 @@ Platform::String^ M2ConvertByteSizeToString(uint64 ByteSize)
 
 	return ByteSizeString + Platform::StringReference(Systems[nSystem]);
 }
+
+// Creates a GUID, a unique 128-bit integer used for CLSIDs and interface 
+// identifiers. 
+// Parameters:
+//   The function does not have parameters.
+// Return value:
+//   The function will return Platform::Guid object.
+Platform::Guid M2CreateGuid()
+{
+	GUID guid = { 0 };
+	M2ThrowPlatformExceptionIfFailed(CoCreateGuid(&guid));
+	return Platform::Guid(guid);
+}

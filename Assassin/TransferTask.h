@@ -83,10 +83,12 @@ namespace Assassin
 		uint64 m_BytesReceivedSpeed = 0;
 
 	protected:
-		void RaisePropertyChanged(String^ PropertyName);
+		void RaisePropertyChanged(
+			String^ PropertyName);
 
 	internal:
-		TransferTask(DownloadOperation^ Operation);
+		TransferTask(
+			DownloadOperation^ Operation);
 
 	public:
 		virtual event PropertyChangedEventHandler^ PropertyChanged;

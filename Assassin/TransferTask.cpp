@@ -13,14 +13,16 @@ using namespace Assassin;
 using namespace Platform;
 using namespace Windows::Networking::BackgroundTransfer;
 
-void TransferTask::RaisePropertyChanged(String ^ PropertyName)
+void TransferTask::RaisePropertyChanged(
+	String ^ PropertyName)
 {
 	using Windows::UI::Xaml::Data::PropertyChangedEventArgs;
 	this->PropertyChanged(
 		this, ref new PropertyChangedEventArgs(PropertyName));
 }
 
-TransferTask::TransferTask(DownloadOperation^ Operations)
+TransferTask::TransferTask(
+	DownloadOperation^ Operations)
 	: m_Operation(Operations)
 {
 	if (TransferTaskStatus::Running == this->Status)

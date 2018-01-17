@@ -30,7 +30,7 @@ void AboutDialog::ContentDialog_Loaded(
 	Object^ sender,
 	RoutedEventArgs^ e)
 {
-	VersionText->Text = L" " + m_TransferManager->Version;
+	VersionText->Text = m_TransferManager->Version;
 }
 
 void AboutDialog::GitHubButtonClick(

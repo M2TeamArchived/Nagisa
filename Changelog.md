@@ -7,6 +7,13 @@
 
 ## Changelog
 
+**Nagisa 0.2 [Build 11]**
+- Improve the implemention of "About" UI.
+- Improve the constructor of TransferManager class.
+- Improve the UI notify timer of TransferManager class.
+- Fix a bug for TransferManager class.
+- Add M2CreateGuid function.
+
 ### Nagisa 0.1 [Build 10]
 **New Features**
 - Supported Transfer Protocols: HTTP, HTTPS, FTP, FTPS, WebSocket and WebSocket

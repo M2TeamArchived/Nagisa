@@ -20,6 +20,7 @@ namespace Assassin
 	using Windows::Foundation::Collections::IVectorView;
 	using Windows::Networking::BackgroundTransfer::BackgroundDownloader;
 	using Windows::Storage::IStorageFile;
+	using Windows::UI::Xaml::DispatcherTimer;
 
 	using ITransferTaskVector = IVectorView<ITransferTask^>;
 
@@ -34,20 +35,24 @@ namespace Assassin
 
 		IAsyncOperation<ITransferTaskVector^>^ GetTasksAsync();
 
-		void AddTask(Uri^ SourceUri, IStorageFile^ DestinationFile);
+		void AddTask(
+			Uri^ SourceUri,
+			IStorageFile^ DestinationFile);
 	};
 	
 	public ref class TransferManager sealed : public ITransferManager
 	{
 	private:
 		BackgroundDownloader^ m_Downloader = nullptr;
+		DispatcherTimer^ m_UINotifyTimer = nullptr;
 
-		bool ExitSignal = false;
+		CRITICAL_SECTION m_TaskListUpdateCS;
 		std::vector<ITransferTask^> m_TaskList;
-		M2::CThread m_UpdateThread;
 
 	public:
-		TransferManager();
+		TransferManager(
+			bool EnableUINotify);
+
 		virtual ~TransferManager();
 
 		virtual property String^ Version
@@ -59,7 +64,9 @@ namespace Assassin
 
 		virtual IAsyncOperation<ITransferTaskVector^>^ GetTasksAsync();
 
-		virtual void AddTask(Uri^ SourceUri, IStorageFile^ DestinationFile);
+		virtual void AddTask(
+			Uri^ SourceUri, 
+			IStorageFile^ DestinationFile);
 
 	};
 }

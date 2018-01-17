@@ -100,15 +100,8 @@ void MainPage::NewTaskButton_Click(
 void MainPage::Page_Loaded(
 	Object^ sender, 
 	RoutedEventArgs^ e)
-{
-	/*GUID guid = { 0 };
-	HRESULT hr = CoCreateGuid(&guid);
-	if (FAILED(hr))
-	throw ref new Platform::Exception(hr);
-
-	String^ x = (ref new Platform::Guid(guid))->ToString();*/
-	
-	this->m_TransferManager = ref new TransferManager();
+{	
+	this->m_TransferManager = ref new TransferManager(true);
 
 	this->RefreshTaskList();
 }
@@ -147,28 +140,36 @@ void MainPage::SearchAutoSuggestBox_TextChanged(
 	AutoSuggestBox^ sender, 
 	AutoSuggestBoxTextChangedEventArgs^ args)
 {
-	using Windows::System::Threading::ThreadPoolTimer;
-	using Windows::System::Threading::TimerElapsedHandler;
-	
-	if (nullptr != sender->DataContext)
+	using Windows::UI::Xaml::DispatcherTimer;
+	using Windows::Foundation::EventHandler;
+	using Windows::Foundation::TimeSpan;
+
+	if (nullptr == sender->DataContext)
 	{
-		dynamic_cast<ThreadPoolTimer^>(sender->DataContext)->Cancel();
-		delete sender->DataContext;
-		sender->DataContext = nullptr;
+		DispatcherTimer^ Timer = ref new DispatcherTimer();
+		AutoSuggestBox^ SearchAutoSuggestBox = sender;
+
+		TimeSpan Interval;
+		Interval.Duration = 250 * 10000; // 10,000 ticks per millisecond.
+
+		Timer->Interval = Interval;
+
+		Timer->Tick += ref new EventHandler<Object^>(
+			[this, SearchAutoSuggestBox, Timer](Object^ sender, Object^ args)
+		{
+			this->SearchTaskList(SearchAutoSuggestBox->Text);
+
+			dynamic_cast<DispatcherTimer^>(sender)->Stop();
+		});
+		
+		sender->DataContext = Timer;
 	}
 
-	TimeSpan delay;
-	// 10,000,000 ticks per second (10,000 ticks per millisecond)
-	delay.Duration = 250 * 10000;
+	DispatcherTimer^ Timer = dynamic_cast<DispatcherTimer^>(
+		sender->DataContext);
 
-	sender->DataContext = ThreadPoolTimer::CreateTimer(
-		ref new TimerElapsedHandler([this, sender](ThreadPoolTimer^ source)
-	{
-		M2ExecuteOnUIThread([this, sender]()
-		{		
-			this->SearchTaskList(sender->Text);
-		});
-	}), delay);
+	Timer->Stop();
+	Timer->Start();
 }
 
 void MainPage::RetryButton_Click(

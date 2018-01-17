@@ -13,16 +13,12 @@
     SecondaryButtonText="[OK]"
     PrimaryButtonClick="GitHubButtonClick"
     Loaded="ContentDialog_Loaded">
-
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
-        <StackPanel  Grid.Row="0" Orientation="Horizontal">
-            <TextBlock Text="M2-Team Nagisa"/>
-            <TextBlock x:Name="VersionText"/>
-        </StackPanel>
-        <TextBlock Grid.Row="1" Text="© M2-Team. All rights reserved."/>
-    </Grid>
+    
+    <TextBlock>
+        <Run Text="M2-Team Nagisa"/>
+        <Run x:Name="VersionText"/>
+        <LineBreak/>
+        <Run Text="© M2-Team. All rights reserved."/>
+    </TextBlock>
+    
 </ContentDialog>
