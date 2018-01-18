@@ -1,4 +1,10 @@
 ﻿# Nagisa - One of Download Utilities for Windows Universal Platform.
+ 
+[![release.badge]][release.link]
+[![latestdownloads.badge]][latestdownloads.link]
+[![totaldownloads.badge]][totaldownloads.link]
+[![license.badge]][license.link]
+[![donate.badge]][donate.link]
 
 # System Requirement
 - Supported OS Version: Windows 10 Build 10240 or later
@@ -30,3 +36,15 @@
 - [Nagisa's License](LICENSE)
 - [Nagisa's Changelog](Changelog.md)
 - [Nagisa's Relevant People](People.md)
+- [Nagisa's Privacy Policy](Privacy.md)
+
+[release.badge]: https://img.shields.io/github/release/Project-Nagisa/Nagisa.svg
+[release.link]: https://github.com/Project-Nagisa/Nagisa/releases/latest
+[latestdownloads.badge]: https://img.shields.io/github/downloads/Project-Nagisa/Nagisa/latest/total.svg
+[latestdownloads.link]: https://github.com/Project-Nagisa/Nagisa/releases/latest
+[totaldownloads.badge]: https://img.shields.io/github/downloads/Project-Nagisa/Nagisa/total.svg
+[totaldownloads.link]: https://github.com/Project-Nagisa/Nagisa/releases
+[license.badge]: https://img.shields.io/github/license/Project-Nagisa/Nagisa.svg
+[license.link]: LICENSE
+[donate.badge]: https://img.shields.io/badge/PayPal-Donate-blue.svg
+[donate.link]: https://www.paypal.me/MouriNaruto

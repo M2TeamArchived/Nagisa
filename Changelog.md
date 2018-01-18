@@ -7,6 +7,9 @@
 
 ## Changelog
 
+**Nagisa 0.2 [Build 12]**
+- Update documents.
+
 **Nagisa 0.2 [Build 11]**
 - Improve the implemention of "About" UI.
 - Improve the constructor of TransferManager class.
