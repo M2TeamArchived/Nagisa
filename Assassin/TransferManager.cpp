@@ -11,6 +11,11 @@ License: The MIT License
 using namespace Assassin;
 using namespace Platform;
 
+// Creates a new TransferManager object.
+// Parameters:
+//   EnableUINotify: Enable the UI notify timer if true. 
+// Return value:
+//   The function does not return a value.
 TransferManager::TransferManager(
 	bool EnableUINotify)
 {
@@ -47,6 +52,11 @@ TransferManager::TransferManager(
 	}
 }
 
+// Destroys a TransferManager object.
+// Parameters:
+//   The function does not have parameters.
+// Return value:
+//   The function does not return a value.
 TransferManager::~TransferManager()
 {
 	delete this->m_Downloader;
@@ -59,11 +69,17 @@ TransferManager::~TransferManager()
 	}
 }
 
+// Gets the version of Nagisa.
 String^ TransferManager::Version::get()
 {
 	return NAGISA_VERSION_STRING;
 }
 
+// Gets the task list.
+// Parameters:
+//   The function does not have parameters.
+// Return value:
+//   Returns an object which represents the task list.
 IAsyncOperation<ITransferTaskVector^>^ TransferManager::GetTasksAsync()
 {
 	return M2AsyncCreate(
@@ -115,6 +131,12 @@ IAsyncOperation<ITransferTaskVector^>^ TransferManager::GetTasksAsync()
 	});
 }
 
+// Add a task to the task list.
+// Parameters:
+//   SourceUri: The source uri object of task.
+//   DestinationFile: The destination file object of task.
+// Return value:
+//   The function does not return a value.
 void TransferManager::AddTask(
 	Uri ^ SourceUri,
 	IStorageFile ^ DestinationFile)

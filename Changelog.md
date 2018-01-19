@@ -7,6 +7,10 @@
 
 ## Changelog
 
+**Nagisa 0.2 [Build 13]**
+- Update documents.
+- Add comments for Assassin interfaces.
+
 **Nagisa 0.2 [Build 12]**
 - Update documents.
 
@@ -16,11 +20,12 @@
 - Improve the UI notify timer of TransferManager class.
 - Fix a bug for TransferManager class.
 - Add M2CreateGuid function.
+- Improve the implemention of TextChanged event for SearchAutoSuggestBox.
 
 ### Nagisa 0.1 [Build 10]
 **New Features**
 - Supported Transfer Protocols: HTTP, HTTPS, FTP, FTPS, WebSocket and WebSocket
-  Secure.
+  Secure. (Temporarily Based on Windows.Networking.BackgroundTransfer)
 - Muitl-language Support: English and Simplified Chinese.
 - Support background download. 
   (Temporarily Based on Windows.Networking.BackgroundTransfer)

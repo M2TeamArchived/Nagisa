@@ -26,15 +26,28 @@ namespace Assassin
 
 	public interface class ITransferManager
 	{
+		// Gets the version of Nagisa.
 		property String^ Version
 		{
 			String^ get();
 		}
 
+		// Gets or sets the filter to use for searching the task list.
 		property String^ SearchFilter;
 
+		// Gets the task list.
+		// Parameters:
+		//   The function does not have parameters.
+		// Return value:
+		//   Returns an object which represents the task list.
 		IAsyncOperation<ITransferTaskVector^>^ GetTasksAsync();
 
+		// Add a task to the task list.
+		// Parameters:
+		//   SourceUri: The source uri object of task.
+		//   DestinationFile: The destination file object of task.
+		// Return value:
+		//   The function does not return a value.
 		void AddTask(
 			Uri^ SourceUri,
 			IStorageFile^ DestinationFile);
@@ -50,20 +63,43 @@ namespace Assassin
 		std::vector<ITransferTask^> m_TaskList;
 
 	public:
+		// Creates a new TransferManager object.
+		// Parameters:
+		//   EnableUINotify: Enable the UI notify timer if true. 
+		// Return value:
+		//   The function does not return a value.
 		TransferManager(
 			bool EnableUINotify);
 
+		// Destroys a TransferManager object.
+		// Parameters:
+		//   The function does not have parameters.
+		// Return value:
+		//   The function does not return a value.
 		virtual ~TransferManager();
 
+		// Gets the version of Nagisa.
 		virtual property String^ Version
 		{
 			String^ get();
 		}
 
+		// Gets or sets the filter to use for searching the task list.
 		virtual property String^ SearchFilter;
 
+		// Gets the task list.
+		// Parameters:
+		//   The function does not have parameters.
+		// Return value:
+		//   Returns an object which represents the task list.
 		virtual IAsyncOperation<ITransferTaskVector^>^ GetTasksAsync();
 
+		// Add a task to the task list.
+		// Parameters:
+		//   SourceUri: The source uri object of task.
+		//   DestinationFile: The destination file object of task.
+		// Return value:
+		//   The function does not return a value.
 		virtual void AddTask(
 			Uri^ SourceUri, 
 			IStorageFile^ DestinationFile);

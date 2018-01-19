@@ -31,16 +31,20 @@ TransferTask::TransferTask(
 	}
 }
 
+// Gets the URI from which to download the file.
 Uri^ TransferTask::RequestedUri::get()
 {
 	return this->m_Operation->RequestedUri;
 }
 
+// Returns the IStorageFile object provided by the caller when creating
+// the task.
 IStorageFile^ TransferTask::ResultFile::get()
 {
 	return this->m_Operation->ResultFile;
 }
 
+// The current status of the task.
 TransferTaskStatus TransferTask::Status::get()
 {	
 	switch (this->m_Operation->Progress.Status)
@@ -69,11 +73,15 @@ TransferTaskStatus TransferTask::Status::get()
 	}
 }
 
+// The total number of bytes received. This value does not include 
+// bytes received as response headers. If the task has restarted, 
+// this value may be smaller than in the previous progress report.
 uint64 TransferTask::BytesReceived::get()
 {
 	return this->m_Operation->Progress.BytesReceived;
 }
 
+// The speed of bytes received in one second.
 uint64 TransferTask::BytesReceivedSpeed::get()
 {	
 	if (0 != this->m_LastUpdated)
@@ -93,6 +101,7 @@ uint64 TransferTask::BytesReceivedSpeed::get()
 	return this->m_BytesReceivedSpeed;
 }
 
+// The remain time, in seconds.
 uint64 TransferTask::RemainTime::get()
 {
 	uint64 ReceivedSpeed = this->m_BytesReceivedSpeed;
@@ -107,11 +116,18 @@ uint64 TransferTask::RemainTime::get()
 	}
 }
 
+// The total number of bytes of data to download. If this number is
+// unknown, this value is set to 0.
 uint64 TransferTask::TotalBytesToReceive::get()
 {
 	return this->m_Operation->Progress.TotalBytesToReceive;
 }
 
+// Pauses a download operation.
+// Parameters:
+//   The function does not have parameters.
+// Return value:
+//   The function does not return a value.
 void TransferTask::Pause()
 {
 	if (TransferTaskStatus::Running == this->Status)
@@ -120,6 +136,11 @@ void TransferTask::Pause()
 	}
 }
 
+// Resumes a paused download operation.
+// Parameters:
+//   The function does not have parameters.
+// Return value:
+//   The function does not return a value.
 void TransferTask::Resume()
 {
 	if (TransferTaskStatus::Paused == this->Status)
@@ -129,6 +150,11 @@ void TransferTask::Resume()
 	}
 }
 
+// Cancels a download operation.
+// Parameters:
+//   The function does not have parameters.
+// Return value:
+//   Returns an object used to wait.
 IAsyncAction^ TransferTask::CancelAsync()
 {
 	return M2AsyncCreate(
@@ -154,6 +180,11 @@ IAsyncAction^ TransferTask::CancelAsync()
 	});
 }
 
+// Send property changed event to the UI.
+// Parameters:
+//   The function does not have parameters.
+// Return value:
+//   The function does not return a value.
 void Assassin::TransferTask::NotifyPropertyChanged()
 {
 	this->RaisePropertyChanged(L"Status");

@@ -64,7 +64,7 @@ bool M2FindSubString(
 // Parameters:
 //   ByteSize: The numeric byte size value to be converted.
 // Return value:
-//   Returns a Platform::String object to the converted string.
+//   Returns a Platform::String object which represents the converted string.
 Platform::String^ M2ConvertByteSizeToString(uint64 ByteSize);
 
 // Creates a GUID, a unique 128-bit integer used for CLSIDs and interface 

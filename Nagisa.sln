@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{
 		People.md = People.md
 		Privacy.md = Privacy.md
 		README.md = README.md
+		Screenshot.png = Screenshot.png
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shared", "Shared\Shared.vcxitems", "{318E66EA-4E29-40A5-966C-F18B7C0BAC45}"
