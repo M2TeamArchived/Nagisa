@@ -76,22 +76,12 @@ void MainPage::NewTaskButton_Click(
 		{
 			if (ContentDialogResult::Primary == asyncInfo->GetResults())
 			{
-				using Windows::Storage::CreationCollisionOption;
-				using Windows::Storage::StorageFile;
+				M2AsyncWait(this->m_TransferManager->AddTaskAsync(
+					dialog->m_DownloadSource,
+					dialog->m_FileName,
+					dialog->m_SaveFolder));
 
-				StorageFile^ SaveFile = M2AsyncWait(
-					dialog->m_SaveFolder->CreateFileAsync(
-						dialog->m_FileName,
-						CreationCollisionOption::GenerateUniqueName));
-
-				if (nullptr != SaveFile)
-				{
-					this->m_TransferManager->AddTask(
-						dialog->m_DownloadSource, 
-						SaveFile);
-
-					this->RefreshTaskList();
-				}		
+				this->RefreshTaskList();
 			}
 		}
 	});
@@ -119,7 +109,7 @@ void MainPage::CopyLinkMenuItem_Click(
 		using Windows::ApplicationModel::DataTransfer::DataPackage;
 
 		DataPackage^ data = ref new DataPackage();
-		data->SetText(Task->RequestedUri->RawUri);
+		data->SetText(Task->SourceUri->RawUri);
 
 		Clipboard::SetContent(data);
 	}
@@ -179,22 +169,14 @@ void MainPage::RetryButton_Click(
 	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
 		dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
-	M2::CThread([this, Task]()
-	{
-		using Windows::Storage::IStorageFile;
+	M2AsyncWait(this->m_TransferManager->AddTaskAsync(
+		Task->SourceUri,
+		Task->FileName,
+		Task->SaveFolder));
 
-		Uri^ SourceUri = Task->RequestedUri;
-		IStorageFile^ DestinationFile = Task->ResultFile;
-		
-		M2AsyncWait(Task->CancelAsync());
-		
-		M2ExecuteOnUIThread([this, SourceUri, DestinationFile]()
-		{
-			this->m_TransferManager->AddTask(SourceUri, DestinationFile);
-			
-			this->RefreshTaskList();
-		});
-	});
+	this->m_TransferManager->RemoveTask(Task);
+
+	this->RefreshTaskList();
 }
 
 void MainPage::ResumeButton_Click(
@@ -221,6 +203,25 @@ void MainPage::PauseButton_Click(
 	this->RefreshTaskList();
 }
 
+void MainPage::TaskItemCancelMenuItem_Click(
+	Object^ sender,
+	RoutedEventArgs^ e)
+{
+	try
+	{
+		ITransferTask^ Task = dynamic_cast<ITransferTask^>(
+			dynamic_cast<FrameworkElement^>(sender)->DataContext);
+
+		Task->Cancel();
+
+		this->RefreshTaskList();
+	}
+	catch (...)
+	{
+
+	}	
+}
+
 void MainPage::TaskItemRemoveMenuItem_Click(
 	Object^ sender,
 	RoutedEventArgs^ e)
@@ -228,13 +229,30 @@ void MainPage::TaskItemRemoveMenuItem_Click(
 	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
 		dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
-	M2::CThread([this, Task]()
-	{
-		M2AsyncWait(Task->CancelAsync());
+	this->m_TransferManager->RemoveTask(Task);
 
-		M2ExecuteOnUIThread([this]()
-		{
-			this->RefreshTaskList();
-		});
-	});
+	this->RefreshTaskList();
+}
+
+void MainPage::TaskItemOpenFolderMenuItem_Click(
+	Object^ sender,
+	RoutedEventArgs^ e)
+{
+	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
+		dynamic_cast<FrameworkElement^>(sender)->DataContext);
+	
+	try
+	{
+		using Windows::System::Launcher;
+		using Windows::System::FolderLauncherOptions;
+
+		FolderLauncherOptions^ Options = ref new FolderLauncherOptions();
+		Options->ItemsToSelect->Append(Task->SaveFile);
+
+		Launcher::LaunchFolderAsync(Task->SaveFolder, Options);
+	}
+	catch (...)
+	{
+
+	}
 }

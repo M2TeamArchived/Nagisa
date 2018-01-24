@@ -20,7 +20,9 @@ namespace Assassin
 	using Windows::Foundation::Collections::IVectorView;
 	using Windows::Networking::BackgroundTransfer::BackgroundDownloader;	
 	using Windows::Storage::ApplicationDataContainer;
+	using Windows::Storage::AccessCache::IStorageItemAccessList;
 	using Windows::Storage::IStorageFile;
+	using Windows::Storage::IStorageFolder;
 	using Windows::UI::Xaml::DispatcherTimer;
 
 	using ITransferTaskVector = IVectorView<ITransferTask^>;
@@ -46,12 +48,22 @@ namespace Assassin
 		// Add a task to the task list.
 		// Parameters:
 		//   SourceUri: The source uri object of task.
-		//   DestinationFile: The destination file object of task.
+		//   DesiredFileName: The file name you desire.
+		//   SaveFolder: The object of the folder which you want to save.
+		// Return value:
+		//   Returns an asynchronous object used to wait.
+		IAsyncAction^ AddTaskAsync(
+			Uri^ SourceUri,
+			String^ DesiredFileName,
+			IStorageFolder^ SaveFolder);
+
+		// Removes a task to the task list.
+		// Parameters:
+		//   Task: The task object. 
 		// Return value:
 		//   The function does not return a value.
-		void AddTask(
-			Uri^ SourceUri,
-			IStorageFile^ DestinationFile);
+		void RemoveTask(
+			ITransferTask^ Task);
 	};
 	
 	public ref class TransferManager sealed : public ITransferManager
@@ -65,6 +77,8 @@ namespace Assassin
 
 		ApplicationDataContainer^ m_RootContainer = nullptr;
 		ApplicationDataContainer^ m_TasksContainer = nullptr;
+
+		IStorageItemAccessList^ m_StorageItemAccessList = nullptr;
 
 	public:
 		// Creates a new TransferManager object.
@@ -101,12 +115,21 @@ namespace Assassin
 		// Add a task to the task list.
 		// Parameters:
 		//   SourceUri: The source uri object of task.
-		//   DestinationFile: The destination file object of task.
+		//   DesiredFileName: The file name you desire.
+		//   SaveFolder: The object of the folder which you want to save.
+		// Return value:
+		//   Returns an asynchronous object used to wait.
+		virtual IAsyncAction^ AddTaskAsync(
+			Uri^ SourceUri,
+			String^ DesiredFileName,
+			IStorageFolder^ SaveFolder);
+
+		// Removes a task to the task list.
+		// Parameters:
+		//   Task: The task object. 
 		// Return value:
 		//   The function does not return a value.
-		virtual void AddTask(
-			Uri^ SourceUri, 
-			IStorageFile^ DestinationFile);
-
+		virtual void RemoveTask(
+			ITransferTask^ Task);
 	};
 }

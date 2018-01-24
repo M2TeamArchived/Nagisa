@@ -13,6 +13,30 @@ using namespace Assassin;
 using namespace Platform;
 using namespace Windows::Networking::BackgroundTransfer;
 
+TransferTask::TransferTask(
+	DownloadOperation^ Operations,
+	String^ Guid,
+	Uri^ SourceUri,
+	String^ FileName,
+	IStorageFolder^ SaveFolder) :
+	m_Operation(Operations),
+	m_Guid(Guid),
+	m_SourceUri(SourceUri),
+	m_FileName(FileName),
+	m_SaveFolder(SaveFolder)
+{
+	this->m_SaveFile = M2AsyncWait(
+		this->m_SaveFolder->GetFileAsync(this->m_FileName));
+	
+	if (nullptr != this->m_Operation)
+	{
+		if (TransferTaskStatus::Running == this->Status)
+		{
+			this->m_Operation->AttachAsync();
+		}
+	}
+}
+
 void TransferTask::RaisePropertyChanged(
 	String ^ PropertyName)
 {
@@ -21,32 +45,42 @@ void TransferTask::RaisePropertyChanged(
 		this, ref new PropertyChangedEventArgs(PropertyName));
 }
 
-TransferTask::TransferTask(
-	DownloadOperation^ Operations)
-	: m_Operation(Operations)
+// Gets the Guid string of the task.
+String^ TransferTask::Guid::get()
 {
-	if (TransferTaskStatus::Running == this->Status)
-	{
-		this->m_Operation->AttachAsync();
-	}
+	return this->m_Guid;
 }
 
-// Gets the URI from which to download the file.
-Uri^ TransferTask::RequestedUri::get()
+// Gets the URI which to download the file.
+Uri^ TransferTask::SourceUri::get()
 {
-	return this->m_Operation->RequestedUri;
+	return this->m_SourceUri;
 }
 
-// Returns the IStorageFile object provided by the caller when creating
-// the task.
-IStorageFile^ TransferTask::ResultFile::get()
+// Gets the file name which to download the file.
+String^ TransferTask::FileName::get()
 {
-	return this->m_Operation->ResultFile;
+	return this->m_FileName;
+}
+
+// Gets the save file object which to download the file.
+IStorageFile^ TransferTask::SaveFile::get()
+{
+	return this->m_SaveFile;
+}
+
+// Gets the save folder object which to download the file.
+IStorageFolder^ TransferTask::SaveFolder::get()
+{
+	return this->m_SaveFolder;
 }
 
 // The current status of the task.
 TransferTaskStatus TransferTask::Status::get()
 {	
+	if (nullptr == this->m_Operation)
+		return TransferTaskStatus::Completed;
+	
 	switch (this->m_Operation->Progress.Status)
 	{
 	case BackgroundTransferStatus::Idle:
@@ -78,6 +112,9 @@ TransferTaskStatus TransferTask::Status::get()
 // this value may be smaller than in the previous progress report.
 uint64 TransferTask::BytesReceived::get()
 {
+	if (nullptr == this->m_Operation)
+		return 0;
+
 	return this->m_Operation->Progress.BytesReceived;
 }
 
@@ -106,20 +143,19 @@ uint64 TransferTask::RemainTime::get()
 {
 	uint64 ReceivedSpeed = this->m_BytesReceivedSpeed;
 	
-	if (0 == ReceivedSpeed)
-	{
+	if (0 == ReceivedSpeed || 0 == this->TotalBytesToReceive)
 		return static_cast<uint64>(-1);
-	}
-	else
-	{
-		return (this->TotalBytesToReceive - this->BytesReceived) / ReceivedSpeed;
-	}
+
+	return (this->TotalBytesToReceive - this->BytesReceived) / ReceivedSpeed;
 }
 
 // The total number of bytes of data to download. If this number is
 // unknown, this value is set to 0.
 uint64 TransferTask::TotalBytesToReceive::get()
 {
+	if (nullptr == this->m_Operation)
+		return 0;
+
 	return this->m_Operation->Progress.TotalBytesToReceive;
 }
 
@@ -130,6 +166,9 @@ uint64 TransferTask::TotalBytesToReceive::get()
 //   The function does not return a value.
 void TransferTask::Pause()
 {
+	if (nullptr == this->m_Operation)
+		M2ThrowPlatformException(E_FAIL);
+	
 	if (TransferTaskStatus::Running == this->Status)
 	{
 		this->m_Operation->Pause();
@@ -143,6 +182,9 @@ void TransferTask::Pause()
 //   The function does not return a value.
 void TransferTask::Resume()
 {
+	if (nullptr == this->m_Operation)
+		M2ThrowPlatformException(E_FAIL);
+
 	if (TransferTaskStatus::Paused == this->Status)
 	{
 		this->m_Operation->Resume();
@@ -154,42 +196,14 @@ void TransferTask::Resume()
 // Parameters:
 //   The function does not have parameters.
 // Return value:
-//   Returns an object used to wait.
-IAsyncAction^ TransferTask::CancelAsync()
-{
-	return M2AsyncCreate(
-		[this](IM2AsyncController^ AsyncController) -> void
-	{
-		if (TransferTaskStatus::Canceled != this->Status)
-		{
-			auto Operation = this->m_Operation->AttachAsync();		
-			Operation->Cancel();
-
-			try
-			{
-				M2AsyncWait(Operation);
-			}
-			catch (...)
-			{
-
-			}
-
-			// Wait for the BackgroundTransfer to update the task list.
-			SleepEx(2000, FALSE);
-		}
-	});
-}
-
-// Send property changed event to the UI.
-// Parameters:
-//   The function does not have parameters.
-// Return value:
 //   The function does not return a value.
-void Assassin::TransferTask::NotifyPropertyChanged()
+void TransferTask::Cancel()
 {
-	this->RaisePropertyChanged(L"Status");
-	this->RaisePropertyChanged(L"BytesReceived");
-	this->RaisePropertyChanged(L"BytesReceivedSpeed");
-	this->RaisePropertyChanged(L"RemainTime");
-	this->RaisePropertyChanged(L"TotalBytesToReceive");
+	if (nullptr == this->m_Operation)
+		M2ThrowPlatformException(E_FAIL);
+
+	if (TransferTaskStatus::Canceled != this->Status)
+	{
+		this->m_Operation->AttachAsync()->Cancel();
+	}
 }

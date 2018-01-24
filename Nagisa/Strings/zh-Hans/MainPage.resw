@@ -145,6 +145,10 @@
     <value>搜索下载项</value>
     <comment>Search Downloads</comment>
   </data>
+  <data name="TaskItemCancelMenuItem.Text" xml:space="preserve">
+    <value>取消</value>
+    <comment>Cancel</comment>
+  </data>
   <data name="TaskItemCopyLinkMenuItem.Text" xml:space="preserve">
     <value>复制链接</value>
     <comment>Copy Link</comment>
@@ -152,6 +156,10 @@
   <data name="TaskItemMoreButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>更多</value>
     <comment>More</comment>
+  </data>
+  <data name="TaskItemOpenFolderMenuItem.Text" xml:space="preserve">
+    <value>打开文件夹</value>
+    <comment>Open Folder</comment>
   </data>
   <data name="TaskItemRemoveMenuItem.Text" xml:space="preserve">
     <value>移除</value>

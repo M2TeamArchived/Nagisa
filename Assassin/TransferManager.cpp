@@ -8,6 +8,8 @@ License: The MIT License
 #include "pch.h"
 #include "TransferManager.h"
 
+#include <map>
+
 using namespace Assassin;
 using namespace Platform;
 
@@ -35,6 +37,10 @@ TransferManager::TransferManager(
 			L"Tasks",
 			ApplicationDataCreateDisposition::Always);
 
+	using Windows::Storage::AccessCache::StorageApplicationPermissions;
+	this->m_StorageItemAccessList =
+		StorageApplicationPermissions::FutureAccessList;
+
 	if (EnableUINotify)
 	{
 		using Windows::Foundation::EventHandler;
@@ -54,7 +60,17 @@ TransferManager::TransferManager(
 
 			for (ITransferTask^ Task : this->m_TaskList)
 			{
-				Task->NotifyPropertyChanged();
+				TransferTask^ TaskInternal = dynamic_cast<TransferTask^>(Task);
+					
+				TaskInternal->RaisePropertyChanged(L"Status");
+				
+				if (TransferTaskStatus::Running == Task->Status)
+				{		
+					TaskInternal->RaisePropertyChanged(L"BytesReceived");
+					TaskInternal->RaisePropertyChanged(L"BytesReceivedSpeed");
+					TaskInternal->RaisePropertyChanged(L"RemainTime");
+					TaskInternal->RaisePropertyChanged(L"TotalBytesToReceive");
+				}	
 			}
 
 			LeaveCriticalSection(&this->m_TaskListUpdateCS);
@@ -99,8 +115,11 @@ IAsyncOperation<ITransferTaskVector^>^ TransferManager::GetTasksAsync()
 			-> ITransferTaskVector^
 	{
 		using Platform::Collections::VectorView;
+		using Windows::Foundation::Collections::IKeyValuePair;
 		using Windows::Foundation::Collections::IVectorView;
 		using Windows::Networking::BackgroundTransfer::DownloadOperation;
+		using Windows::Storage::AccessCache::AccessListEntry;
+		using Windows::Storage::ApplicationDataCompositeValue;
 
 		VectorView<ITransferTask^>^ Result = nullptr;
 		
@@ -114,35 +133,64 @@ IAsyncOperation<ITransferTaskVector^>^ TransferManager::GetTasksAsync()
 			nullptr != CurrentSearchFilter &&
 			!CurrentSearchFilter->IsEmpty());
 
-		IVectorView<DownloadOperation^>^ downloads = M2AsyncWait(
-			this->m_Downloader->GetCurrentDownloadsAsync());
+		std::map<String^, DownloadOperation^> DownloadsList;
 
-		for (DownloadOperation^ download : downloads)
+		for (DownloadOperation^ Item 
+			: M2AsyncWait(this->m_Downloader->GetCurrentDownloadsAsync()))
 		{
-			using Windows::Storage::ApplicationDataCompositeValue;
+			DownloadsList.insert(std::pair<String^, DownloadOperation^>(
+				Item->Guid.ToString(), Item));
+		}	
 
-			String^ TaskGuidString = download->Guid.ToString();
-
-			if (!this->m_TasksContainer->Values->HasKey(TaskGuidString))
-				continue;
-
+		for (IKeyValuePair<String^, Object^>^ Download
+			: this->m_TasksContainer->Values)
+		{
+			String^ TaskGuid = Download->Key;
 			ApplicationDataCompositeValue^ TaskConfig =
-				dynamic_cast<ApplicationDataCompositeValue^>(
-					this->m_TasksContainer->Values->Lookup(TaskGuidString));
+				dynamic_cast<ApplicationDataCompositeValue^>(Download->Value);
+
+			String^ BackgroundTransferGuid = dynamic_cast<String^>(
+				TaskConfig->Lookup(L"BackgroundTransferGuid"));
+
+			Uri^ SourceUri = ref new Uri(dynamic_cast<String^>(
+				TaskConfig->Lookup(L"SourceUri")));
+			String^ FileName = dynamic_cast<String^>(
+				TaskConfig->Lookup(L"FileName"));
+			String^ SaveFolderPath = dynamic_cast<String^>(
+				TaskConfig->Lookup(L"SaveFolderPath"));
+
+			IStorageFolder^ SaveFolder = nullptr;
+			for (AccessListEntry Entry : this->m_StorageItemAccessList->Entries)
+			{
+				if (SaveFolderPath == Entry.Metadata)
+				{
+					SaveFolder = M2AsyncWait(
+						this->m_StorageItemAccessList->GetFolderAsync(
+							Entry.Token));
+					break;
+				}
+			}
+
+			std::map<String^, DownloadOperation^>::iterator iterator =
+				DownloadsList.find(BackgroundTransferGuid);
+
+			DownloadOperation^ Operation =
+				(DownloadsList.end() != iterator) ? iterator->second : nullptr;
 
 			if (NeedSearchFilter)
 			{
-				if (!M2FindSubString(
-					download->ResultFile->Name,
-					CurrentSearchFilter,
-					true))
+				if (Operation && 
+					!M2FindSubString(
+						Operation->ResultFile->Name,
+						CurrentSearchFilter,
+						true))
 				{
 					continue;
 				}
 			}
 
-			this->m_TaskList.push_back(
-				ref new TransferTask(download));
+			this->m_TaskList.push_back(ref new TransferTask(
+				Operation, TaskGuid, SourceUri, FileName, SaveFolder));
 		}
 
 		Result = ref new VectorView<ITransferTask^>(this->m_TaskList);
@@ -156,27 +204,99 @@ IAsyncOperation<ITransferTaskVector^>^ TransferManager::GetTasksAsync()
 // Add a task to the task list.
 // Parameters:
 //   SourceUri: The source uri object of task.
-//   DestinationFile: The destination file object of task.
+//   DesiredFileName: The file name you desire.
+//   SaveFolder: The object of the folder which you want to save.
+// Return value:
+//   Returns an asynchronous object used to wait.
+IAsyncAction^ TransferManager::AddTaskAsync(
+	Uri^ SourceUri,
+	String^ DesiredFileName,
+	IStorageFolder^ SaveFolder)
+{
+	return M2AsyncCreate(
+		[this, SourceUri, DesiredFileName, SaveFolder](
+			IM2AsyncController^ AsyncController) -> void
+	{
+		using Windows::Networking::BackgroundTransfer::DownloadOperation;
+		using Windows::Storage::AccessCache::AccessListEntry;
+		using Windows::Storage::ApplicationDataCompositeValue;
+		using Windows::Storage::CreationCollisionOption;
+		using Windows::Storage::StorageFile;
+
+		StorageFile^ SaveFile = M2AsyncWait(SaveFolder->CreateFileAsync(
+			DesiredFileName, CreationCollisionOption::GenerateUniqueName));
+
+		String^ SaveFolderPath = SaveFolder->Path;
+		bool NeedAddToFutureAccessList = true;
+		for (AccessListEntry Entry : this->m_StorageItemAccessList->Entries)
+		{
+			if (SaveFolderPath == Entry.Metadata)
+			{
+				NeedAddToFutureAccessList = false;
+				break;
+			}
+		}
+		if (NeedAddToFutureAccessList)
+		{
+			this->m_StorageItemAccessList->Add(SaveFolder, SaveFolderPath);
+		}
+		
+		DownloadOperation^ Operation = this->m_Downloader->CreateDownload(
+			SourceUri, SaveFile);
+
+		ApplicationDataCompositeValue^ TaskConfig =
+			ref new ApplicationDataCompositeValue();
+
+		TaskConfig->Insert(
+			L"BackgroundTransferGuid",
+			Operation->Guid.ToString());
+
+		TaskConfig->Insert(
+			L"SourceUri",
+			SourceUri->RawUri);
+		TaskConfig->Insert(
+			L"FileName",
+			SaveFile->Name);
+		TaskConfig->Insert(
+			L"SaveFolderPath",
+			SaveFolderPath);
+
+		this->m_TasksContainer->Values->Insert(
+			M2CreateGuid().ToString(),
+			TaskConfig);
+
+		Operation->StartAsync();
+	});
+}
+
+// Removes a task to the task list.
+// Parameters:
+//   Task: The task object. 
 // Return value:
 //   The function does not return a value.
-void TransferManager::AddTask(
-	Uri ^ SourceUri,
-	IStorageFile ^ DestinationFile)
+void TransferManager::RemoveTask(
+	ITransferTask^ Task)
 {
-	using Windows::Networking::BackgroundTransfer::DownloadOperation;
-	using Windows::Storage::ApplicationDataCompositeValue;
+	EnterCriticalSection(&this->m_TaskListUpdateCS);
 
-	DownloadOperation^ Operation = this->m_Downloader->CreateDownload(
-		SourceUri, DestinationFile);
+	switch (Task->Status)
+	{
+	case TransferTaskStatus::Paused:
+	case TransferTaskStatus::Queued:
+	case TransferTaskStatus::Running:
+		Task->Cancel();		
+		break;	
+	default:
+		break;
+	}
 
-	String^ TaskGuidString = Operation->Guid.ToString();
+	if (TransferTaskStatus::Completed != Task->Status)
+	{
+		using Windows::Storage::StorageDeleteOption;
+		Task->SaveFile->DeleteAsync(StorageDeleteOption::PermanentDelete);
+	}
 
-	ApplicationDataCompositeValue^ TaskConfig =
-		ref new ApplicationDataCompositeValue();
+	this->m_TasksContainer->Values->Remove(Task->Guid);
 
-	this->m_TasksContainer->Values->Insert(
-		TaskGuidString,
-		TaskConfig);
-
-	Operation->StartAsync();
+	LeaveCriticalSection(&this->m_TaskListUpdateCS);
 }

@@ -7,6 +7,28 @@
 
 ## Changelog
 
+**Nagisa 0.2 [Build 15]**
+- Improve the implemention of ITransferManager::GetTasksAsync method.
+- Improve the implemention of ITransferTask interface.
+- Fix a bug for ITransferTask interface.
+- Improve the UI notify timer of TransferManager class.
+- Remove ITransferTask::NotifyPropertyChanged method.
+- Rename ITransferTask::RequestedUri property as ITransferTask::SourceUri
+  property.
+- Add ITransferTask::FileName property.
+- Remove StorageFileToFileNameConverter converter.
+- Add ITransferTask::SaveFolder property.
+- Remove TransferManager::AddTask method.
+- Add TransferManager::AddTaskAsync method.
+- Add ITransferTask::Guid property.
+- Remove ITransferTask::ResultFile property.
+- Add TransferTask::Cancel method.
+- Remove TransferTask::CancelAsync method.
+- You can cancel task without remove it in the UI.
+- You can open every task's folder in the UI.
+- Add TransferManager::RemoveTask method.
+- Remove ITransferTask::SaveFile property.
+
 **Nagisa 0.2 [Build 14]**
 - Merge the changelog.
 - Add configuration infrastructure.

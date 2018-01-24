@@ -24,23 +24,41 @@ namespace Assassin
 	using Windows::Foundation::Uri;
 	using Windows::Foundation::IAsyncAction;
 	using Windows::Storage::IStorageFile;
+	using Windows::Storage::IStorageFolder;
 	using Windows::Networking::BackgroundTransfer::DownloadOperation;
 	using Windows::UI::Xaml::Data::INotifyPropertyChanged;
 	using Windows::UI::Xaml::Data::PropertyChangedEventHandler;
 
 	public interface class ITransferTask : INotifyPropertyChanged
 	{
-		// Gets the URI from which to download the file.
-		property Uri^ RequestedUri
+		// Gets the Guid string of the task.
+		property String^ Guid
+		{
+			String^ get();
+		}
+			
+		// Gets the URI which to download the file.
+		property Uri^ SourceUri
 		{
 			Uri^ get();
 		}
 
-		// Returns the IStorageFile object provided by the caller when creating
-		// the task.
-		property IStorageFile^ ResultFile
+		// Gets the file name which to download the file.
+		property String^ FileName
+		{
+			String^ get();
+		}
+
+		// Gets the save file object which to download the file.
+		property IStorageFile^ SaveFile
 		{
 			IStorageFile^ get();
+		}
+
+		// Gets the save folder object which to download the file.
+		property IStorageFolder^ SaveFolder
+		{
+			IStorageFolder^ get();
 		}
 
 		// The current status of the task.
@@ -94,15 +112,8 @@ namespace Assassin
 		// Parameters:
 		//   The function does not have parameters.
 		// Return value:
-		//   Returns an object used to wait.
-		IAsyncAction^ CancelAsync();
-
-		// Send property changed event to the UI.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
 		//   The function does not return a value.
-		void NotifyPropertyChanged();
+		void Cancel();
 	};
 
 	ref class TransferTask sealed : public ITransferTask
@@ -114,28 +125,54 @@ namespace Assassin
 		uint64 m_LastBytesReceived = 0;
 		uint64 m_BytesReceivedSpeed = 0;
 
-	protected:
-		void RaisePropertyChanged(
-			String^ PropertyName);
+		String^ m_Guid = nullptr;
+		Uri^ m_SourceUri = nullptr;
+		String^ m_FileName = nullptr;
+		IStorageFile^ m_SaveFile = nullptr;
+		IStorageFolder^ m_SaveFolder = nullptr;
 
 	internal:
 		TransferTask(
-			DownloadOperation^ Operation);
+			DownloadOperation^ Operation,
+			String^ Guid,
+			Uri^ SourceUri,
+			String^ FileName,
+			IStorageFolder^ SaveFolder);
+
+		void RaisePropertyChanged(
+			String^ PropertyName);
 
 	public:
 		virtual event PropertyChangedEventHandler^ PropertyChanged;
 
-		// Gets the URI from which to download the file.
-		virtual property Uri^ RequestedUri
+		// Gets the Guid string of the task.
+		virtual property String^ Guid
+		{
+			String^ get();
+		}
+
+		// Gets the URI which to download the file.
+		virtual property Uri^ SourceUri
 		{
 			Uri^ get();
 		}
 
-		// Returns the IStorageFile object provided by the caller when creating
-		// the task.
-		virtual property IStorageFile^ ResultFile
+		// Gets the file name which to download the file.
+		virtual property String^ FileName
+		{
+			String^ get();
+		}
+
+		// Gets the save file object which to download the file.
+		virtual property IStorageFile^ SaveFile
 		{
 			IStorageFile^ get();
+		}
+
+		// Gets the save folder object which to download the file.
+		virtual property IStorageFolder^ SaveFolder
+		{
+			IStorageFolder^ get();
 		}
 
 		// The current status of the task.
@@ -189,14 +226,7 @@ namespace Assassin
 		// Parameters:
 		//   The function does not have parameters.
 		// Return value:
-		//   Returns an object used to wait.
-		virtual IAsyncAction^ CancelAsync();
-
-		// Send property changed event to the UI.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
 		//   The function does not return a value.
-		virtual void NotifyPropertyChanged();
+		virtual void Cancel();
 	};
 }

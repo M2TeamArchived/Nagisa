@@ -86,26 +86,6 @@ Object^ Uint64RemainTimeToStringConverter::ConvertBack(
 	M2ThrowPlatformException(E_NOTIMPL);
 }
 
-Object^ StorageFileToFileNameConverter::Convert(
-	Object^ value,
-	TypeName targetType,
-	Object^ parameter,
-	String^ language)
-{
-	using Windows::Storage::IStorageFile;
-	IStorageFile^ result = dynamic_cast<IStorageFile^>(value);
-	return ((result != nullptr) ? result->Name : L"N/A");
-}
-
-Object^ StorageFileToFileNameConverter::ConvertBack(
-	Object^ value,
-	TypeName targetType,
-	Object^ parameter,
-	String^ language)
-{
-	M2ThrowPlatformException(E_NOTIMPL);
-}
-
 Object^ TaskListEmptyToVisibilityConverter::Convert(
 	Object^ value,
 	TypeName targetType,

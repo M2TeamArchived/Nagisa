@@ -56,8 +56,14 @@ namespace Nagisa
 		void PauseButton_Click(
 			Object^ sender, 
 			RoutedEventArgs^ e);
+		void TaskItemCancelMenuItem_Click(
+			Object^ sender,
+			RoutedEventArgs^ e);
 		void TaskItemRemoveMenuItem_Click(
 			Object^ sender, 
+			RoutedEventArgs^ e);
+		void TaskItemOpenFolderMenuItem_Click(
+			Object^ sender,
 			RoutedEventArgs^ e);
 	};
 }

@@ -56,7 +56,7 @@
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" 
-                                       Text="{x:Bind ResultFile, Converter={StaticResource StorageFileToFileNameConverter}, Mode=OneWay}"/>
+                                       Text="{x:Bind FileName, TargetNullValue=N/A, Mode=OneWay}"/>
                             <StackPanel Grid.Row="1" 
                                         Padding="0,2,0,0"
                                         Orientation="Horizontal">
@@ -115,7 +115,13 @@
                                     <MenuFlyoutItem x:Uid="/MainPage/TaskItemCopyLinkMenuItem"
                                                     Text="[Copy Link]" 
                                                     Click="CopyLinkMenuItem_Click"/>
+                                    <MenuFlyoutItem x:Uid="/MainPage/TaskItemOpenFolderMenuItem" 
+                                                    Text="[Open Folder]"
+                                                    Click="TaskItemOpenFolderMenuItem_Click"/>
                                     <MenuFlyoutSeparator/>
+                                    <MenuFlyoutItem x:Uid="/MainPage/TaskItemCancelMenuItem" 
+                                                    Text="[Cancel]"
+                                                    Click="TaskItemCancelMenuItem_Click"/>
                                     <MenuFlyoutItem x:Uid="/MainPage/TaskItemRemoveMenuItem" 
                                                     Text="[Remove]"
                                                     Click="TaskItemRemoveMenuItem_Click"/>

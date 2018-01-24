@@ -6,7 +6,6 @@
     <local:Uint64ToDoubleConverter x:Name="Uint64ToDoubleConverter"/>
     <local:Uint64ByteSizeToStringConverter x:Name="Uint64ByteSizeToStringConverter"/>
     <local:Uint64RemainTimeToStringConverter x:Name="Uint64RemainTimeToStringConverter"/>
-    <local:StorageFileToFileNameConverter x:Name="StorageFileToFileNameConverter"/>
     <local:TaskListEmptyToVisibilityConverter x:Name="TaskListEmptyToVisibilityConverter"/>
     <local:TaskStatusToVisibleConverter x:Name="TaskStatusToVisibleConverter"/>
 
