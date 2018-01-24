@@ -7,6 +7,9 @@
 
 ## Changelog
 
+**Nagisa 0.2 [Build 16]**
+- Change the icon.
+
 **Nagisa 0.2 [Build 15]**
 - Improve the implemention of ITransferManager::GetTasksAsync method.
 - Improve the implemention of ITransferTask interface.

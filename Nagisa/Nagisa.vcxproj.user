@@ -2,14 +2,14 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <AppxShowAllApps>False</AppxShowAllApps>
-    <Source>F:\NagisaRepositories\Nagisa\Shared\LogoAssets\Nagisa.png</Source>
-    <SmallTileSource>F:\NagisaRepositories\Nagisa\Shared\LogoAssets\Nagisa.png</SmallTileSource>
-    <MediumTileSource>F:\NagisaRepositories\Nagisa\Shared\LogoAssets\Nagisa.png</MediumTileSource>
-    <WideTileSource>F:\NagisaRepositories\Nagisa\Shared\LogoAssets\Nagisa.png</WideTileSource>
-    <LargeTileSource>F:\NagisaRepositories\Nagisa\Shared\LogoAssets\Nagisa.png</LargeTileSource>
-    <AppIconSource>F:\NagisaRepositories\Nagisa\Shared\LogoAssets\Nagisa.png</AppIconSource>
-    <SplashScreenSource>F:\NagisaRepositories\Nagisa\Shared\LogoAssets\Nagisa.png</SplashScreenSource>
-    <PackageLogoSource>F:\NagisaRepositories\Nagisa\Shared\LogoAssets\Nagisa.png</PackageLogoSource>
+    <Source>F:\Nagisa.png</Source>
+    <SmallTileSource>F:\Nagisa.png</SmallTileSource>
+    <MediumTileSource>F:\Nagisa.png</MediumTileSource>
+    <WideTileSource>F:\Nagisa.png</WideTileSource>
+    <LargeTileSource>F:\Nagisa.png</LargeTileSource>
+    <AppIconSource>F:\Nagisa.png</AppIconSource>
+    <SplashScreenSource>F:\Nagisa.png</SplashScreenSource>
+    <PackageLogoSource>F:\Nagisa.png</PackageLogoSource>
     <AppxPackageIsForStore>False</AppxPackageIsForStore>
     <AppxBuildConfigurationSelection>x86|x64|arm|arm64</AppxBuildConfigurationSelection>
     <PackageOptionalProjectsInIdeBuilds>False</PackageOptionalProjectsInIdeBuilds>

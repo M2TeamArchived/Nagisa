@@ -1,4 +1,5 @@
-﻿# Nagisa - One of Download Utilities for Windows Universal Platform.
+﻿![Logo](Logo.png)
+# Nagisa - One of Download Utilities for Windows Universal Platform.
  
 [![release.badge]][release.link]
 [![latestdownloads.badge]][latestdownloads.link]
