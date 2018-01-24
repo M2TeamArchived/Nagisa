@@ -18,7 +18,8 @@ namespace Assassin
 	using Windows::Foundation::IAsyncOperation;
 	using Windows::Foundation::Uri;
 	using Windows::Foundation::Collections::IVectorView;
-	using Windows::Networking::BackgroundTransfer::BackgroundDownloader;
+	using Windows::Networking::BackgroundTransfer::BackgroundDownloader;	
+	using Windows::Storage::ApplicationDataContainer;
 	using Windows::Storage::IStorageFile;
 	using Windows::UI::Xaml::DispatcherTimer;
 
@@ -61,6 +62,9 @@ namespace Assassin
 
 		CRITICAL_SECTION m_TaskListUpdateCS;
 		std::vector<ITransferTask^> m_TaskList;
+
+		ApplicationDataContainer^ m_RootContainer = nullptr;
+		ApplicationDataContainer^ m_TasksContainer = nullptr;
 
 	public:
 		// Creates a new TransferManager object.

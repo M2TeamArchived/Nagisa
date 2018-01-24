@@ -7,20 +7,25 @@
 
 ## Changelog
 
-**Nagisa 0.2 [Build 13]**
-- Update documents.
-- Add comments for Assassin interfaces.
+**Nagisa 0.2 [Build 14]**
+- Merge the changelog.
+- Add configuration infrastructure.
 
-**Nagisa 0.2 [Build 12]**
-- Update documents.
-
-**Nagisa 0.2 [Build 11]**
+### Nagisa 0.2 [Build 13]
+**New Changes**
 - Improve the implemention of "About" UI.
-- Improve the constructor of TransferManager class.
 - Improve the UI notify timer of TransferManager class.
 - Fix a bug for TransferManager class.
-- Add M2CreateGuid function.
-- Improve the implemention of TextChanged event for SearchAutoSuggestBox.
+- Improve the implemention of TextChanged event for SearchAutoSuggestBox. 
+
+**Changed APIs**
+- Assassin
+  - TransferManager class (Based on ITransferManager interface).
+    - Constructor.
+
+**New APIs**
+- M2-Team Common Library
+  - M2CreateGuid function.
 
 ### Nagisa 0.1 [Build 10]
 **New Features**
@@ -36,13 +41,8 @@
 - Support for searching tasks from the task list.
 - The color themes of Nagisa follows the options in Windows Settings.
 
-**Added APIs**
+**New APIs**
 - Assassin
-  - TransferManager class or ITransferManager interface.
-    - Version property.
-	- SearchFilter property.
-	- GetTasksAsync method.
-	- AddTask method.
   - TransferTaskStatus enum.
   - ITransferTask interface.
     - RequestedUri property.
@@ -56,6 +56,14 @@
 	- Resume method.
 	- CancelAsync method.
 	- NotifyPropertyChanged method.
+  - ITransferManager interface.
+    - Version property.
+	- SearchFilter property.
+	- GetTasksAsync method.
+	- AddTask method.
+  - TransferManager class (Based on ITransferManager interface).
+    - Constructor.
+	- Close method.
 - M2-Team Common Library
   - M2RemoveReference trait.
   - M2AsyncSetCompletedHandler function.

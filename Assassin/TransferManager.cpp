@@ -23,6 +23,18 @@ TransferManager::TransferManager(
 
 	InitializeCriticalSection(&this->m_TaskListUpdateCS);
 
+	using Windows::Storage::ApplicationData;
+	using Windows::Storage::ApplicationDataCreateDisposition;
+
+	this->m_RootContainer =
+		ApplicationData::Current->LocalSettings->CreateContainer(
+			L"Nagisa",
+			ApplicationDataCreateDisposition::Always);
+	this->m_TasksContainer =
+		this->m_RootContainer->CreateContainer(
+			L"Tasks",
+			ApplicationDataCreateDisposition::Always);
+
 	if (EnableUINotify)
 	{
 		using Windows::Foundation::EventHandler;
@@ -107,12 +119,21 @@ IAsyncOperation<ITransferTaskVector^>^ TransferManager::GetTasksAsync()
 
 		for (DownloadOperation^ download : downloads)
 		{
-			ITransferTask^ Task = ref new TransferTask(download);
+			using Windows::Storage::ApplicationDataCompositeValue;
+
+			String^ TaskGuidString = download->Guid.ToString();
+
+			if (!this->m_TasksContainer->Values->HasKey(TaskGuidString))
+				continue;
+
+			ApplicationDataCompositeValue^ TaskConfig =
+				dynamic_cast<ApplicationDataCompositeValue^>(
+					this->m_TasksContainer->Values->Lookup(TaskGuidString));
 
 			if (NeedSearchFilter)
 			{
 				if (!M2FindSubString(
-					Task->ResultFile->Name,
+					download->ResultFile->Name,
 					CurrentSearchFilter,
 					true))
 				{
@@ -120,7 +141,8 @@ IAsyncOperation<ITransferTaskVector^>^ TransferManager::GetTasksAsync()
 				}
 			}
 
-			this->m_TaskList.push_back(Task);
+			this->m_TaskList.push_back(
+				ref new TransferTask(download));
 		}
 
 		Result = ref new VectorView<ITransferTask^>(this->m_TaskList);
@@ -141,6 +163,20 @@ void TransferManager::AddTask(
 	Uri ^ SourceUri,
 	IStorageFile ^ DestinationFile)
 {
-	this->m_Downloader->CreateDownload(
-		SourceUri, DestinationFile)->StartAsync();
+	using Windows::Networking::BackgroundTransfer::DownloadOperation;
+	using Windows::Storage::ApplicationDataCompositeValue;
+
+	DownloadOperation^ Operation = this->m_Downloader->CreateDownload(
+		SourceUri, DestinationFile);
+
+	String^ TaskGuidString = Operation->Guid.ToString();
+
+	ApplicationDataCompositeValue^ TaskConfig =
+		ref new ApplicationDataCompositeValue();
+
+	this->m_TasksContainer->Values->Insert(
+		TaskGuidString,
+		TaskConfig);
+
+	Operation->StartAsync();
 }
