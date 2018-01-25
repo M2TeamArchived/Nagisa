@@ -1,6 +1,6 @@
 ﻿/******************************************************************************
 Project: M2-Team Common Library
-Description: Implemention for the C++/CX helper functions.
+Description: Implementation for the C++/CX helper functions.
 File Name: M2CXHelpers.cpp
 License: The MIT License
 ******************************************************************************/

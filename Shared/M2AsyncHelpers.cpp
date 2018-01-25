@@ -1,6 +1,6 @@
 ﻿/******************************************************************************
 Project: M2-Team Common Library
-Description: Implemention for the asynchronous helper functions.
+Description: Implementation for the asynchronous helper functions.
 File Name: M2AsyncHelpers.cpp
 License: The MIT License
 ******************************************************************************/

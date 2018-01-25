@@ -1,6 +1,6 @@
 ﻿/******************************************************************************
 Project: M2-Team Common Library
-Description: Implemention for the basic helper functions.
+Description: Implementation for the basic helper functions.
 File Name: M2BaseHelpers.cpp
 License: The MIT License
 ******************************************************************************/

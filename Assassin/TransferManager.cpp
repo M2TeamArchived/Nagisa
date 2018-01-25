@@ -1,6 +1,6 @@
 ﻿/******************************************************************************
 Project: Assassin
-Description: Implemention for TransferManager.
+Description: Implementation for TransferManager.
 File Name: TransferManager.cpp
 License: The MIT License
 ******************************************************************************/

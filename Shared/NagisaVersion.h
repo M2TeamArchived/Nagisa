@@ -12,7 +12,7 @@ License: The MIT License
 
 #define NAGISA_VER_MAJOR 0
 #define NAGISA_VER_MINOR 2
-#define NAGISA_VER_BUILD 16
+#define NAGISA_VER_BUILD 17
 #define NAGISA_VER_REV 0
 #endif
 

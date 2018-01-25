@@ -1,6 +1,6 @@
 ﻿/******************************************************************************
 Project: Assassin
-Description: Implemention for TransferTask.
+Description: Implementation for TransferTask.
 File Name: TransferTask.cpp
 License: The MIT License
 ******************************************************************************/

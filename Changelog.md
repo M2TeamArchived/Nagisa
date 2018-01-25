@@ -7,41 +7,16 @@
 
 ## Changelog
 
-**Nagisa 0.2 [Build 16]**
-- Change the icon.
+**Nagisa 0.2 [Build 17]**
+- Merge the changelog.
 
-**Nagisa 0.2 [Build 15]**
-- Improve the implemention of ITransferManager::GetTasksAsync method.
-- Improve the implemention of ITransferTask interface.
-- Fix a bug for ITransferTask interface.
-- Improve the UI notify timer of TransferManager class.
-- Remove ITransferTask::NotifyPropertyChanged method.
-- Rename ITransferTask::RequestedUri property as ITransferTask::SourceUri
-  property.
-- Add ITransferTask::FileName property.
-- Remove StorageFileToFileNameConverter converter.
-- Add ITransferTask::SaveFolder property.
-- Remove TransferManager::AddTask method.
-- Add TransferManager::AddTaskAsync method.
-- Add ITransferTask::Guid property.
-- Remove ITransferTask::ResultFile property.
-- Add TransferTask::Cancel method.
-- Remove TransferTask::CancelAsync method.
+### Nagisa 0.2 [Build 16]
+**New Changes**
+- Fix several bugs and improve several implementations.
+- Add configuration infrastructure.
 - You can cancel task without remove it in the UI.
 - You can open every task's folder in the UI.
-- Add TransferManager::RemoveTask method.
-- Remove ITransferTask::SaveFile property.
-
-**Nagisa 0.2 [Build 14]**
-- Merge the changelog.
-- Add configuration infrastructure.
-
-### Nagisa 0.2 [Build 13]
-**New Changes**
-- Improve the implemention of "About" UI.
-- Improve the UI notify timer of TransferManager class.
-- Fix a bug for TransferManager class.
-- Improve the implemention of TextChanged event for SearchAutoSuggestBox. 
+- Change the icon.
 
 **Changed APIs**
 - Assassin
@@ -49,8 +24,31 @@
     - Constructor.
 
 **New APIs**
+- Assassin
+  - ITransferTask interface.
+    - Guid property.
+    - SourceUri property.
+    - FileName property.
+    - SaveFile property.
+    - SaveFolder property.
+    - Cancel method.
+  - ITransferManager interface.
+    - AddTaskAsync method.
+    - RemoveTask method.
 - M2-Team Common Library
   - M2CreateGuid function.
+
+**Removed APIs**
+- Assassin
+  - ITransferTask interface.
+    - RequestedUri property.
+    - ResultFile property.
+    - CancelAsync method.
+    - NotifyPropertyChanged method.
+  - ITransferManager interface.
+    - AddTask method.
+- XAML
+  - StorageFileToFileNameConverter converter.
 
 ### Nagisa 0.1 [Build 10]
 **New Features**
