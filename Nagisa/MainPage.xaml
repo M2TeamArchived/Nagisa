@@ -90,6 +90,12 @@
                                     ToolTipService.ToolTip="[Retry]"
                                     Visibility="{x:Bind Status, Converter={StaticResource TaskStatusToVisibleConverter}, ConverterParameter=Error, Mode=OneWay}"
                                     Click="RetryButton_Click"/>
+                            <Button x:Uid="/MainPage/RetryButton" 
+                                    Style="{StaticResource CustomIconButtonStyle}"
+                                    Content="{StaticResource RetryIcon}"
+                                    ToolTipService.ToolTip="[Retry]"
+                                    Visibility="{x:Bind Status, Converter={StaticResource TaskStatusToVisibleConverter}, ConverterParameter=Canceled, Mode=OneWay}"
+                                    Click="RetryButton_Click"/>
                             <Button x:Uid="/MainPage/ResumeButton" 
                                     Style="{StaticResource CustomIconButtonStyle}"
                                     Content="{StaticResource ResumeIcon}"
@@ -175,6 +181,42 @@
         </ListView>
 
         <CommandBar Grid.Row="2">
+            <CommandBar.Content>
+                <StackPanel Orientation="Horizontal" 
+                            Padding="0"
+                            Margin="0,13,0,0">
+                    <StackPanel x:Uid="/MainPage/TotalDownloadBandwidthStackPanel"
+                                Margin="8,0" 
+                                Orientation="Horizontal" 
+                                ToolTipService.ToolTip="[Total Download Bandwidth]">
+                        <FontIcon Margin="0,0,8,0" 
+                                  VerticalAlignment="Center" 
+                                  FontSize="16"
+                                  Glyph="&#xE74B;"/>
+                        <TextBlock VerticalAlignment="Center" 
+                                   FontSize="16" 
+                                   Text="N/A MiB"/>
+                        <TextBlock VerticalAlignment="Center" 
+                                   FontSize="16" 
+                                   Text="/s"/>
+                    </StackPanel>
+                    <StackPanel x:Uid="/MainPage/TotalUploadBandwidthStackPanel" 
+                                Margin="8,0" 
+                                Orientation="Horizontal"
+                                ToolTipService.ToolTip="[Total Upload Bandwidth]">
+                        <FontIcon Margin="0,0,8,0"
+                                  VerticalAlignment="Center" 
+                                  FontSize="16" 
+                                  Glyph="&#xE74A;"/>
+                        <TextBlock VerticalAlignment="Center" 
+                                   FontSize="16"
+                                   Text="N/A KiB"/>
+                        <TextBlock VerticalAlignment="Center"
+                                   FontSize="16"
+                                   Text="/s"/>
+                    </StackPanel>
+                </StackPanel>
+            </CommandBar.Content>
             <CommandBar.PrimaryCommands>
                 <AppBarButton x:Uid="/MainPage/NewTaskAppBarButton"
                               Icon="Add"
@@ -183,6 +225,30 @@
                               Click="NewTaskButton_Click"/>
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
+                <AppBarButton x:Uid="/MainPage/StartAllAppBarButton" 
+                              Icon="Play" 
+                              Label="[Start All]"
+                              Click="StartAllAppBarButton_Click"/>
+                <AppBarButton x:Uid="/MainPage/PauseAllAppBarButton" 
+                              Icon="Pause"
+                              Label="[Pause All]"
+                              Click="PauseAllAppBarButton_Click"/>
+                <AppBarSeparator/>
+                <AppBarButton x:Uid="/MainPage/ClearListAppBarButton"
+                              Icon="Clear"
+                              Label="[Clear List]"
+                              Click="ClearListAppBarButton_Click"/>
+                <AppBarSeparator/>
+                <AppBarButton x:Uid="/MainPage/OpenDownloadsFolderAppBarButton" 
+                              Icon="OpenLocal" 
+                              Label="[Open Downloads Folder]"
+                              Click="OpenDownloadsFolderAppBarButton_Click"/>
+                <AppBarSeparator/>
+                <AppBarButton x:Uid="/MainPage/SettingsAppBarButton" 
+                              Icon="Setting"
+                              Label="[Settings]"
+                              Click="SettingsAppBarButton_Click"/>
+                <AppBarSeparator/>
                 <AppBarButton x:Uid="/MainPage/AboutAppBarButton"
                               Icon="Help" 
                               Label="[About]"

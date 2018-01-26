@@ -7,6 +7,7 @@
 #include "MainPage.xaml.h"
 #include "AboutDialog.xaml.h"
 #include "NewTaskDialog.xaml.h"
+#include "SettingsDialog.xaml.h"
 
 using namespace Nagisa;
 using namespace Assassin;
@@ -169,14 +170,21 @@ void MainPage::RetryButton_Click(
 	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
 		dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
-	M2AsyncWait(this->m_TransferManager->AddTaskAsync(
-		Task->SourceUri,
-		Task->FileName,
-		Task->SaveFolder));
+	M2::CThread([this, Task]()
+	{
+		auto SourceUri = Task->SourceUri;
+		auto FileName = Task->FileName;
+		auto SaveFolder = Task->SaveFolder;
+		
+		M2AsyncWait(this->m_TransferManager->RemoveTaskAsync(Task));
 
-	this->m_TransferManager->RemoveTask(Task);
+		M2AsyncWait(this->m_TransferManager->AddTaskAsync(
+			SourceUri,
+			FileName,
+			SaveFolder));
 
-	this->RefreshTaskList();
+		this->RefreshTaskList();
+	});	
 }
 
 void MainPage::ResumeButton_Click(
@@ -229,9 +237,12 @@ void MainPage::TaskItemRemoveMenuItem_Click(
 	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
 		dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
-	this->m_TransferManager->RemoveTask(Task);
+	M2::CThread([this, Task]()
+	{
+		M2AsyncWait(this->m_TransferManager->RemoveTaskAsync(Task));
 
-	this->RefreshTaskList();
+		this->RefreshTaskList();
+	});
 }
 
 void MainPage::TaskItemOpenFolderMenuItem_Click(
@@ -255,4 +266,45 @@ void MainPage::TaskItemOpenFolderMenuItem_Click(
 	{
 
 	}
+}
+
+void MainPage::StartAllAppBarButton_Click(
+	Object^ sender,
+	RoutedEventArgs^ e)
+{
+	this->m_TransferManager->StartAllTasks();
+}
+
+void MainPage::PauseAllAppBarButton_Click(
+	Object^ sender,
+	RoutedEventArgs^ e)
+{
+	this->m_TransferManager->PauseAllTasks();
+}
+
+void MainPage::ClearListAppBarButton_Click(
+	Object^ sender, 
+	RoutedEventArgs^ e)
+{
+	this->m_TransferManager->ClearTaskList();
+
+	this->RefreshTaskList();
+}
+
+void MainPage::OpenDownloadsFolderAppBarButton_Click(
+	Object^ sender,
+	RoutedEventArgs^ e)
+{
+	using Windows::UI::Popups::MessageDialog;
+	MessageDialog^ Dialog = ref new MessageDialog(L"Unimplemented");
+	Dialog->ShowAsync();
+}
+
+void MainPage::SettingsAppBarButton_Click(
+	Object^ sender,
+	RoutedEventArgs^ e)
+{
+	SettingsDialog^ dialog = ref new SettingsDialog();
+	dialog->m_TransferManager = this->m_TransferManager;
+	dialog->ShowAsync();
 }

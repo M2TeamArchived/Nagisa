@@ -20,7 +20,6 @@ namespace Assassin
 	using Windows::Foundation::Collections::IVectorView;
 	using Windows::Networking::BackgroundTransfer::BackgroundDownloader;	
 	using Windows::Storage::ApplicationDataContainer;
-	using Windows::Storage::AccessCache::IStorageItemAccessList;
 	using Windows::Storage::IStorageFile;
 	using Windows::Storage::IStorageFolder;
 	using Windows::UI::Xaml::DispatcherTimer;
@@ -61,11 +60,32 @@ namespace Assassin
 		// Parameters:
 		//   Task: The task object. 
 		// Return value:
-		//   The function does not return a value.
-		void RemoveTask(
+		//   Returns an asynchronous object used to wait.
+		IAsyncAction^ RemoveTaskAsync(
 			ITransferTask^ Task);
+
+		// Start all tasks.
+		// Parameters:
+		//   The function does not have parameters.
+		// Return value:
+		//   The function does not return a value.
+		void StartAllTasks();
+
+		// Pause all tasks.
+		// Parameters:
+		//   The function does not have parameters.
+		// Return value:
+		//   The function does not return a value.
+		void PauseAllTasks();
+
+		// Clears the task list.
+		// Parameters:
+		//   The function does not have parameters.
+		// Return value:
+		//   The function does not return a value.
+		void ClearTaskList();
 	};
-	
+
 	public ref class TransferManager sealed : public ITransferManager
 	{
 	private:
@@ -78,7 +98,7 @@ namespace Assassin
 		ApplicationDataContainer^ m_RootContainer = nullptr;
 		ApplicationDataContainer^ m_TasksContainer = nullptr;
 
-		IStorageItemAccessList^ m_StorageItemAccessList = nullptr;
+		M2::CFutureAccessList m_FutureAccessList;
 
 	public:
 		// Creates a new TransferManager object.
@@ -128,8 +148,29 @@ namespace Assassin
 		// Parameters:
 		//   Task: The task object. 
 		// Return value:
-		//   The function does not return a value.
-		virtual void RemoveTask(
+		//   Returns an asynchronous object used to wait.
+		virtual IAsyncAction^ RemoveTaskAsync(
 			ITransferTask^ Task);
+
+		// Start all tasks.
+		// Parameters:
+		//   The function does not have parameters.
+		// Return value:
+		//   The function does not return a value.
+		virtual void StartAllTasks();
+
+		// Pause all tasks.
+		// Parameters:
+		//   The function does not have parameters.
+		// Return value:
+		//   The function does not return a value.
+		virtual void PauseAllTasks();
+
+		// Clears the task list.
+		// Parameters:
+		//   The function does not have parameters.
+		// Return value:
+		//   The function does not return a value.
+		virtual void ClearTaskList();
 	};
 }

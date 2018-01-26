@@ -14,25 +14,69 @@ using namespace Platform;
 using namespace Windows::Networking::BackgroundTransfer;
 
 TransferTask::TransferTask(
-	DownloadOperation^ Operations,
 	String^ Guid,
-	Uri^ SourceUri,
-	String^ FileName,
-	IStorageFolder^ SaveFolder) :
-	m_Operation(Operations),
+	ApplicationDataCompositeValue^ TaskConfig,
+	M2::CFutureAccessList& FutureAccessList,
+	std::map<String^, DownloadOperation^>& DownloadOperationMap) :
 	m_Guid(Guid),
-	m_SourceUri(SourceUri),
-	m_FileName(FileName),
-	m_SaveFolder(SaveFolder)
+	m_TaskConfig(TaskConfig)
 {
-	this->m_SaveFile = M2AsyncWait(
-		this->m_SaveFolder->GetFileAsync(this->m_FileName));
-	
+	this->m_SourceUri = ref new Uri(dynamic_cast<String^>(
+		TaskConfig->Lookup(L"SourceUri")));
+	this->m_FileName = dynamic_cast<String^>(
+		TaskConfig->Lookup(L"FileName"));
+	try
+	{
+		this->m_SaveFolder = dynamic_cast<IStorageFolder^>(M2AsyncWait(
+			FutureAccessList.GetItemAsync(dynamic_cast<String^>(
+				TaskConfig->Lookup(L"SaveFolderPath")))));
+		if (nullptr != this->m_SaveFolder)
+		{
+			this->m_SaveFile = M2AsyncWait(
+				this->m_SaveFolder->GetFileAsync(this->m_FileName));
+		}
+		this->m_LastStatus = static_cast<TransferTaskStatus>(
+			dynamic_cast<Windows::Foundation::IPropertyValue^>(
+				TaskConfig->Lookup(L"LastStatus"))->GetUInt8());
+	}
+	catch (...)
+	{
+		switch (this->m_LastStatus)
+		{
+		case TransferTaskStatus::Paused:
+		case TransferTaskStatus::Queued:
+		case TransferTaskStatus::Running:
+			this->m_LastStatus = TransferTaskStatus::Error;
+			break;
+		default:
+			break;
+		}
+	}	
+
+	std::map<String^, DownloadOperation^>::iterator iterator =
+		DownloadOperationMap.find(dynamic_cast<String^>(
+			TaskConfig->Lookup(L"BackgroundTransferGuid")));
+	this->m_Operation =
+		(DownloadOperationMap.end() != iterator) ? iterator->second : nullptr;
+
 	if (nullptr != this->m_Operation)
 	{
 		if (TransferTaskStatus::Running == this->Status)
 		{
 			this->m_Operation->AttachAsync();
+		}
+	}
+	else
+	{
+		switch (this->m_LastStatus)
+		{
+		case TransferTaskStatus::Paused:
+		case TransferTaskStatus::Queued:
+		case TransferTaskStatus::Running:
+			this->m_LastStatus = TransferTaskStatus::Error;
+			break;
+		default:
+			break;
 		}
 	}
 }
@@ -43,6 +87,16 @@ void TransferTask::RaisePropertyChanged(
 	using Windows::UI::Xaml::Data::PropertyChangedEventArgs;
 	this->PropertyChanged(
 		this, ref new PropertyChangedEventArgs(PropertyName));
+}
+
+ApplicationDataCompositeValue^ TransferTask::GetTaskConfig()
+{
+	this->m_TaskConfig->Insert(
+		L"LastStatus", 
+		Windows::Foundation::PropertyValue::CreateUInt8(
+			static_cast<uint8>(this->Status)));
+
+	return this->m_TaskConfig;
 }
 
 // Gets the Guid string of the task.
@@ -78,33 +132,36 @@ IStorageFolder^ TransferTask::SaveFolder::get()
 // The current status of the task.
 TransferTaskStatus TransferTask::Status::get()
 {	
-	if (nullptr == this->m_Operation)
-		return TransferTaskStatus::Completed;
-	
-	switch (this->m_Operation->Progress.Status)
+	if (nullptr != this->m_Operation)
 	{
-	case BackgroundTransferStatus::Idle:
-		return TransferTaskStatus::Queued;
-
-	case BackgroundTransferStatus::Running:
-		return TransferTaskStatus::Running;
-
-	case BackgroundTransferStatus::PausedByApplication:
-	case BackgroundTransferStatus::PausedCostedNetwork:
-	case BackgroundTransferStatus::PausedNoNetwork:
-	case BackgroundTransferStatus::PausedSystemPolicy:
-		return TransferTaskStatus::Paused;
-
-	case BackgroundTransferStatus::Completed:
-		return TransferTaskStatus::Completed;
-
-	case BackgroundTransferStatus::Canceled:
-		return TransferTaskStatus::Canceled;
-
-	case BackgroundTransferStatus::Error:		
-	default:
-		return TransferTaskStatus::Error;
+		switch (this->m_Operation->Progress.Status)
+		{
+		case BackgroundTransferStatus::Idle:
+			this->m_LastStatus = TransferTaskStatus::Queued;
+			break;
+		case BackgroundTransferStatus::Running:
+		case BackgroundTransferStatus::PausedCostedNetwork:
+		case BackgroundTransferStatus::PausedNoNetwork:
+		case BackgroundTransferStatus::PausedSystemPolicy:
+			this->m_LastStatus = TransferTaskStatus::Running;
+			break;
+		case BackgroundTransferStatus::PausedByApplication:
+			this->m_LastStatus = TransferTaskStatus::Paused;
+			break;
+		case BackgroundTransferStatus::Completed:
+			this->m_LastStatus = TransferTaskStatus::Completed;
+			break;
+		case BackgroundTransferStatus::Canceled:
+			this->m_LastStatus = TransferTaskStatus::Canceled;
+			break;
+		case BackgroundTransferStatus::Error:
+		default:
+			this->m_LastStatus = TransferTaskStatus::Error;
+			break;
+		}
 	}
+
+	return this->m_LastStatus;
 }
 
 // The total number of bytes received. This value does not include 
@@ -165,13 +222,17 @@ uint64 TransferTask::TotalBytesToReceive::get()
 // Return value:
 //   The function does not return a value.
 void TransferTask::Pause()
-{
-	if (nullptr == this->m_Operation)
-		M2ThrowPlatformException(E_FAIL);
-	
+{	
 	if (TransferTaskStatus::Running == this->Status)
 	{
-		this->m_Operation->Pause();
+		if (nullptr != this->m_Operation)
+		{
+			this->m_Operation->Pause();
+		}
+		else
+		{
+			this->m_LastStatus = TransferTaskStatus::Error;
+		}
 	}
 }
 
@@ -182,13 +243,17 @@ void TransferTask::Pause()
 //   The function does not return a value.
 void TransferTask::Resume()
 {
-	if (nullptr == this->m_Operation)
-		M2ThrowPlatformException(E_FAIL);
-
 	if (TransferTaskStatus::Paused == this->Status)
 	{
-		this->m_Operation->Resume();
-		this->m_Operation->AttachAsync();
+		if (nullptr != this->m_Operation)
+		{
+			this->m_Operation->Resume();
+			this->m_Operation->AttachAsync();
+		}
+		else
+		{
+			this->m_LastStatus = TransferTaskStatus::Error;
+		}
 	}
 }
 
@@ -199,11 +264,21 @@ void TransferTask::Resume()
 //   The function does not return a value.
 void TransferTask::Cancel()
 {
-	if (nullptr == this->m_Operation)
-		M2ThrowPlatformException(E_FAIL);
-
-	if (TransferTaskStatus::Canceled != this->Status)
+	switch (this->Status)
 	{
-		this->m_Operation->AttachAsync()->Cancel();
+	case TransferTaskStatus::Paused:
+	case TransferTaskStatus::Queued:
+	case TransferTaskStatus::Running:
+		if (nullptr != this->m_Operation)
+		{
+			this->m_Operation->AttachAsync()->Cancel();
+		}
+		else
+		{
+			this->m_LastStatus = TransferTaskStatus::Error;
+		}
+		break;
+	default:
+		break;
 	}
 }

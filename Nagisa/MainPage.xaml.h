@@ -65,5 +65,20 @@ namespace Nagisa
 		void TaskItemOpenFolderMenuItem_Click(
 			Object^ sender,
 			RoutedEventArgs^ e);
+		void StartAllAppBarButton_Click(
+			Object^ sender,
+			RoutedEventArgs^ e);
+		void PauseAllAppBarButton_Click(
+			Object^ sender,
+			RoutedEventArgs^ e);
+		void ClearListAppBarButton_Click(
+			Object^ sender,
+			RoutedEventArgs^ e);
+		void OpenDownloadsFolderAppBarButton_Click(
+			Object^ sender,
+			RoutedEventArgs^ e);
+		void SettingsAppBarButton_Click(
+			Object^ sender,
+			RoutedEventArgs^ e);
 	};
 }

@@ -121,6 +121,10 @@
     <value>About</value>
     <comment>About</comment>
   </data>
+  <data name="ClearListAppBarButton.Label" xml:space="preserve">
+    <value>Clear List</value>
+    <comment>Clear List</comment>
+  </data>
   <data name="NewTaskAppBarButton.Label" xml:space="preserve">
     <value>New Task</value>
     <comment>New Task</comment>
@@ -128,6 +132,14 @@
   <data name="NewTaskAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>New Task</value>
     <comment>New Task</comment>
+  </data>
+  <data name="OpenDownloadsFolderAppBarButton.Label" xml:space="preserve">
+    <value>Open Downloads Folder</value>
+    <comment>Open Downloads Folder</comment>
+  </data>
+  <data name="PauseAllAppBarButton.Label" xml:space="preserve">
+    <value>Pause All</value>
+    <comment>Pause All</comment>
   </data>
   <data name="PauseButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Pause</value>
@@ -144,6 +156,14 @@
   <data name="SearchAutoSuggestBox.PlaceholderText" xml:space="preserve">
     <value>Search Downloads</value>
     <comment>Search Downloads</comment>
+  </data>
+  <data name="SettingsAppBarButton.Label" xml:space="preserve">
+    <value>Settings</value>
+    <comment>Settings</comment>
+  </data>
+  <data name="StartAllAppBarButton.Label" xml:space="preserve">
+    <value>Start All</value>
+    <comment>Start All</comment>
   </data>
   <data name="TaskItemCancelMenuItem.Text" xml:space="preserve">
     <value>Cancel</value>
@@ -168,5 +188,13 @@
   <data name="TaskListNoItemsTextBlock.Text" xml:space="preserve">
     <value>No Downloads</value>
     <comment>No Downloads</comment>
+  </data>
+  <data name="TotalDownloadBandwidthStackPanel.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Total Download Bandwidth</value>
+    <comment>Total Download Bandwidth</comment>
+  </data>
+  <data name="TotalUploadBandwidthStackPanel.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Total Upload Bandwidth</value>
+    <comment>Total Upload Bandwidth</comment>
   </data>
 </root>

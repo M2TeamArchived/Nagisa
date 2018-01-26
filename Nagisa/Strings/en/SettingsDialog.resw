@@ -117,84 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutAppBarButton.Label" xml:space="preserve">
-    <value>关于</value>
-    <comment>About</comment>
+  <data name="Dialog.SecondaryButtonText" xml:space="preserve">
+    <value>Close</value>
+    <comment>Close</comment>
   </data>
-  <data name="ClearListAppBarButton.Label" xml:space="preserve">
-    <value>清除列表</value>
-    <comment>Clear List</comment>
-  </data>
-  <data name="NewTaskAppBarButton.Label" xml:space="preserve">
-    <value>新建任务</value>
-    <comment>New Task</comment>
-  </data>
-  <data name="NewTaskAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>新建任务</value>
-    <comment>New Task</comment>
-  </data>
-  <data name="OpenDownloadsFolderAppBarButton.Label" xml:space="preserve">
-    <value>打开下载目录</value>
-    <comment>Open Downloads Folder</comment>
-  </data>
-  <data name="PauseAllAppBarButton.Label" xml:space="preserve">
-    <value>全部暂停</value>
-    <comment>Pause All</comment>
-  </data>
-  <data name="PauseButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>暂停</value>
-    <comment>Pause</comment>
-  </data>
-  <data name="ResumeButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>继续</value>
-    <comment>Resume</comment>
-  </data>
-  <data name="RetryButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>重试</value>
-    <comment>Retry</comment>
-  </data>
-  <data name="SearchAutoSuggestBox.PlaceholderText" xml:space="preserve">
-    <value>搜索下载项</value>
-    <comment>Search Downloads</comment>
-  </data>
-  <data name="SettingsAppBarButton.Label" xml:space="preserve">
-    <value>设置</value>
+  <data name="Dialog.Title" xml:space="preserve">
+    <value>Settings</value>
     <comment>Settings</comment>
-  </data>
-  <data name="StartAllAppBarButton.Label" xml:space="preserve">
-    <value>全部开始</value>
-    <comment>Start All</comment>
-  </data>
-  <data name="TaskItemCancelMenuItem.Text" xml:space="preserve">
-    <value>取消</value>
-    <comment>Cancel</comment>
-  </data>
-  <data name="TaskItemCopyLinkMenuItem.Text" xml:space="preserve">
-    <value>复制链接</value>
-    <comment>Copy Link</comment>
-  </data>
-  <data name="TaskItemMoreButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>更多</value>
-    <comment>More</comment>
-  </data>
-  <data name="TaskItemOpenFolderMenuItem.Text" xml:space="preserve">
-    <value>打开文件夹</value>
-    <comment>Open Folder</comment>
-  </data>
-  <data name="TaskItemRemoveMenuItem.Text" xml:space="preserve">
-    <value>移除</value>
-    <comment>Remove</comment>
-  </data>
-  <data name="TaskListNoItemsTextBlock.Text" xml:space="preserve">
-    <value>没有下载项</value>
-    <comment>No Downloads</comment>
-  </data>
-  <data name="TotalDownloadBandwidthStackPanel.ToolTipService.ToolTip" xml:space="preserve">
-    <value>总下载带宽</value>
-    <comment>Total Download Bandwidth</comment>
-  </data>
-  <data name="TotalUploadBandwidthStackPanel.ToolTipService.ToolTip" xml:space="preserve">
-    <value>总上传带宽</value>
-    <comment>Total Upload Bandwidth</comment>
   </data>
 </root>

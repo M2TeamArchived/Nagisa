@@ -7,6 +7,18 @@
 
 ## Changelog
 
+**Nagisa 0.2 [Build 18]**
+- Fix several bugs and improve several implementations.
+- Add M2::CFutureAccessList class.
+- Remove ITransferManager::RemoveTask method.
+- Add ITransferManager::RemoveTaskAsync method.
+- Add ITransferManager::StartAllTasks method.
+- Add ITransferManager::PauseAllTasks method.
+- Add ITransferManager::ClearTaskList method.
+- You can start or pause all tasks in the UI.
+- You can clear task list in the UI.
+- Start to implement the "Settings" dialog.
+
 **Nagisa 0.2 [Build 17]**
 - Merge the changelog.
 

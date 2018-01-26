@@ -23,6 +23,7 @@ namespace Assassin
 	using Platform::String;
 	using Windows::Foundation::Uri;
 	using Windows::Foundation::IAsyncAction;
+	using Windows::Storage::ApplicationDataCompositeValue;
 	using Windows::Storage::IStorageFile;
 	using Windows::Storage::IStorageFolder;
 	using Windows::Networking::BackgroundTransfer::DownloadOperation;
@@ -130,17 +131,21 @@ namespace Assassin
 		String^ m_FileName = nullptr;
 		IStorageFile^ m_SaveFile = nullptr;
 		IStorageFolder^ m_SaveFolder = nullptr;
+		TransferTaskStatus m_LastStatus = TransferTaskStatus::Canceled;
+
+		ApplicationDataCompositeValue^ m_TaskConfig = nullptr;
 
 	internal:
 		TransferTask(
-			DownloadOperation^ Operation,
 			String^ Guid,
-			Uri^ SourceUri,
-			String^ FileName,
-			IStorageFolder^ SaveFolder);
+			ApplicationDataCompositeValue^ TaskConfig,
+			M2::CFutureAccessList& FutureAccessList,
+			std::map<String^, DownloadOperation^>& DownloadOperationMap);
 
 		void RaisePropertyChanged(
 			String^ PropertyName);
+
+		ApplicationDataCompositeValue^ GetTaskConfig();
 
 	public:
 		virtual event PropertyChangedEventHandler^ PropertyChanged;

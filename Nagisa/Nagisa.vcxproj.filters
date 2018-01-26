@@ -210,6 +210,7 @@
       <Filter>XamlResources</Filter>
     </Page>
     <Page Include="NewTaskDialog.xaml" />
+    <Page Include="SettingsDialog.xaml" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Nagisa.rc" />
@@ -231,6 +232,12 @@
       <Filter>Strings\zh-Hans</Filter>
     </PRIResource>
     <PRIResource Include="Strings\zh-Hans\NewTaskDialog.resw">
+      <Filter>Strings\zh-Hans</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\en\SettingsDialog.resw">
+      <Filter>Strings\en</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\zh-Hans\SettingsDialog.resw">
       <Filter>Strings\zh-Hans</Filter>
     </PRIResource>
   </ItemGroup>
