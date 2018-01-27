@@ -123,14 +123,14 @@
                                                     Click="CopyLinkMenuItem_Click"/>
                                     <MenuFlyoutItem x:Uid="/MainPage/TaskItemOpenFolderMenuItem" 
                                                     Text="[Open Folder]"
-                                                    Click="TaskItemOpenFolderMenuItem_Click"/>
+                                                    Click="OpenFolderMenuItem_Click"/>
                                     <MenuFlyoutSeparator/>
                                     <MenuFlyoutItem x:Uid="/MainPage/TaskItemCancelMenuItem" 
                                                     Text="[Cancel]"
-                                                    Click="TaskItemCancelMenuItem_Click"/>
+                                                    Click="CancelMenuItem_Click"/>
                                     <MenuFlyoutItem x:Uid="/MainPage/TaskItemRemoveMenuItem" 
                                                     Text="[Remove]"
-                                                    Click="TaskItemRemoveMenuItem_Click"/>
+                                                    Click="RemoveMenuItem_Click"/>
                                 </MenuFlyout>
                             </Button.Flyout>
                         </Button>

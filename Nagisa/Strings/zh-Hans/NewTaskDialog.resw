@@ -146,12 +146,8 @@
     <comment>File Name</comment>
   </data>
   <data name="SaveFolderBrowseButton.Content" xml:space="preserve">
-    <value>浏览</value>
-    <comment>Browse</comment>
-  </data>
-  <data name="SaveFolderTextBox.PlaceholderText" xml:space="preserve">
-    <value>请点击浏览按钮修改</value>
-    <comment>Please click the Browse button to change.</comment>
+    <value>浏览以修改</value>
+    <comment>Browse to modify</comment>
   </data>
   <data name="SaveFolderTitle.Text" xml:space="preserve">
     <value>保存目录</value>

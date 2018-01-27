@@ -9,8 +9,44 @@
     mc:Ignorable="d"
     Style="{StaticResource CustomContentDialogStyle}" 
     Title="[Settings]"
-    SecondaryButtonText="[Close]">
+    SecondaryButtonText="[Close]"
+    Loaded="ContentDialog_Loaded">
 
-    <Grid>
-    </Grid>
+    <StackPanel Orientation="Vertical">
+        <TextBlock x:Uid="/SettingsDialog/DefaultDownloadFolderTitle"
+                   Style="{StaticResource SubtitleTextBlockStyle}" 
+                   Text="[Default Download Folder]"/>
+        <RadioButton HorizontalAlignment="Stretch"
+                     HorizontalContentAlignment="Stretch">
+            <RadioButton.Content>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock x:Uid="/SettingsDialog/LastusedDownloadFolderTitle"
+                               Text="[Last used]"/>
+                    <TextBox IsReadOnly="True" 
+                             PlaceholderText="N/A"
+                             Text="G:\OS\Windows\Windows 10 16299"/>
+                </StackPanel>
+            </RadioButton.Content>
+        </RadioButton>
+        <RadioButton HorizontalAlignment="Stretch" 
+                     HorizontalContentAlignment="Stretch">
+            <RadioButton.Content>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock x:Uid="/SettingsDialog/CustomDownloadFolderTitle"
+                               Text="[Custom]"/>
+                    <TextBox IsReadOnly="True" 
+                             PlaceholderText="N/A" 
+                             Text="D:\NagisaDownloads"/>
+                    <Button x:Uid="/SettingsDialog/CustomDownloadFolderBrowseButton"
+                            Content="[Browse to modify]"/>
+                </StackPanel>
+            </RadioButton.Content>
+        </RadioButton>
+        <TextBlock x:Uid="/SettingsDialog/AdvancedTitle" 
+                   Style="{StaticResource SubtitleTextBlockStyle}" 
+                   Text="[Advanced]"/>
+        <CheckBox x:Uid="/SettingsDialog/DisableWindowsBackgroundTransferCheckBox" 
+                  IsEnabled="False"
+                  Content="[Don't use Windows Background Transfer]"/>
+    </StackPanel>
 </ContentDialog>

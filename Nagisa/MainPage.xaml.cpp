@@ -211,7 +211,7 @@ void MainPage::PauseButton_Click(
 	this->RefreshTaskList();
 }
 
-void MainPage::TaskItemCancelMenuItem_Click(
+void MainPage::CancelMenuItem_Click(
 	Object^ sender,
 	RoutedEventArgs^ e)
 {
@@ -230,7 +230,7 @@ void MainPage::TaskItemCancelMenuItem_Click(
 	}	
 }
 
-void MainPage::TaskItemRemoveMenuItem_Click(
+void MainPage::RemoveMenuItem_Click(
 	Object^ sender,
 	RoutedEventArgs^ e)
 {
@@ -245,7 +245,7 @@ void MainPage::TaskItemRemoveMenuItem_Click(
 	});
 }
 
-void MainPage::TaskItemOpenFolderMenuItem_Click(
+void MainPage::OpenFolderMenuItem_Click(
 	Object^ sender,
 	RoutedEventArgs^ e)
 {
@@ -295,9 +295,16 @@ void MainPage::OpenDownloadsFolderAppBarButton_Click(
 	Object^ sender,
 	RoutedEventArgs^ e)
 {
-	using Windows::UI::Popups::MessageDialog;
-	MessageDialog^ Dialog = ref new MessageDialog(L"Unimplemented");
-	Dialog->ShowAsync();
+	try
+	{
+		using Windows::System::Launcher;
+
+		Launcher::LaunchFolderAsync(nullptr);
+	}
+	catch (...)
+	{
+
+	}
 }
 
 void MainPage::SettingsAppBarButton_Click(

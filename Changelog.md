@@ -7,28 +7,20 @@
 
 ## Changelog
 
-**Nagisa 0.2 [Build 18]**
-- Fix several bugs and improve several implementations.
-- Add M2::CFutureAccessList class.
-- Remove ITransferManager::RemoveTask method.
-- Add ITransferManager::RemoveTaskAsync method.
-- Add ITransferManager::StartAllTasks method.
-- Add ITransferManager::PauseAllTasks method.
-- Add ITransferManager::ClearTaskList method.
-- You can start or pause all tasks in the UI.
-- You can clear task list in the UI.
-- Start to implement the "Settings" dialog.
-
-**Nagisa 0.2 [Build 17]**
+**Nagisa 0.2 [Build 19]**
 - Merge the changelog.
+- Improve several implementations.
+- Continue to implement the "Settings" dialog.
 
-### Nagisa 0.2 [Build 16]
+### Nagisa 0.2 [Build 18]
 **New Changes**
 - Fix several bugs and improve several implementations.
 - Add configuration infrastructure.
 - You can cancel task without remove it in the UI.
 - You can open every task's folder in the UI.
 - Change the icon.
+- You can start or pause all tasks in the UI.
+- You can clear task list in the UI.
 
 **Changed APIs**
 - Assassin
@@ -46,9 +38,13 @@
     - Cancel method.
   - ITransferManager interface.
     - AddTaskAsync method.
-    - RemoveTask method.
+    - RemoveTaskAsync method.
+	- StartAllTasks method.
+	- PauseAllTasks method.
+	- ClearTaskList method.
 - M2-Team Common Library
   - M2CreateGuid function.
+  - Add CFutureAccessList class.
 
 **Removed APIs**
 - Assassin

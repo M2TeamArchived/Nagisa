@@ -20,9 +20,9 @@
     <Filter Include="Strings\zh-Hans">
       <UniqueIdentifier>{4c722a55-5ee9-43cd-8caf-e081143d0ebd}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ApplicationDefinition Include="App.xaml" />
+    <Filter Include="Xaml">
+      <UniqueIdentifier>{6062f432-bcda-4b23-b38d-27fb385c3d7c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.xaml.cpp" />
@@ -31,6 +31,7 @@
     <ClCompile Include="AboutDialog.xaml.cpp" />
     <ClCompile Include="XamlResources\CustomConverters.xaml.cpp" />
     <ClCompile Include="NewTaskDialog.xaml.cpp" />
+    <ClCompile Include="SettingsDialog.xaml.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -40,6 +41,7 @@
     <ClInclude Include="AboutDialog.xaml.h" />
     <ClInclude Include="XamlResources\CustomConverters.xaml.h" />
     <ClInclude Include="NewTaskDialog.xaml.h" />
+    <ClInclude Include="SettingsDialog.xaml.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\SplashScreen.scale-200.png">
@@ -195,7 +197,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="MainPage.xaml" />
     <Page Include="XamlResources\CustomContentDialogStyle.xaml">
       <Filter>XamlResources</Filter>
     </Page>
@@ -205,12 +206,21 @@
     <Page Include="XamlResources\CustomListViewItemStyle.xaml">
       <Filter>XamlResources</Filter>
     </Page>
-    <Page Include="AboutDialog.xaml" />
     <Page Include="XamlResources\CustomConverters.xaml">
       <Filter>XamlResources</Filter>
     </Page>
-    <Page Include="NewTaskDialog.xaml" />
-    <Page Include="SettingsDialog.xaml" />
+    <Page Include="AboutDialog.xaml">
+      <Filter>Xaml</Filter>
+    </Page>
+    <Page Include="MainPage.xaml">
+      <Filter>Xaml</Filter>
+    </Page>
+    <Page Include="NewTaskDialog.xaml">
+      <Filter>Xaml</Filter>
+    </Page>
+    <Page Include="SettingsDialog.xaml">
+      <Filter>Xaml</Filter>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Nagisa.rc" />
@@ -240,5 +250,10 @@
     <PRIResource Include="Strings\zh-Hans\SettingsDialog.resw">
       <Filter>Strings\zh-Hans</Filter>
     </PRIResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Filter>Xaml</Filter>
+    </ApplicationDefinition>
   </ItemGroup>
 </Project>

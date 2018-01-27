@@ -23,3 +23,11 @@ SettingsDialog::SettingsDialog()
 {
 	InitializeComponent();
 }
+
+
+void SettingsDialog::ContentDialog_Loaded(
+	Object^ sender,
+	RoutedEventArgs^ e)
+{
+
+}

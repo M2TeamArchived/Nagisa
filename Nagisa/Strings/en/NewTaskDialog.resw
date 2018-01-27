@@ -146,12 +146,8 @@
     <comment>File Name</comment>
   </data>
   <data name="SaveFolderBrowseButton.Content" xml:space="preserve">
-    <value>Browse</value>
-    <comment>Browse</comment>
-  </data>
-  <data name="SaveFolderTextBox.PlaceholderText" xml:space="preserve">
-    <value>Please click the Browse button to change.</value>
-    <comment>Please click the Browse button to change.</comment>
+    <value>Browse to modify</value>
+    <comment>Browse to modify</comment>
   </data>
   <data name="SaveFolderTitle.Text" xml:space="preserve">
     <value>Save Folder</value>

@@ -117,6 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AdvancedTitle.Text" xml:space="preserve">
+    <value>高级</value>
+    <comment>Advanced</comment>
+  </data>
+  <data name="CustomDownloadFolderBrowseButton.Content" xml:space="preserve">
+    <value>浏览以修改</value>
+    <comment>Browse to modify</comment>
+  </data>
+  <data name="CustomDownloadFolderTitle.Text" xml:space="preserve">
+    <value>自定义</value>
+    <comment>Custom</comment>
+  </data>
+  <data name="DefaultDownloadFolderTitle.Text" xml:space="preserve">
+    <value>默认下载目录</value>
+    <comment>Default Download Folder</comment>
+  </data>
   <data name="Dialog.SecondaryButtonText" xml:space="preserve">
     <value>返回</value>
     <comment>Close</comment>
@@ -124,5 +140,13 @@
   <data name="Dialog.Title" xml:space="preserve">
     <value>设置</value>
     <comment>Settings</comment>
+  </data>
+  <data name="DisableWindowsBackgroundTransferCheckBox.Content" xml:space="preserve">
+    <value>不要使用Windows后台传输</value>
+    <comment>Don't use Windows Background Transfer</comment>
+  </data>
+  <data name="LastusedDownloadFolderTitle.Text" xml:space="preserve">
+    <value>上次使用</value>
+    <comment>Last used</comment>
   </data>
 </root>

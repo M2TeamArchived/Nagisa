@@ -35,12 +35,11 @@
             <TextBlock x:Uid="/NewTaskDialog/SaveFolderTitle"
                        Style="{StaticResource SubtitleTextBlockStyle}"
                        Text="[Save Folder]"/>
-            <TextBox x:Uid="/NewTaskDialog/SaveFolderTextBox" 
-                     x:Name="SaveFolderTextBox" 
+            <TextBox x:Name="SaveFolderTextBox" 
                      IsReadOnly="True" 
-                     PlaceholderText="[Please click the Browse button to change.]"/>
+                     PlaceholderText="N/A"/>
             <Button x:Uid="/NewTaskDialog/SaveFolderBrowseButton"
-                    Content="[Browse]"
+                    Content="[Browse to modify]"
                     Click="BrowseButtonClick"/>
         </StackPanel>
     </StackPanel>

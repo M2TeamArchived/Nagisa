@@ -56,13 +56,13 @@ namespace Nagisa
 		void PauseButton_Click(
 			Object^ sender, 
 			RoutedEventArgs^ e);
-		void TaskItemCancelMenuItem_Click(
+		void CancelMenuItem_Click(
 			Object^ sender,
 			RoutedEventArgs^ e);
-		void TaskItemRemoveMenuItem_Click(
+		void RemoveMenuItem_Click(
 			Object^ sender, 
 			RoutedEventArgs^ e);
-		void TaskItemOpenFolderMenuItem_Click(
+		void OpenFolderMenuItem_Click(
 			Object^ sender,
 			RoutedEventArgs^ e);
 		void StartAllAppBarButton_Click(
