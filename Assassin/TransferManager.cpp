@@ -46,16 +46,34 @@ TransferManager::TransferManager(
 
 	if (this->m_RootContainer->Values->HasKey(L"LastusedFolder"))
 	{
-		this->m_LastusedFolder = dynamic_cast<IStorageFolder^>(M2AsyncWait(
-			this->m_FutureAccessList.GetItemAsync(dynamic_cast<String^>(
-				this->m_RootContainer->Values->Lookup(L"LastusedFolder")))));
+		try
+		{
+			this->m_LastusedFolder = dynamic_cast<IStorageFolder^>(M2AsyncWait(
+				this->m_FutureAccessList.GetItemAsync(dynamic_cast<String^>(
+					this->m_RootContainer->Values->Lookup(
+						L"LastusedFolder")))));
+		}
+		catch (...)
+		{
+			this->m_LastusedFolder = nullptr;
+			this->m_RootContainer->Values->Remove(L"LastusedFolder");
+		}
 	}
 
 	if (this->m_RootContainer->Values->HasKey(L"DefaultFolder"))
 	{
-		this->m_DefaultFolder = dynamic_cast<IStorageFolder^>(M2AsyncWait(
-			this->m_FutureAccessList.GetItemAsync(dynamic_cast<String^>(
-				this->m_RootContainer->Values->Lookup(L"DefaultFolder")))));
+		try
+		{
+			this->m_DefaultFolder = dynamic_cast<IStorageFolder^>(M2AsyncWait(
+				this->m_FutureAccessList.GetItemAsync(dynamic_cast<String^>(
+					this->m_RootContainer->Values->Lookup(
+						L"DefaultFolder")))));
+		}
+		catch (...)
+		{
+			this->m_DefaultFolder = nullptr;
+			this->m_RootContainer->Values->Remove(L"DefaultFolder");
+		}	
 	}
 
 	if (EnableUINotify)
@@ -87,6 +105,7 @@ TransferManager::TransferManager(
 				this->m_TasksContainer->Values->Insert(
 					TaskInternal->Guid, TaskInternal->GetTaskConfig());
 
+				TaskInternal->UpdateChangedProperties();
 				TaskInternal->NotifyPropertyChanged();
 
 				this->m_TotalDownloadBandwidth += TaskInternal->BytesReceivedSpeed;
@@ -144,8 +163,9 @@ void TransferManager::DefaultFolder::set(
 	
 	if (nullptr != value)
 	{
-		this->m_FutureAccessList.AddItem(value);	
-		this->m_RootContainer->Values->Insert(L"DefaultFolder", value->Path);
+		this->m_RootContainer->Values->Insert(
+			L"DefaultFolder", 
+			this->m_FutureAccessList.AddItem(value));
 	}
 	else
 	{
@@ -268,12 +288,13 @@ IAsyncAction^ TransferManager::AddTaskAsync(
 
 		StorageFile^ SaveFile = M2AsyncWait(SaveFolder->CreateFileAsync(
 			DesiredFileName, CreationCollisionOption::GenerateUniqueName));
-		String^ SaveFolderPath = SaveFolder->Path;
 
-		this->m_FutureAccessList.AddItem(SaveFolder);
+		String^ Token = this->m_FutureAccessList.AddItem(SaveFolder);
+
 		this->m_LastusedFolder = SaveFolder;
 		this->m_RootContainer->Values->Insert(
-			L"LastusedFolder", SaveFolderPath);
+			L"LastusedFolder", 
+			Token);
 		
 		DownloadOperation^ Operation = this->m_Downloader->CreateDownload(
 			SourceUri, SaveFile);
@@ -288,10 +309,10 @@ IAsyncAction^ TransferManager::AddTaskAsync(
 			L"FileName",
 			SaveFile->Name);
 		TaskConfig->Insert(
-			L"SaveFolderPath",
-			SaveFolderPath);
+			L"SaveFolder",
+			Token);
 		TaskConfig->Insert(
-			L"LastStatus",
+			L"Status",
 			Windows::Foundation::PropertyValue::CreateUInt8(
 				static_cast<uint8>(TransferTaskStatus::Queued)));
 

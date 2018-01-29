@@ -104,54 +104,21 @@ namespace M2
 		// Parameters:
 		//   Item: The IStorageItem object which you want to add. 
 		// Return value:
-		//   This function does not return a value.
-		void AddItem(IStorageItem^ Item)
+		//   A token that the app can use later to retrieve the storage item.
+		String^ AddItem(IStorageItem^ Item)
 		{
-			String^ ItemPath = Item->Path;
-
-			if (nullptr == this->FindToken(ItemPath))
-			{
-				this->m_FutureAccessList->Add(Item, ItemPath);
-			}
-		}
-
-		// Finds token of the IStorageItem object from the future access list.
-		// Parameters:
-		//   Path: The path of the IStorageItem object. 
-		// Return value:
-		//   Returns a token of the IStorageItem object if found, or nullptr 
-		//   otherwise.
-		String^ FindToken(String^ Path)
-		{
-			using Windows::Storage::AccessCache::AccessListEntry;
-
-			for (AccessListEntry Entry : this->m_FutureAccessList->Entries)
-			{
-				if (Path == Entry.Metadata)
-				{
-					return Entry.Token;
-				}
-			}
-
-			return nullptr;
+			return this->m_FutureAccessList->Add(Item);
 		}
 
 		// Gets IStorageItem object from the future access list.
 		// Parameters:
-		//   Path: The path of the IStorageItem object. 
+		//   Token: The token of the IStorageItem object. 
 		// Return value:
-		//   Returns an asynchronous object for getting the IStorageItem object
-		//   if found, or nullptr otherwise.
-		IAsyncOperation<IStorageItem^>^ GetItemAsync(String^ Path)
+		//   When this method completes successfully, it returns the item (type
+		//   IStorageItem ) that is associated with the specified token.
+		IAsyncOperation<IStorageItem^>^ GetItemAsync(String^ Token)
 		{
-			String^ ItemToken = this->FindToken(Path);
-
-			if (nullptr != ItemToken)
-			{
-				return this->m_FutureAccessList->GetItemAsync(ItemToken);
-			}
-
-			return nullptr;
+			return this->m_FutureAccessList->GetItemAsync(Token);
 		}
 
 		// Gets IStorageItemAccessList object.

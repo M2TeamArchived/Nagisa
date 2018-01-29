@@ -7,6 +7,10 @@
 
 ## Changelog
 
+**Nagisa 0.2 [Build 21]**
+- You can open default download folder by File Explorer in the UI.
+- Fix several bugs and improve several implementations.
+
 **Nagisa 0.2 [Build 20]**
 - Fix several bugs and improve several implementations.
 - Add ITransferManager::LastusedFolder property.

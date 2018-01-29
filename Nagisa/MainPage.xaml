@@ -193,7 +193,7 @@
                                   Glyph="&#xE74B;"/>
                         <TextBlock VerticalAlignment="Center" 
                                    FontSize="16" 
-                                   Text="{x:Bind Path=Manager.TotalDownloadBandwidth, Converter={StaticResource Uint64ByteSizeToStringConverter}, Mode=OneWay}"/>
+                                   Text="{x:Bind Path=TransferManager.TotalDownloadBandwidth, Converter={StaticResource Uint64ByteSizeToStringConverter}, Mode=OneWay}"/>
                         <TextBlock VerticalAlignment="Center" 
                                    FontSize="16" 
                                    Text="/s"/>
@@ -208,7 +208,7 @@
                                   Glyph="&#xE74A;"/>
                         <TextBlock VerticalAlignment="Center" 
                                    FontSize="16"
-                                   Text="{x:Bind Path=Manager.TotalUploadBandwidth, Converter={StaticResource Uint64ByteSizeToStringConverter}, Mode=OneWay}"/>
+                                   Text="{x:Bind Path=TransferManager.TotalUploadBandwidth, Converter={StaticResource Uint64ByteSizeToStringConverter}, Mode=OneWay}"/>
                         <TextBlock VerticalAlignment="Center"
                                    FontSize="16"
                                    Text="/s"/>

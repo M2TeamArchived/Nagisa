@@ -29,14 +29,14 @@ MainPage::MainPage() :
 	InitializeComponent();
 }
 
-ITransferManager^ MainPage::Manager::get()
+ITransferManager^ MainPage::TransferManager::get()
 {
 	return this->m_TransferManager;
 }
 
 void MainPage::RefreshTaskList()
 {
-	auto Tasks = M2AsyncWait(this->Manager->GetTasksAsync());
+	auto Tasks = M2AsyncWait(this->m_TransferManager->GetTasksAsync());
 
 	if (nullptr != Tasks)
 	{
@@ -57,7 +57,7 @@ void Nagisa::MainPage::RefreshTaskListAsync()
 
 void Nagisa::MainPage::SearchTaskList(String^ SearchFilter)
 {
-	this->Manager->SearchFilter = SearchFilter;
+	this->m_TransferManager->SearchFilter = SearchFilter;
 
 	this->RefreshTaskListAsync();
 }
@@ -77,7 +77,7 @@ void MainPage::AboutButton_Click(
 	RoutedEventArgs^ e)
 {
 	this->ShowContentDialogAsync(
-		ref new AboutDialog(this->Manager));
+		ref new AboutDialog(this->m_TransferManager));
 }
 
 void MainPage::NewTaskButton_Click(
@@ -86,7 +86,7 @@ void MainPage::NewTaskButton_Click(
 {
 	IAsyncOperation<ContentDialogResult>^ Operation = 
 		this->ShowContentDialogAsync(
-			ref new NewTaskDialog(this->Manager));
+			ref new NewTaskDialog(this->m_TransferManager));
 
 	M2::CThread([this, Operation]()
 	{
@@ -183,9 +183,9 @@ void MainPage::RetryButton_Click(
 		auto FileName = Task->FileName;
 		auto SaveFolder = Task->SaveFolder;
 		
-		M2AsyncWait(this->Manager->RemoveTaskAsync(Task));
+		M2AsyncWait(this->m_TransferManager->RemoveTaskAsync(Task));
 
-		M2AsyncWait(this->Manager->AddTaskAsync(
+		M2AsyncWait(this->m_TransferManager->AddTaskAsync(
 			SourceUri,
 			FileName,
 			SaveFolder));
@@ -246,7 +246,7 @@ void MainPage::RemoveMenuItem_Click(
 
 	M2::CThread([this, Task]()
 	{
-		M2AsyncWait(this->Manager->RemoveTaskAsync(Task));
+		M2AsyncWait(this->m_TransferManager->RemoveTaskAsync(Task));
 
 		this->RefreshTaskList();
 	});
@@ -279,7 +279,7 @@ void MainPage::StartAllAppBarButton_Click(
 	Object^ sender,
 	RoutedEventArgs^ e)
 {
-	this->Manager->StartAllTasks();
+	this->m_TransferManager->StartAllTasks();
 
 	this->RefreshTaskListAsync();
 }
@@ -288,7 +288,7 @@ void MainPage::PauseAllAppBarButton_Click(
 	Object^ sender,
 	RoutedEventArgs^ e)
 {
-	this->Manager->PauseAllTasks();
+	this->m_TransferManager->PauseAllTasks();
 
 	this->RefreshTaskListAsync();
 }
@@ -297,7 +297,7 @@ void MainPage::ClearListAppBarButton_Click(
 	Object^ sender, 
 	RoutedEventArgs^ e)
 {
-	this->Manager->ClearTaskList();
+	this->m_TransferManager->ClearTaskList();
 
 	this->RefreshTaskListAsync();
 }
@@ -308,9 +308,19 @@ void MainPage::OpenDownloadsFolderAppBarButton_Click(
 {
 	try
 	{
+		using Windows::Storage::IStorageFolder;
 		using Windows::System::Launcher;
 
-		Launcher::LaunchFolderAsync(nullptr);
+		IStorageFolder^ Folder = this->m_TransferManager->DefaultFolder;
+		if (nullptr == Folder)
+		{
+			Folder = this->m_TransferManager->LastusedFolder;
+		}
+
+		if (nullptr != Folder)
+		{
+			Launcher::LaunchFolderAsync(Folder);
+		}	
 	}
 	catch (...)
 	{
@@ -323,5 +333,5 @@ void MainPage::SettingsAppBarButton_Click(
 	RoutedEventArgs^ e)
 {
 	this->ShowContentDialogAsync(
-		ref new SettingsDialog(this->Manager));
+		ref new SettingsDialog(this->m_TransferManager));
 }

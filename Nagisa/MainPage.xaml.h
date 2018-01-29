@@ -28,7 +28,7 @@ namespace Nagisa
 	public:
 		MainPage();
 
-		property ITransferManager^ Manager
+		property ITransferManager^ TransferManager
 		{
 			ITransferManager^ get();
 		}

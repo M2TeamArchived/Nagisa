@@ -25,19 +25,31 @@ TransferTask::TransferTask(
 		TaskConfig->Lookup(L"SourceUri")));
 	this->m_FileName = dynamic_cast<String^>(
 		TaskConfig->Lookup(L"FileName"));
+	this->m_Status = static_cast<TransferTaskStatus>(
+		dynamic_cast<Windows::Foundation::IPropertyValue^>(
+			TaskConfig->Lookup(L"Status"))->GetUInt8());
 	try
 	{
 		this->m_SaveFolder = dynamic_cast<IStorageFolder^>(M2AsyncWait(
 			FutureAccessList.GetItemAsync(dynamic_cast<String^>(
-				TaskConfig->Lookup(L"SaveFolderPath")))));
+				TaskConfig->Lookup(L"SaveFolder")))));
 		if (nullptr != this->m_SaveFolder)
 		{
 			this->m_SaveFile = M2AsyncWait(
 				this->m_SaveFolder->GetFileAsync(this->m_FileName));
 		}
-		this->m_Status = static_cast<TransferTaskStatus>(
-			dynamic_cast<Windows::Foundation::IPropertyValue^>(
-				TaskConfig->Lookup(L"LastStatus"))->GetUInt8());
+
+		std::map<String^, DownloadOperation^>::iterator iterator =
+			DownloadOperationMap.find(dynamic_cast<String^>(
+				TaskConfig->Lookup(L"BackgroundTransferGuid")));
+		this->m_Operation = (DownloadOperationMap.end() != iterator)
+			? iterator->second : nullptr;
+		if (nullptr == this->m_Operation) throw;
+
+		if (TransferTaskStatus::Running == this->Status)
+		{
+			this->m_Operation->AttachAsync();
+		}
 	}
 	catch (...)
 	{
@@ -51,48 +63,13 @@ TransferTask::TransferTask(
 		default:
 			break;
 		}
-	}	
-
-	std::map<String^, DownloadOperation^>::iterator iterator =
-		DownloadOperationMap.find(dynamic_cast<String^>(
-			TaskConfig->Lookup(L"BackgroundTransferGuid")));
-	this->m_Operation =
-		(DownloadOperationMap.end() != iterator) ? iterator->second : nullptr;
-
-	if (nullptr != this->m_Operation)
-	{
-		if (TransferTaskStatus::Running == this->Status)
-		{
-			this->m_Operation->AttachAsync();
-		}
-	}
-	else
-	{
-		switch (this->m_Status)
-		{
-		case TransferTaskStatus::Paused:
-		case TransferTaskStatus::Queued:
-		case TransferTaskStatus::Running:
-			this->m_Status = TransferTaskStatus::Error;
-			break;
-		default:
-			break;
-		}
 	}
 }
 
-void TransferTask::RaisePropertyChanged(
-	String ^ PropertyName)
-{
-	using Windows::UI::Xaml::Data::PropertyChangedEventArgs;
-	this->PropertyChanged(
-		this, ref new PropertyChangedEventArgs(PropertyName));
-}
-
-void TransferTask::NotifyPropertyChanged()
+void TransferTask::UpdateChangedProperties()
 {
 	using Windows::Networking::BackgroundTransfer::BackgroundDownloadProgress;
-	
+
 	if (nullptr != this->m_Operation)
 	{
 		switch (this->m_Operation->Progress.Status)
@@ -120,7 +97,6 @@ void TransferTask::NotifyPropertyChanged()
 			this->m_Status = TransferTaskStatus::Error;
 			break;
 		}
-		this->RaisePropertyChanged(L"Status");
 		if (TransferTaskStatus::Running != this->m_Status)
 			return;
 
@@ -131,37 +107,58 @@ void TransferTask::NotifyPropertyChanged()
 
 		uint64 LastBytesReceived = this->m_BytesReceived;
 		this->m_BytesReceived = Progress.BytesReceived;
-		this->RaisePropertyChanged(L"BytesReceived");
 
 		this->m_TotalBytesToReceive = Progress.TotalBytesToReceive;
-		this->RaisePropertyChanged(L"TotalBytesToReceive");
 
 		uint64 DeltaBytesReceived = this->m_BytesReceived - LastBytesReceived;
 		ULONGLONG DeltaPassedTime = this->m_TickCount - LastTickCount;
 		this->m_BytesReceivedSpeed =
 			DeltaBytesReceived * 1000 / DeltaPassedTime;
-		this->RaisePropertyChanged(L"BytesReceivedSpeed");
 
-		if (0 == this->m_BytesReceivedSpeed || 
+		if (0 == this->m_BytesReceivedSpeed ||
 			0 == this->m_TotalBytesToReceive)
 		{
 			this->m_RemainTime = static_cast<uint64>(-1);
 		}
 		else
 		{
-			uint64 RemainBytesToReceive = 
-				this->m_TotalBytesToReceive - this->m_BytesReceived;		
-			this->m_RemainTime = 
+			uint64 RemainBytesToReceive =
+				this->m_TotalBytesToReceive - this->m_BytesReceived;
+			this->m_RemainTime =
 				RemainBytesToReceive / this->m_BytesReceivedSpeed;
 		}
-		this->RaisePropertyChanged(L"RemainTime");
+	}
+}
+
+void TransferTask::RaisePropertyChanged(
+	String ^ PropertyName)
+{
+	using Windows::UI::Xaml::Data::PropertyChangedEventArgs;
+	this->PropertyChanged(
+		this, ref new PropertyChangedEventArgs(PropertyName));
+}
+
+void TransferTask::NotifyPropertyChanged()
+{
+	using Windows::Networking::BackgroundTransfer::BackgroundDownloadProgress;
+	
+	if (nullptr != this->m_Operation)
+	{
+		this->RaisePropertyChanged(L"Status");
+		if (TransferTaskStatus::Running == this->m_Status)
+		{
+			this->RaisePropertyChanged(L"BytesReceived");
+			this->RaisePropertyChanged(L"TotalBytesToReceive");
+			this->RaisePropertyChanged(L"BytesReceivedSpeed");
+			this->RaisePropertyChanged(L"RemainTime");
+		}	
 	}
 }
 
 ApplicationDataCompositeValue^ TransferTask::GetTaskConfig()
 {
 	this->m_TaskConfig->Insert(
-		L"LastStatus", 
+		L"Status", 
 		Windows::Foundation::PropertyValue::CreateUInt8(
 			static_cast<uint8>(this->Status)));
 
