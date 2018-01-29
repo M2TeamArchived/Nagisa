@@ -21,7 +21,9 @@ using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 
 
-AboutDialog::AboutDialog()
+AboutDialog::AboutDialog(
+	ITransferManager^ TransferManager) :
+	m_TransferManager(TransferManager)
 {
 	InitializeComponent();
 }

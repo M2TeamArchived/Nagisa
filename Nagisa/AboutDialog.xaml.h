@@ -9,7 +9,7 @@
 
 namespace Nagisa
 {
-	using Assassin::TransferManager;
+	using Assassin::ITransferManager;
 	using Platform::Object;
 	using Windows::UI::Xaml::Controls::ContentDialog;
 	using Windows::UI::Xaml::Controls::ContentDialogButtonClickEventArgs;
@@ -19,10 +19,11 @@ namespace Nagisa
 	public ref class AboutDialog sealed
 	{
 	public:
-		AboutDialog();
-	internal:
-		TransferManager^ m_TransferManager = nullptr;
+		AboutDialog(
+			ITransferManager^ TransferManager);
 	private:
+		ITransferManager ^ m_TransferManager = nullptr;
+
 		void ContentDialog_Loaded(
 			Object^ sender,
 			RoutedEventArgs^ e);

@@ -22,11 +22,13 @@ namespace Assassin
 	using Windows::Storage::ApplicationDataContainer;
 	using Windows::Storage::IStorageFile;
 	using Windows::Storage::IStorageFolder;
+	using Windows::UI::Xaml::Data::INotifyPropertyChanged;
+	using Windows::UI::Xaml::Data::PropertyChangedEventHandler;
 	using Windows::UI::Xaml::DispatcherTimer;
 
 	using ITransferTaskVector = IVectorView<ITransferTask^>;
 
-	public interface class ITransferManager
+	public interface class ITransferManager : INotifyPropertyChanged
 	{
 		// Gets the version of Nagisa.
 		property String^ Version
@@ -36,6 +38,27 @@ namespace Assassin
 
 		// Gets or sets the filter to use for searching the task list.
 		property String^ SearchFilter;
+
+		// Gets the last used folder.
+		property IStorageFolder^ LastusedFolder
+		{
+			IStorageFolder^ get();
+		}
+
+		// Gets or sets the default download folder.
+		property IStorageFolder^ DefaultFolder;
+
+		// Gets the total download bandwidth.
+		property uint64 TotalDownloadBandwidth
+		{
+			uint64 get();
+		}
+
+		// Gets the total upload bandwidth.
+		property uint64 TotalUploadBandwidth
+		{
+			uint64 get();
+		}
 
 		// Gets the task list.
 		// Parameters:
@@ -86,7 +109,7 @@ namespace Assassin
 		void ClearTaskList();
 	};
 
-	public ref class TransferManager sealed : public ITransferManager
+	ref class TransferManager sealed : public ITransferManager
 	{
 	private:
 		BackgroundDownloader^ m_Downloader = nullptr;
@@ -99,6 +122,16 @@ namespace Assassin
 		ApplicationDataContainer^ m_TasksContainer = nullptr;
 
 		M2::CFutureAccessList m_FutureAccessList;
+
+		IStorageFolder^ m_LastusedFolder = nullptr;
+		IStorageFolder^ m_DefaultFolder = nullptr;
+
+		uint64 m_TotalDownloadBandwidth = 0;
+		uint64 m_TotalUploadBandwidth = 0;
+
+	internal:
+		void RaisePropertyChanged(
+			String^ PropertyName);
 
 	public:
 		// Creates a new TransferManager object.
@@ -116,6 +149,8 @@ namespace Assassin
 		//   The function does not return a value.
 		virtual ~TransferManager();
 
+		virtual event PropertyChangedEventHandler^ PropertyChanged;
+
 		// Gets the version of Nagisa.
 		virtual property String^ Version
 		{
@@ -124,6 +159,31 @@ namespace Assassin
 
 		// Gets or sets the filter to use for searching the task list.
 		virtual property String^ SearchFilter;
+
+		// Gets the last used folder.
+		virtual property IStorageFolder^ LastusedFolder
+		{
+			IStorageFolder^ get();
+		}
+
+		// Gets or sets the default download folder.
+		virtual property IStorageFolder^ DefaultFolder
+		{
+			IStorageFolder^ get();
+			void set(IStorageFolder^ value);
+		}
+
+		// Gets the total download bandwidth.
+		virtual property uint64 TotalDownloadBandwidth
+		{
+			uint64 get();
+		}
+
+		// Gets the total upload bandwidth.
+		virtual property uint64 TotalUploadBandwidth
+		{
+			uint64 get();
+		}
 
 		// Gets the task list.
 		// Parameters:
@@ -172,5 +232,16 @@ namespace Assassin
 		// Return value:
 		//   The function does not return a value.
 		virtual void ClearTaskList();
+	};
+
+	public ref class TransferManagerFactory sealed
+	{
+	public:
+		// Creates a new TransferManager object.
+		// Parameters:
+		//   The function does not have parameters.
+		// Return value:
+		//   Returns a new TransferManager object.
+		static ITransferManager^ CreateInstance();
 	};
 }

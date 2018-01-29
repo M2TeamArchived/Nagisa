@@ -13,6 +13,13 @@ License: The MIT License
 using namespace Assassin;
 using namespace Platform;
 
+void TransferManager::RaisePropertyChanged(String^ PropertyName)
+{
+	using Windows::UI::Xaml::Data::PropertyChangedEventArgs;
+	this->PropertyChanged(
+		this, ref new PropertyChangedEventArgs(PropertyName));
+}
+
 // Creates a new TransferManager object.
 // Parameters:
 //   EnableUINotify: Enable the UI notify timer if true. 
@@ -35,7 +42,21 @@ TransferManager::TransferManager(
 	this->m_TasksContainer =
 		this->m_RootContainer->CreateContainer(
 			L"Tasks",
-			ApplicationDataCreateDisposition::Always);	
+			ApplicationDataCreateDisposition::Always);
+
+	if (this->m_RootContainer->Values->HasKey(L"LastusedFolder"))
+	{
+		this->m_LastusedFolder = dynamic_cast<IStorageFolder^>(M2AsyncWait(
+			this->m_FutureAccessList.GetItemAsync(dynamic_cast<String^>(
+				this->m_RootContainer->Values->Lookup(L"LastusedFolder")))));
+	}
+
+	if (this->m_RootContainer->Values->HasKey(L"DefaultFolder"))
+	{
+		this->m_DefaultFolder = dynamic_cast<IStorageFolder^>(M2AsyncWait(
+			this->m_FutureAccessList.GetItemAsync(dynamic_cast<String^>(
+				this->m_RootContainer->Values->Lookup(L"DefaultFolder")))));
+	}
 
 	if (EnableUINotify)
 	{
@@ -54,6 +75,9 @@ TransferManager::TransferManager(
 		{
 			EnterCriticalSection(&this->m_TaskListUpdateCS);
 
+			this->m_TotalDownloadBandwidth = 0;
+			this->m_TotalUploadBandwidth = 0;
+
 			for (ITransferTask^ Task : this->m_TaskList)
 			{
 				if (nullptr == Task) continue;
@@ -63,16 +87,14 @@ TransferManager::TransferManager(
 				this->m_TasksContainer->Values->Insert(
 					TaskInternal->Guid, TaskInternal->GetTaskConfig());
 
-				TaskInternal->RaisePropertyChanged(L"Status");
-				
-				if (TransferTaskStatus::Running == Task->Status)
-				{		
-					TaskInternal->RaisePropertyChanged(L"BytesReceived");
-					TaskInternal->RaisePropertyChanged(L"BytesReceivedSpeed");
-					TaskInternal->RaisePropertyChanged(L"RemainTime");
-					TaskInternal->RaisePropertyChanged(L"TotalBytesToReceive");
-				}	
+				TaskInternal->NotifyPropertyChanged();
+
+				this->m_TotalDownloadBandwidth += TaskInternal->BytesReceivedSpeed;
+				this->m_TotalUploadBandwidth += 0;
 			}
+
+			this->RaisePropertyChanged(L"TotalDownloadBandwidth");
+			this->RaisePropertyChanged(L"TotalUploadBandwidth");
 
 			LeaveCriticalSection(&this->m_TaskListUpdateCS);
 		});
@@ -100,6 +122,50 @@ TransferManager::~TransferManager()
 String^ TransferManager::Version::get()
 {
 	return NAGISA_VERSION_STRING;
+}
+
+// Gets the last used folder.
+IStorageFolder^ TransferManager::LastusedFolder::get()
+{
+	return this->m_LastusedFolder;
+}
+
+// Gets the default download folder.
+IStorageFolder^ TransferManager::DefaultFolder::get()
+{
+	return this->m_DefaultFolder;
+}
+
+// Sets the default download folder.
+void TransferManager::DefaultFolder::set(
+	IStorageFolder^ value)
+{
+	this->m_DefaultFolder = value;
+	
+	if (nullptr != value)
+	{
+		this->m_FutureAccessList.AddItem(value);	
+		this->m_RootContainer->Values->Insert(L"DefaultFolder", value->Path);
+	}
+	else
+	{
+		if (this->m_RootContainer->Values->HasKey(L"DefaultFolder"))
+		{
+			this->m_RootContainer->Values->Remove(L"DefaultFolder");
+		}	
+	}
+}
+
+// Gets the total download bandwidth.
+uint64 TransferManager::TotalDownloadBandwidth::get()
+{
+	return this->m_TotalDownloadBandwidth;
+}
+
+// Gets the total upload bandwidth.
+uint64 TransferManager::TotalUploadBandwidth::get()
+{
+	return this->m_TotalUploadBandwidth;
 }
 
 // Gets the task list.
@@ -202,8 +268,12 @@ IAsyncAction^ TransferManager::AddTaskAsync(
 
 		StorageFile^ SaveFile = M2AsyncWait(SaveFolder->CreateFileAsync(
 			DesiredFileName, CreationCollisionOption::GenerateUniqueName));
+		String^ SaveFolderPath = SaveFolder->Path;
 
 		this->m_FutureAccessList.AddItem(SaveFolder);
+		this->m_LastusedFolder = SaveFolder;
+		this->m_RootContainer->Values->Insert(
+			L"LastusedFolder", SaveFolderPath);
 		
 		DownloadOperation^ Operation = this->m_Downloader->CreateDownload(
 			SourceUri, SaveFile);
@@ -219,7 +289,7 @@ IAsyncAction^ TransferManager::AddTaskAsync(
 			SaveFile->Name);
 		TaskConfig->Insert(
 			L"SaveFolderPath",
-			SaveFolder->Path);
+			SaveFolderPath);
 		TaskConfig->Insert(
 			L"LastStatus",
 			Windows::Foundation::PropertyValue::CreateUInt8(
@@ -357,4 +427,14 @@ void TransferManager::ClearTaskList()
 	}
 
 	LeaveCriticalSection(&this->m_TaskListUpdateCS);
+}
+
+// Creates a new TransferManager object.
+// Parameters:
+//   The function does not have parameters.
+// Return value:
+//   Returns a new TransferManager object.
+ITransferManager^ TransferManagerFactory::CreateInstance()
+{
+	return ref new TransferManager(true);
 }

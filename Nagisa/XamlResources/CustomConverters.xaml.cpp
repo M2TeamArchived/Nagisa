@@ -172,3 +172,22 @@ Object^ TaskStatusToVisibleConverter::ConvertBack(
 	M2ThrowPlatformException(E_NOTIMPL);
 }
 
+Object^ NullableBooleanToBooleanConverter::Convert(
+	Object^ value,
+	TypeName targetType,
+	Object^ parameter,
+	String^ language)
+{
+	IBox<bool>^ status = dynamic_cast<IBox<bool>^>(value);
+	return (status != nullptr) ? status->Value : false;
+}
+
+Object^ NullableBooleanToBooleanConverter::ConvertBack(
+	Object^ value,
+	TypeName targetType,
+	Object^ parameter,
+	String^ language)
+{
+	IBox<bool>^ status = dynamic_cast<IBox<bool>^>(value);
+	return (status != nullptr) ? status->Value : false;
+}

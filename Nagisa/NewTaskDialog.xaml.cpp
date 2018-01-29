@@ -20,7 +20,11 @@ using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 
-NewTaskDialog::NewTaskDialog()
+NewTaskDialog::NewTaskDialog(
+	ITransferManager^ TransferManager) :
+	m_TransferManager(TransferManager),
+	m_NormalBrush(ref new SolidColorBrush(Colors::Gray)), 
+	m_NoticeableBrush(ref new SolidColorBrush(Colors::Red))
 {
 	InitializeComponent();
 }
@@ -29,37 +33,27 @@ void NewTaskDialog::DownloadButtonClick(
 	ContentDialog^ sender, 
 	ContentDialogButtonClickEventArgs^ args)
 {
-	using Windows::UI::Colors;
-	SolidColorBrush^ NormalBrush = ref new SolidColorBrush(Colors::Gray);
-	SolidColorBrush^ NoticeableBrush = ref new SolidColorBrush(Colors::Red);
+	bool IsDownloadSourceEmpty = (nullptr == this->m_DownloadSource);
+	bool IsFileNameEmpty = this->m_FileName->IsEmpty();
+	bool IsSaveFolderEmpty = (nullptr == this->m_SaveFolder);
 
-	this->DownloadSourceTextBox->BorderBrush = NormalBrush;
-	this->FileNameTextBox->BorderBrush = NormalBrush;
-	this->SaveFolderTextBox->BorderBrush = NormalBrush;
+	this->DownloadSourceTextBox->BorderBrush = IsDownloadSourceEmpty
+		? this->m_NoticeableBrush : this->m_NormalBrush;
+	this->FileNameTextBox->BorderBrush = IsFileNameEmpty
+		? this->m_NoticeableBrush : this->m_NormalBrush;
+	this->SaveFolderTextBox->BorderBrush = IsSaveFolderEmpty
+		? this->m_NoticeableBrush : this->m_NormalBrush;
 
-	bool IsSuccess = true;
-
-	if (nullptr == this->m_DownloadSource)
-	{
-		IsSuccess = false;
-		this->DownloadSourceTextBox->BorderBrush = NoticeableBrush;
-	}
-
-	if (this->m_FileName->IsEmpty())
-	{
-		IsSuccess = false;
-		this->FileNameTextBox->BorderBrush = NoticeableBrush;
-	}
-
-	if (nullptr == this->m_SaveFolder)
-	{
-		IsSuccess = false;
-		this->SaveFolderTextBox->BorderBrush = NoticeableBrush;
-	}
-
-	if (false == IsSuccess)
+	if (IsDownloadSourceEmpty || IsFileNameEmpty || IsSaveFolderEmpty)
 	{
 		args->Cancel = true;
+	}
+	else
+	{
+		M2AsyncWait(this->m_TransferManager->AddTaskAsync(
+			this->m_DownloadSource,
+			this->m_FileName,
+			this->m_SaveFolder));
 	}
 }
 
@@ -75,23 +69,21 @@ void NewTaskDialog::BrowseButtonClick(
 	picker->SuggestedStartLocation = PickerLocationId::ComputerFolder;
 	picker->FileTypeFilter->Append(L"*");
 
-	M2AsyncSetCompletedHandler(
-		picker->PickSingleFolderAsync(),
-		[this](
-			IAsyncOperation<StorageFolder^>^ asyncInfo,
-			AsyncStatus asyncStatus)
+	IAsyncOperation<StorageFolder^>^ Operation =
+		picker->PickSingleFolderAsync();
+
+	M2::CThread([this, Operation]()
 	{
-		M2ExecuteOnUIThread([this, asyncInfo, asyncStatus]()
+		StorageFolder^ Folder = M2AsyncWait(Operation);
+		
+		if (nullptr != Folder)
 		{
-			if (AsyncStatus::Completed == asyncStatus)
+			M2ExecuteOnUIThread([this, Folder]()
 			{
-				if (StorageFolder^ Folder = asyncInfo->GetResults())
-				{
-					this->m_SaveFolder = Folder;
-					this->SaveFolderTextBox->Text = Folder->Path;
-				}
-			}
-		});	
+				this->m_SaveFolder = Folder;
+				this->SaveFolderTextBox->Text = Folder->Path;
+			});	
+		}	
 	});
 }
 
@@ -99,25 +91,49 @@ void NewTaskDialog::DownloadSourceTextBox_LostFocus(
 	Object^ sender,
 	RoutedEventArgs^ e)
 {
+	String^ DownloadSourceText = this->DownloadSourceTextBox->Text;
 	Uri^ DownloadSource = nullptr;
 	
 	try
 	{
-		DownloadSource = ref new Uri(DownloadSourceTextBox->Text);	
+		if (nullptr != DownloadSourceText && !DownloadSourceText->IsEmpty())
+		{
+			DownloadSource = ref new Uri(DownloadSourceText);
+		}	
 	}
-	catch (Exception^ ex)
+	catch (...)
 	{
-		DownloadSource = ref new Uri(L"http://" + DownloadSourceTextBox->Text);
+		DownloadSource = ref new Uri(L"http://" + DownloadSourceText);
 	}
 
-	this->FileNameTextBox->Text = ref new String(
-		M2PathFindFileName(DownloadSource->Path->Data()));
+	if (nullptr != DownloadSource)
+	{
+		this->FileNameTextBox->Text = ref new String(
+			M2PathFindFileName(DownloadSource->Path->Data()));
+	}
+
 	this->m_DownloadSource = DownloadSource;
 }
 
 void NewTaskDialog::FileNameTextBox_LostFocus(
-	Object^ sender, 
+	Object^ sender,
 	RoutedEventArgs^ e)
 {
 	this->m_FileName = this->FileNameTextBox->Text;
+}
+
+void NewTaskDialog::ContentDialog_Loaded(
+	Object^ sender,
+	RoutedEventArgs^ e)
+{
+	this->m_SaveFolder = this->m_TransferManager->DefaultFolder;
+	if (nullptr == this->m_SaveFolder)
+	{
+		this->m_SaveFolder = this->m_TransferManager->LastusedFolder;
+	}
+
+	if (nullptr != this->m_SaveFolder)
+	{
+		this->SaveFolderTextBox->Text = this->m_SaveFolder->Path;
+	}
 }

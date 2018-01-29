@@ -7,6 +7,18 @@
 
 ## Changelog
 
+**Nagisa 0.2 [Build 20]**
+- Fix several bugs and improve several implementations.
+- Add ITransferManager::LastusedFolder property.
+- Add ITransferManager::DefaultFolder property.
+- Add NullableBooleanToBooleanConverter converter.
+- You can use the custom or last used folder as the default download folder.
+- Add ITransferManager::TotalDownloadBandwidth property.
+- Add ITransferManager::TotalUploadBandwidth property.
+- Add TransferManagerFactory::CreateInstance method.
+- Remove TransferManager class.
+- You can get the total download and total upload bandwidth in the UI.
+
 **Nagisa 0.2 [Build 19]**
 - Merge the changelog.
 - Improve several implementations.

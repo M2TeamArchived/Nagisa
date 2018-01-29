@@ -8,5 +8,6 @@
     <local:Uint64RemainTimeToStringConverter x:Name="Uint64RemainTimeToStringConverter"/>
     <local:TaskListEmptyToVisibilityConverter x:Name="TaskListEmptyToVisibilityConverter"/>
     <local:TaskStatusToVisibleConverter x:Name="TaskStatusToVisibleConverter"/>
+    <local:NullableBooleanToBooleanConverter x:Key="NullableBooleanToBooleanConverter"/>
 
 </ResourceDictionary>

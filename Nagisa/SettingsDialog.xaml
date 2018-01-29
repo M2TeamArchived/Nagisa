@@ -16,32 +16,17 @@
         <TextBlock x:Uid="/SettingsDialog/DefaultDownloadFolderTitle"
                    Style="{StaticResource SubtitleTextBlockStyle}" 
                    Text="[Default Download Folder]"/>
-        <RadioButton HorizontalAlignment="Stretch"
-                     HorizontalContentAlignment="Stretch">
-            <RadioButton.Content>
-                <StackPanel Orientation="Vertical">
-                    <TextBlock x:Uid="/SettingsDialog/LastusedDownloadFolderTitle"
-                               Text="[Last used]"/>
-                    <TextBox IsReadOnly="True" 
-                             PlaceholderText="N/A"
-                             Text="G:\OS\Windows\Windows 10 16299"/>
-                </StackPanel>
-            </RadioButton.Content>
-        </RadioButton>
-        <RadioButton HorizontalAlignment="Stretch" 
-                     HorizontalContentAlignment="Stretch">
-            <RadioButton.Content>
-                <StackPanel Orientation="Vertical">
-                    <TextBlock x:Uid="/SettingsDialog/CustomDownloadFolderTitle"
-                               Text="[Custom]"/>
-                    <TextBox IsReadOnly="True" 
-                             PlaceholderText="N/A" 
-                             Text="D:\NagisaDownloads"/>
-                    <Button x:Uid="/SettingsDialog/CustomDownloadFolderBrowseButton"
-                            Content="[Browse to modify]"/>
-                </StackPanel>
-            </RadioButton.Content>
-        </RadioButton>
+        <CheckBox x:Uid="/SettingsDialog/UseCustomFolder"
+                  x:Name="UseCustomFolder" 
+                  Content="[Use custom instead of last used folder]"
+                  Click="UseCustomFolder_Click"/>
+        <TextBox x:Name="DownloadFolderPathTextBox"
+                 IsReadOnly="True" 
+                 PlaceholderText="N/A"/>
+        <Button x:Uid="/SettingsDialog/CustomDownloadFolderBrowseButton"
+                Content="[Browse to modify]"
+                Click="CustomDownloadFolderBrowseButton_Click"
+                IsEnabled="{x:Bind UseCustomFolder.IsChecked, Converter={StaticResource NullableBooleanToBooleanConverter}, Mode=OneWay}"/>
         <TextBlock x:Uid="/SettingsDialog/AdvancedTitle" 
                    Style="{StaticResource SubtitleTextBlockStyle}" 
                    Text="[Advanced]"/>

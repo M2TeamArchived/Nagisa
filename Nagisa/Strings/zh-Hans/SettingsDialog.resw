@@ -125,10 +125,6 @@
     <value>浏览以修改</value>
     <comment>Browse to modify</comment>
   </data>
-  <data name="CustomDownloadFolderTitle.Text" xml:space="preserve">
-    <value>自定义</value>
-    <comment>Custom</comment>
-  </data>
   <data name="DefaultDownloadFolderTitle.Text" xml:space="preserve">
     <value>默认下载目录</value>
     <comment>Default Download Folder</comment>
@@ -145,8 +141,8 @@
     <value>不要使用Windows后台传输</value>
     <comment>Don't use Windows Background Transfer</comment>
   </data>
-  <data name="LastusedDownloadFolderTitle.Text" xml:space="preserve">
-    <value>上次使用</value>
-    <comment>Last used</comment>
+  <data name="UseCustomFolder.Content" xml:space="preserve">
+    <value>使用自定义而不是上次使用的文件夹</value>
+    <comment>Use custom instead of last used folder</comment>
   </data>
 </root>

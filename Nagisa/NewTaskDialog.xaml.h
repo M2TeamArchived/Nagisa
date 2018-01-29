@@ -9,26 +9,33 @@
 
 namespace Nagisa
 {
-	using Assassin::TransferManager;
+	using Assassin::ITransferManager;
 	using Platform::Object;
 	using Platform::String;
 	using Windows::Foundation::Uri;
-	using Windows::Storage::StorageFolder;
+	using Windows::Storage::IStorageFolder;
+	using Windows::UI::Colors;
 	using Windows::UI::Xaml::Controls::ContentDialog;
 	using Windows::UI::Xaml::Controls::ContentDialogButtonClickEventArgs;
+	using Windows::UI::Xaml::Media::SolidColorBrush;
 	using Windows::UI::Xaml::RoutedEventArgs;
 	
 	[Windows::Foundation::Metadata::WebHostHidden]
 	public ref class NewTaskDialog sealed
 	{
 	public:
-		NewTaskDialog();
-	internal:
-		TransferManager ^ m_TransferManager = nullptr;
+		NewTaskDialog(
+			ITransferManager^ TransferManager);
+	private:
+		ITransferManager ^ m_TransferManager = nullptr;
+
+		SolidColorBrush^ m_NormalBrush = nullptr;
+		SolidColorBrush^ m_NoticeableBrush = nullptr;
+
 		Uri^ m_DownloadSource = nullptr;
 		String^ m_FileName = nullptr;
-		StorageFolder^ m_SaveFolder = nullptr;
-	private:
+		IStorageFolder^ m_SaveFolder = nullptr;
+
 		void DownloadButtonClick(
 			ContentDialog^ sender, 
 			ContentDialogButtonClickEventArgs^ args);
@@ -39,7 +46,10 @@ namespace Nagisa
 			Object^ sender, 
 			RoutedEventArgs^ e);
 		void FileNameTextBox_LostFocus(
-			Object^ sender, 
+			Object^ sender,
+			RoutedEventArgs^ e);
+		void ContentDialog_Loaded(
+			Object^ sender,
 			RoutedEventArgs^ e);
 	};
 }

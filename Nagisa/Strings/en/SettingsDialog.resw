@@ -125,10 +125,6 @@
     <value>Browse to modify</value>
     <comment>Browse to modify</comment>
   </data>
-  <data name="CustomDownloadFolderTitle.Text" xml:space="preserve">
-    <value>Custom</value>
-    <comment>Custom</comment>
-  </data>
   <data name="DefaultDownloadFolderTitle.Text" xml:space="preserve">
     <value>Default Download Folder</value>
     <comment>Default Download Folder</comment>
@@ -145,8 +141,8 @@
     <value>Don't use Windows Background Transfer</value>
     <comment>Don't use Windows Background Transfer</comment>
   </data>
-  <data name="LastusedDownloadFolderTitle.Text" xml:space="preserve">
-    <value>Last used</value>
-    <comment>Last used</comment>
+  <data name="UseCustomFolder.Content" xml:space="preserve">
+    <value>Use custom instead of last used folder</value>
+    <comment>Use custom instead of last used folder</comment>
   </data>
 </root>

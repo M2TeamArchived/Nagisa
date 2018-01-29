@@ -122,18 +122,25 @@ namespace Assassin
 	private:
 		DownloadOperation^ m_Operation = nullptr;
 
-		ULONGLONG m_LastUpdated = 0;
-		uint64 m_LastBytesReceived = 0;
-		uint64 m_BytesReceivedSpeed = 0;
+		//ULONGLONG m_LastUpdated = 0;
+		//uint64 m_LastBytesReceived = 0;
+		
 
 		String^ m_Guid = nullptr;
 		Uri^ m_SourceUri = nullptr;
 		String^ m_FileName = nullptr;
 		IStorageFile^ m_SaveFile = nullptr;
 		IStorageFolder^ m_SaveFolder = nullptr;
-		TransferTaskStatus m_LastStatus = TransferTaskStatus::Canceled;
 
 		ApplicationDataCompositeValue^ m_TaskConfig = nullptr;
+
+		ULONGLONG m_TickCount = 0;
+
+		TransferTaskStatus m_Status = TransferTaskStatus::Canceled;
+		uint64 m_BytesReceived = 0;
+		uint64 m_TotalBytesToReceive = 0;
+		uint64 m_BytesReceivedSpeed = 0;
+		uint64 m_RemainTime = 0;
 
 	internal:
 		TransferTask(
@@ -144,6 +151,8 @@ namespace Assassin
 
 		void RaisePropertyChanged(
 			String^ PropertyName);
+
+		void NotifyPropertyChanged();
 
 		ApplicationDataCompositeValue^ GetTaskConfig();
 

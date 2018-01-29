@@ -73,8 +73,6 @@
                                 </TextBlock>
                             </StackPanel>
 
-
-                            
                         </Grid>
 
                         <Grid Grid.Row="0" Grid.Column="1">
@@ -195,7 +193,7 @@
                                   Glyph="&#xE74B;"/>
                         <TextBlock VerticalAlignment="Center" 
                                    FontSize="16" 
-                                   Text="N/A MiB"/>
+                                   Text="{x:Bind Path=Manager.TotalDownloadBandwidth, Converter={StaticResource Uint64ByteSizeToStringConverter}, Mode=OneWay}"/>
                         <TextBlock VerticalAlignment="Center" 
                                    FontSize="16" 
                                    Text="/s"/>
@@ -210,7 +208,7 @@
                                   Glyph="&#xE74A;"/>
                         <TextBlock VerticalAlignment="Center" 
                                    FontSize="16"
-                                   Text="N/A KiB"/>
+                                   Text="{x:Bind Path=Manager.TotalUploadBandwidth, Converter={StaticResource Uint64ByteSizeToStringConverter}, Mode=OneWay}"/>
                         <TextBlock VerticalAlignment="Center"
                                    FontSize="16"
                                    Text="/s"/>

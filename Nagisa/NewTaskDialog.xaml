@@ -11,7 +11,8 @@
     Title="[New Task]"
     PrimaryButtonText="[Download]"
     SecondaryButtonText="[Cancel]"
-    PrimaryButtonClick="DownloadButtonClick">
+    PrimaryButtonClick="DownloadButtonClick"
+    Loaded="ContentDialog_Loaded">
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Vertical">
             <TextBlock x:Uid="/NewTaskDialog/DownloadSourceTitle" 
@@ -28,7 +29,7 @@
                        Text="[File Name]"/>
             <TextBox x:Uid="/NewTaskDialog/FileNameTextBox" 
                      x:Name="FileNameTextBox" 
-                     PlaceholderText="[Please input the file name here.]" 
+                     PlaceholderText="[Please input the file name here.]"
                      LostFocus="FileNameTextBox_LostFocus"/>
         </StackPanel>
         <StackPanel Orientation="Vertical">
