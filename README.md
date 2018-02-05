@@ -41,8 +41,6 @@ already a translation present in the Nagisa's GitHub Repository.
   (Temporarily Based on Windows.Networking.BackgroundTransfer)
 - Support single-threaded multi-tasking download.
   (Temporarily Based on Windows.Networking.BackgroundTransfer)
-- Support for searching tasks from the task list.
-- The color themes of Nagisa follows the options in Windows Settings.
 
 # Unfininshed Features
 - Cortana Integration
@@ -58,6 +56,7 @@ already a translation present in the Nagisa's GitHub Repository.
 - [Nagisa's Changelog](Changelog.md)
 - [Nagisa's Relevant People](People.md)
 - [Nagisa's Privacy Policy](Privacy.md)
+- [Nagisa's Windows Store](https://www.microsoft.com/store/apps/9NFW53N9MFJR)
 
 [release.badge]: https://img.shields.io/github/release/Project-Nagisa/Nagisa.svg
 [release.link]: https://github.com/Project-Nagisa/Nagisa/releases/latest

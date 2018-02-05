@@ -10,7 +10,7 @@
     <AppIconSource>F:\NagisaRepositories\Nagisa\Nagisa\LogoAssets\Nagisa.png</AppIconSource>
     <SplashScreenSource>F:\NagisaRepositories\Nagisa\Nagisa\LogoAssets\Nagisa.png</SplashScreenSource>
     <PackageLogoSource>F:\NagisaRepositories\Nagisa\Nagisa\LogoAssets\Nagisa.png</PackageLogoSource>
-    <AppxPackageIsForStore>False</AppxPackageIsForStore>
+    <AppxPackageIsForStore>True</AppxPackageIsForStore>
     <AppxBuildConfigurationSelection>x86|x64|arm</AppxBuildConfigurationSelection>
     <PackageOptionalProjectsInIdeBuilds>False</PackageOptionalProjectsInIdeBuilds>
   </PropertyGroup>

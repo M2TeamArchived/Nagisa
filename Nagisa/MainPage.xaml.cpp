@@ -68,6 +68,10 @@ IAsyncOperation<ContentDialogResult>^ MainPage::ShowContentDialogAsync(
 	double PageActualWidth = this->ActualWidth;
 	if (Dialog->MaxWidth > PageActualWidth)
 		Dialog->MaxWidth = PageActualWidth;
+
+	double PageActualHeight = this->ActualHeight;
+	if (Dialog->MaxHeight > PageActualHeight)
+		Dialog->MaxHeight = PageActualHeight;
 	
 	return Dialog->ShowAsync();
 }

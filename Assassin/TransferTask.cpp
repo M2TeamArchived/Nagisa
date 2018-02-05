@@ -11,7 +11,9 @@ License: The MIT License
 
 using namespace Assassin;
 using namespace Platform;
-using namespace Windows::Networking::BackgroundTransfer;
+
+using Windows::Networking::BackgroundTransfer::BackgroundDownloadProgress;
+using Windows::Networking::BackgroundTransfer::BackgroundTransferStatus;
 
 TransferTask::TransferTask(
 	String^ Guid,
@@ -45,6 +47,10 @@ TransferTask::TransferTask(
 		this->m_Operation = (DownloadOperationMap.end() != iterator)
 			? iterator->second : nullptr;
 		if (nullptr == this->m_Operation) throw;
+
+		BackgroundDownloadProgress Progress = this->m_Operation->Progress;
+		this->m_BytesReceived = Progress.BytesReceived;
+		this->m_TotalBytesToReceive = Progress.TotalBytesToReceive;
 
 		if (TransferTaskStatus::Running == this->Status)
 		{

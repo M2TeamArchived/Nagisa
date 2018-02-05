@@ -7,41 +7,18 @@
 
 ## Changelog
 
-**Nagisa 0.2 [Build 21]**
-- You can open default download folder by File Explorer in the UI.
-- Fix several bugs and improve several implementations.
-
-**Nagisa 0.2 [Build 20]**
-- Fix several bugs and improve several implementations.
-- Add ITransferManager::LastusedFolder property.
-- Add ITransferManager::DefaultFolder property.
-- Add NullableBooleanToBooleanConverter converter.
-- You can use the custom or last used folder as the default download folder.
-- Add ITransferManager::TotalDownloadBandwidth property.
-- Add ITransferManager::TotalUploadBandwidth property.
-- Add TransferManagerFactory::CreateInstance method.
-- Remove TransferManager class.
-- You can get the total download and total upload bandwidth in the UI.
-
-**Nagisa 0.2 [Build 19]**
-- Merge the changelog.
-- Improve several implementations.
-- Continue to implement the "Settings" dialog.
-
-### Nagisa 0.2 [Build 18]
+### Nagisa 0.2 [Build 22]
 **New Changes**
+- Change the icon.
 - Fix several bugs and improve several implementations.
 - Add configuration infrastructure.
 - You can cancel task without remove it in the UI.
 - You can open every task's folder in the UI.
-- Change the icon.
 - You can start or pause all tasks in the UI.
 - You can clear task list in the UI.
-
-**Changed APIs**
-- Assassin
-  - TransferManager class (Based on ITransferManager interface).
-    - Constructor.
+- You can use the custom or last used folder as the default download folder.
+- You can get the total download and total upload bandwidth in the UI.
+- You can open default download folder by File Explorer in the UI.
 
 **New APIs**
 - Assassin
@@ -58,9 +35,17 @@
 	- StartAllTasks method.
 	- PauseAllTasks method.
 	- ClearTaskList method.
+	- LastusedFolder property.
+    - DefaultFolder property.
+    - TotalDownloadBandwidth property.
+    - TotalUploadBandwidth property.
+  - TransferManagerFactory class.
+    - CreateInstance method.
 - M2-Team Common Library
   - M2CreateGuid function.
-  - Add CFutureAccessList class.
+  - CFutureAccessList class.
+- XAML
+  - NullableBooleanToBooleanConverter converter.
 
 **Removed APIs**
 - Assassin
@@ -71,6 +56,9 @@
     - NotifyPropertyChanged method.
   - ITransferManager interface.
     - AddTask method.
+  - TransferManager class (Based on ITransferManager interface).
+    - Constructor.
+	- Close method.
 - XAML
   - StorageFileToFileNameConverter converter.
 
