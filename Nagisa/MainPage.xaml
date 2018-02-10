@@ -40,6 +40,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="48"/>
                             <ColumnDefinition Width="48"/>
+                            <ColumnDefinition Width="14"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="48"/>
@@ -135,8 +136,8 @@
 
                         <Grid Grid.Row="1" 
                               Grid.Column="0" 
-                              Grid.ColumnSpan="3"
-                              Margin="-48,0,0,0">
+                              Grid.ColumnSpan="4"
+                              Margin="-62,0,0,0">
                             <Grid.Resources>
                                 <SolidColorBrush x:Key="ProgressBarBackgroundColor" 
                                                  Color="Black" 

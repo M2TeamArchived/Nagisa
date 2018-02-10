@@ -10,7 +10,7 @@
         <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
         <Setter Property="TabNavigation" Value="Local"/>
         <Setter Property="IsHoldingEnabled" Value="True"/>
-        <Setter Property="Padding" Value="14,0,0,0"/>
+        <Setter Property="Padding" Value="28,0,0,0"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
         <Setter Property="MinWidth" Value="{ThemeResource ListViewItemMinWidth}"/>
@@ -290,7 +290,7 @@
                                 BorderThickness="2"
                                 Width="20"
                                 Height="20"
-                                Margin="14,14,0,0"
+                                Margin="28,14,0,0"
                                 VerticalAlignment="Top"
                                 HorizontalAlignment="Left"
                                 Visibility="Collapsed" >

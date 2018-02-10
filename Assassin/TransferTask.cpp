@@ -46,7 +46,10 @@ TransferTask::TransferTask(
 				TaskConfig->Lookup(L"BackgroundTransferGuid")));
 		this->m_Operation = (DownloadOperationMap.end() != iterator)
 			? iterator->second : nullptr;
-		if (nullptr == this->m_Operation) throw;
+		if (nullptr == this->m_Operation)
+		{
+			M2ThrowPlatformException(E_FAIL);
+		}
 
 		BackgroundDownloadProgress Progress = this->m_Operation->Progress;
 		this->m_BytesReceived = Progress.BytesReceived;

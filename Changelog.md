@@ -7,6 +7,14 @@
 
 ## Changelog
 
+**Nagisa 0.3 [Build 23]**
+- Remove ARM64 support because the Microsoft don't provide the ARM64 Visual C++
+  Runtime for UWP.
+- Fix a bug that could cause the app to crash.
+- Adjust the MainPage UI. (Thanks to suwakowww.)
+- According to system requirements for Windows 8, 8.1 and 10, re-enable the SSE
+  and SSE2 optimization in the x86 binaries.
+
 ### Nagisa 0.2 [Build 22]
 **New Changes**
 - Change the icon.

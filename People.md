@@ -19,3 +19,4 @@
 - 山宏岳 (https://social.msdn.microsoft.com/Profile/山宏岳)
 - 千风无痕 (https://github.com/QianFengWuHen)
 - vbfool (https://github.com/vbfool)
+- suwakowww (https://github.com/suwakowww)
