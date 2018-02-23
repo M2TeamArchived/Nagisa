@@ -112,4 +112,16 @@ namespace M2
 	};
 }
 
+// Retrieves the number of logical processors in the current group. 
+// Parameters:
+//   The function does not have parameters.
+// Return value:
+//   Return the number of logical processors in the current group.
+inline DWORD M2GetNumberOfHardwareThreads()
+{
+	SYSTEM_INFO SystemInfo = { 0 };
+	GetNativeSystemInfo(&SystemInfo);
+	return SystemInfo.dwNumberOfProcessors;
+}
+
 #endif // _M2_THREAD_

@@ -11,6 +11,8 @@ License: The MIT License
 
 #include "M2BaseHelpers.h"
 
+#include <string>
+
 // Write formatted data to a string. 
 // Parameters:
 //   Format: Format-control string.
@@ -73,4 +75,70 @@ ULONGLONG M2GetTickCount()
 	}
 
 	return GetTickCount64();
+}
+
+// Converts from the UTF-8 string to the UTF-16 string.
+// Parameters:
+//   UTF8String: The UTF-8 string you want to convert.
+// Return value:
+//   The return value is the UTF-16 string.
+std::wstring M2MakeUTF16String(const std::string& UTF8String)
+{
+	std::wstring UTF16String;
+
+	int UTF16StringLength = MultiByteToWideChar(
+		CP_UTF8,
+		0,
+		UTF8String.data(),
+		(int)UTF8String.size(),
+		nullptr,
+		0);
+	if (UTF16StringLength > 0)
+	{
+		UTF16String.resize(UTF16StringLength);
+		MultiByteToWideChar(
+			CP_UTF8,
+			0,
+			UTF8String.data(),
+			(int)UTF8String.size(),
+			&UTF16String[0],
+			UTF16StringLength);
+	}
+
+	return UTF16String;
+}
+
+// Converts from the UTF-16 string to the UTF-8 string.
+// Parameters:
+//   UTF16String: The UTF-16 string you want to convert.
+// Return value:
+//   The return value is the UTF-8 string.
+std::string M2MakeUTF8String(const std::wstring& UTF16String)
+{
+	std::string UTF8String;
+
+	int UTF8StringLength = WideCharToMultiByte(
+		CP_UTF8,
+		0,
+		UTF16String.data(),
+		(int)UTF16String.size(),
+		nullptr,
+		0,
+		nullptr,
+		nullptr);
+	if (UTF8StringLength > 0)
+	{
+		UTF8String.resize(UTF8StringLength);
+		WideCharToMultiByte(
+			CP_UTF8,
+			0,
+			UTF16String.data(),
+			(int)UTF16String.size(),
+			&UTF8String[0],
+			UTF8StringLength,
+			nullptr,
+			nullptr);
+	}
+
+	return UTF8String;
 }

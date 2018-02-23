@@ -14,12 +14,14 @@ License: The MIT License
 
 #include "M2BaseHelpers.h"
 
+#include <string>
+
 // Retrieve the IInspectable interface from the provided C++/CX object.
 // Parameters:
 //   object: The C++/CX object you want to retrieve the raw pointer.
 // Return value:
 //   Return the IInspectable interface from the provided C++/CX object.
-inline IInspectable* M2GetInspectable(Platform::Object^ object) throw()
+inline IInspectable* M2GetInspectable(Platform::Object^ object)
 {
 	return reinterpret_cast<IInspectable*>(object);
 }
@@ -132,5 +134,54 @@ namespace M2
 		}
 	};
 }
+
+// Retrieves the raw pointer from the provided IBuffer object. 
+// Parameters:
+//   Buffer: The IBuffer object you want to retrieve the raw pointer.
+// Return value:
+//   If the function succeeds, the return value is the raw pointer from the 
+//   provided IBuffer object. If the function fails, the return value is 
+//   nullptr.
+// Warning: 
+//   The lifetime of the returned buffer is controlled by the lifetime of the 
+//   buffer object that's passed to this method. When the buffer has been 
+//   released, the pointer becomes invalid and must not be used.
+byte* M2GetPointer(Windows::Storage::Streams::IBuffer^ Buffer);
+
+// Retrieves the IBuffer object from the provided raw pointer.
+// Parameters:
+//   Pointer: The raw pointer you want to retrieve the IBuffer object.
+//   Capacity: The size of raw pointer you want to retrieve the IBuffer object.
+// Return value:
+//   If the function succeeds, the return value is the IBuffer object from the 
+//   provided raw pointer. If the function fails, the return value is nullptr.
+// Warning: 
+//   The lifetime of the returned IBuffer object is controlled by the lifetime 
+//   of the raw pointer that's passed to this method. When the raw pointer has 
+//   been released, the IBuffer object becomes invalid and must not be used.
+Windows::Storage::Streams::IBuffer^ M2MakeIBuffer(
+	byte* Pointer,
+	UINT32 Capacity);
+
+// Converts from the C++/CX string to the UTF-16 string.
+// Parameters:
+//   PlatformString: The C++/CX string you want to convert.
+// Return value:
+//   The return value is the UTF-16 string.
+std::wstring M2MakeUTF16String(Platform::String^ PlatformString);
+
+// Converts from the C++/CX string to the UTF-8 string.
+// Parameters:
+//   PlatformString: The C++/CX string you want to convert.
+// Return value:
+//   The return value is the UTF-8 string.
+std::string M2MakeUTF8String(Platform::String^ PlatformString);
+
+// Converts from the UTF-8 string to the C++/CX string.
+// Parameters:
+//   UTF16String: The UTF-16 string you want to convert.
+// Return value:
+//   The return value is the C++/CX string.
+Platform::String^ M2MakeCXString(const std::wstring& UTF16String);
 
 #endif // _M2_CX_HELPERS_

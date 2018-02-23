@@ -7,6 +7,14 @@
 
 ## Changelog
 
+**Nagisa 0.3 [Build 24]**
+- Add M2MakeUTF16String function.
+- Add M2MakeUTF8String function.
+- Add M2GetPointer function.
+- Add M2MakeIBuffer function.
+- Add M2MakeCXString function.
+- Add M2GetNumberOfHardwareThreads function.
+
 **Nagisa 0.3 [Build 23]**
 - Remove ARM64 support because the Microsoft don't provide the ARM64 Visual C++
   Runtime for UWP.

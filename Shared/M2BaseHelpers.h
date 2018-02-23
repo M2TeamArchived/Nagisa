@@ -12,6 +12,8 @@ License: The MIT License
 
 #include <Windows.h>
 
+#include <string>
+
 // Write formatted data to a string. 
 // Parameters:
 //   Format: Format-control string.
@@ -55,5 +57,19 @@ CharType M2PathFindFileName(CharType Path)
 
 	return FileName;
 }
+
+// Converts from the UTF-8 string to the UTF-16 string.
+// Parameters:
+//   UTF8String: The UTF-8 string you want to convert.
+// Return value:
+//   The return value is the UTF-16 string.
+std::wstring M2MakeUTF16String(const std::string& UTF8String);
+
+// Converts from the UTF-16 string to the UTF-8 string.
+// Parameters:
+//   UTF16String: The UTF-16 string you want to convert.
+// Return value:
+//   The return value is the UTF-8 string.
+std::string M2MakeUTF8String(const std::wstring& UTF16String);
 
 #endif // _M2_BASE_HELPERS_
