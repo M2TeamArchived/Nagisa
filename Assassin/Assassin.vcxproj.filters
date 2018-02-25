@@ -1,25 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Resources">
-      <UniqueIdentifier>9093689e-1bd9-46a5-a926-151245b34f86</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="TransferManager">
+      <UniqueIdentifier>{81a127d8-7948-4712-8275-534b8e890add}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TransferTask">
+      <UniqueIdentifier>{bf5cc4f9-e41a-47ed-a22d-77a054fe16a3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="TransferManager.cpp" />
-    <ClCompile Include="TransferTask.cpp" />
+    <ClCompile Include="TransferManager.cpp">
+      <Filter>TransferManager</Filter>
+    </ClCompile>
+    <ClCompile Include="TransferTask.cpp">
+      <Filter>TransferTask</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="TransferManager.h" />
-    <ClInclude Include="TransferTask.h" />
+    <ClInclude Include="TransferManager.h">
+      <Filter>TransferManager</Filter>
+    </ClInclude>
+    <ClInclude Include="TransferTask.h">
+      <Filter>TransferTask</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Assassin.rc">
-      <Filter>Resources</Filter>
-    </ResourceCompile>
+    <ResourceCompile Include="Assassin.rc" />
   </ItemGroup>
 </Project>

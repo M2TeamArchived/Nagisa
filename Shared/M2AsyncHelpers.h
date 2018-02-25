@@ -99,7 +99,7 @@ auto M2AsyncWait(
 	else
 	{
 		// Get error code if failed to create an event object.
-		hr = __HRESULT_FROM_WIN32(GetLastError());
+		hr = M2GetLastError();
 	}
 
 	// Throw a COM exception if failed.
