@@ -5,7 +5,7 @@
 
 ## Changelog
 
-### Nagisa 0.3 [Build 24]
+### Nagisa 0.3 [Build 25]
 **New APIs**
 - M2-Team Common Library
   - M2MakeUTF16String function.
@@ -14,6 +14,13 @@
   - M2MakeIBuffer function.
   - M2MakeCXString function.
   - M2GetNumberOfHardwareThreads function.
+  - M2GetLastError function.
+  - M2::CDisableObjectCopying class.
+  - M2::CMemory class.
+
+**Changed APIs**
+- M2-Team Common Library
+  - M2::CObject template.
 
 ### Nagisa 0.2 [Build 22]
 **New APIs**

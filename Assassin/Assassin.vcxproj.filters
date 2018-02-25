@@ -7,6 +7,9 @@
     <Filter Include="TransferTask">
       <UniqueIdentifier>{bf5cc4f9-e41a-47ed-a22d-77a054fe16a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BackgroundWorker">
+      <UniqueIdentifier>{539b1046-02d3-446b-a2c1-12d9cf8c825e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -15,6 +18,9 @@
     </ClCompile>
     <ClCompile Include="TransferTask.cpp">
       <Filter>TransferTask</Filter>
+    </ClCompile>
+    <ClCompile Include="BackgroundWorker.cpp">
+      <Filter>BackgroundWorker</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -25,6 +31,9 @@
     </ClInclude>
     <ClInclude Include="TransferTask.h">
       <Filter>TransferTask</Filter>
+    </ClInclude>
+    <ClInclude Include="BackgroundWorker.h">
+      <Filter>BackgroundWorker</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

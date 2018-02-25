@@ -9,13 +9,12 @@
 
 ## Changelog
 
-**Nagisa 0.3 [Build *Next*]**
-- Add M2GetLastError function.
-- Add M2::CDisableObjectCopying class.
-- Disable C++ Object Copying for M2::CObject template.
-- Add M2::CMemory class.
+**Nagisa 0.3 [Build *Current*]**
+- Sync the Changelog.md and APIChanges.md.
+- Sync the version number.
+- Start to add the BackgroundWorker.
 
-### Nagisa 0.3 [Build 24]
+### Nagisa 0.3 [Build 25]
 - Remove ARM64 support because the Microsoft don't provide the ARM64 Visual C++
   Runtime for UWP.
 - Fix a bug that could cause the app to crash.
