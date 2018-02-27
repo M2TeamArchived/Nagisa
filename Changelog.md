@@ -10,14 +10,11 @@
 ## Changelog
 
 **Nagisa 0.3 [Build *Current*]**
-- Sync the Changelog.md and APIChanges.md.
+- Sync the Changelog.md.
 - Sync the version number.
 - Start to add the BackgroundWorker.
-- Fix bug for M2MakeCXString function.
-- Fix bug for M2FormatString function.
-- Add OpenSSL for implementing SSL support.
 
-### Nagisa 0.3 [Build 25]
+### Nagisa 0.3 [Build 29]
 - Remove ARM64 support because the Microsoft don't provide the ARM64 Visual C++
   Runtime for UWP.
 - Fix a bug that could cause the app to crash.
@@ -25,6 +22,7 @@
 - According to system requirements for Windows 8, 8.1 and 10, re-enable the SSE
   and SSE2 optimization in the x86 binaries.
 - Improve several implementations.
+- Add OpenSSL for implementing SSL support.
 
 ### Nagisa 0.2 [Build 22]
 - Change the icon.
