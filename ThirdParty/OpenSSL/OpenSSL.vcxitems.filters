@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Library Include="$(MSBuildThisFileDirectory)$(Platform)\libeay32.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)$(Platform)\ssleay32.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Include">
+      <UniqueIdentifier>{36336820-631e-4f0b-92b2-bd08149f35e1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\aes.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\asn1.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\asn1_mac.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\asn1t.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\bio.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\blowfish.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\bn.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\buffer.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\camellia.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\cast.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\cmac.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\cms.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\comp.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\conf.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\conf_api.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\crypto.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\des.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\des_old.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\dh.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\dsa.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\dso.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\dtls1.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\e_os2.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ebcdic.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ec.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ecdh.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ecdsa.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\engine.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\err.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\evp.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\hmac.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\idea.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\krb5_asn.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\kssl.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\lhash.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\md4.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\md5.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\mdc2.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\modes.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\obj_mac.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\objects.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ocsp.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\opensslconf.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\opensslv.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ossl_typ.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\pem.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\pem2.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\pkcs7.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\pkcs12.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\pqueue.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\rand.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\rc2.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\rc4.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ripemd.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\rsa.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\safestack.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\seed.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\sha.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\srp.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\srtp.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ssl.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ssl2.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ssl3.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ssl23.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\stack.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\symhacks.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\tls1.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ts.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\txt_db.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ui.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ui_compat.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\whrlpool.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\x509.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\x509_vfy.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\x509v3.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

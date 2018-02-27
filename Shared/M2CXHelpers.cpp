@@ -312,5 +312,6 @@ std::string M2MakeUTF8String(Platform::String^ PlatformString)
 //   The return value is the C++/CX string.
 Platform::String^ M2MakeCXString(const std::wstring& UTF16String)
 {
-	return ref new Platform::String(UTF16String.c_str(), UTF16String.size());
+	return ref new Platform::String(
+		UTF16String.c_str(), static_cast<unsigned int>(UTF16String.size()));
 }

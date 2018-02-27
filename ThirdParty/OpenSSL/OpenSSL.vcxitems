@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{6b84fb2b-ae13-44ce-b6db-c5b32cbf0a72}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="$(MSBuildThisFileDirectory)$(Platform)\libeay32.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)$(Platform)\ssleay32.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\aes.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\asn1.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\asn1t.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\asn1_mac.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\bio.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\blowfish.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\bn.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\buffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\camellia.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\cast.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\cmac.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\cms.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\comp.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\conf.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\conf_api.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\crypto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\des.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\des_old.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\dh.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\dsa.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\dso.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\dtls1.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ebcdic.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ec.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ecdh.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ecdsa.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\engine.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\err.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\evp.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\e_os2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\hmac.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\idea.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\krb5_asn.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\kssl.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\lhash.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\md4.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\md5.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\mdc2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\modes.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\objects.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\obj_mac.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ocsp.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\opensslconf.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\opensslv.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ossl_typ.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\pem.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\pem2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\pkcs12.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\pkcs7.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\pqueue.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\rand.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\rc2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\rc4.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ripemd.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\rsa.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\safestack.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\seed.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\sha.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\srp.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\srtp.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ssl.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ssl2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ssl23.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ssl3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\stack.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\symhacks.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\tls1.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ts.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\txt_db.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ui.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\ui_compat.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\whrlpool.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\x509.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\x509v3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenSSL\x509_vfy.h" />
+  </ItemGroup>
+</Project>

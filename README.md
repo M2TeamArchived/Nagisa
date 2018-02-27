@@ -51,8 +51,14 @@ already a translation present in the Nagisa's GitHub Repository.
 # How to contribute the code for Nagisa
 - You should send an e-mail to Mouri_Naruto@Outlook.com first.
 
+# License
+Nagisa is distributed under the MIT License except the third-party libraries. 
+For more information, please read [Nagisa's License](LICENSE).
+
+# Third-party libraries
+- [OpenSSL](ThirdParty/OpenSSL/README.md)
+
 # Documents
-- [Nagisa's License](LICENSE)
 - [Nagisa's Changelog](Changelog.md)
 - [Nagisa's Relevant People](People.md)
 - [Nagisa's Privacy Policy](Privacy.md)

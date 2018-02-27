@@ -14,6 +14,7 @@ using namespace Platform;
 using Windows::Networking::Sockets::SocketActivityInformation;
 using Windows::Networking::Sockets::SocketActivityTriggerDetails;
 using Windows::Networking::Sockets::SocketActivityTriggerReason;
+using Windows::Networking::Sockets::StreamSocket;
 
 BackgroundWorker::BackgroundWorker()
 {
@@ -41,35 +42,55 @@ void BackgroundWorker::Run(IBackgroundTaskInstance^ taskInstance)
 		switch (details->Reason)
 		{
 		case SocketActivityTriggerReason::SocketActivity:
-			/*var socket = socketInformation.StreamSocket;
+		{
+			StreamSocket^ Socket = socketInformation->StreamSocket;
+
+			//CRYPTO_malloc_debug_init();
+
+			/*
 			DataReader reader = new DataReader(socket.InputStream);
 			reader.InputStreamOptions = InputStreamOptions.Partial;
 			await reader.LoadAsync(250);
 			var dataString = reader.ReadString(reader.UnconsumedBufferLength);
-			ShowToast(dataString);
-			socket.TransferOwnership(socketInformation.Id);*/
+			ShowToast(dataString);*/
+
+			Socket->TransferOwnership(socketInformation->Id);
+
 			break;
+		}			
 		case SocketActivityTriggerReason::KeepAliveTimerExpired:
-			/*socket = socketInformation.StreamSocket;
+		{
+			StreamSocket^ Socket = socketInformation->StreamSocket;
+			
+			/*
 			DataWriter writer = new DataWriter(socket.OutputStream);
 			writer.WriteBytes(Encoding.UTF8.GetBytes("Keep alive"));
 			await writer.StoreAsync();
 			writer.DetachStream();
-			writer.Dispose();
-			socket.TransferOwnership(socketInformation.Id);*/
+			writer.Dispose();*/
+
+			Socket->TransferOwnership(socketInformation->Id);
+
 			break;
+		}		
 		case SocketActivityTriggerReason::SocketClosed:
+		{
+			StreamSocket^ Socket = ref new StreamSocket();
+
 			/*socket = new StreamSocket();
 			socket.EnableTransferOwnership(taskInstance.Task.TaskId, SocketActivityConnectedStandbyAction.Wake);
 			if (ApplicationData.Current.LocalSettings.Values["hostname"] == null)
 			{
-				break;
+			break;
 			}
 			var hostname = (String)ApplicationData.Current.LocalSettings.Values["hostname"];
 			var port = (String)ApplicationData.Current.LocalSettings.Values["port"];
-			await socket.ConnectAsync(new HostName(hostname), port);
-			socket.TransferOwnership(socketId);*/
+			await socket.ConnectAsync(new HostName(hostname), port);*/
+
+			Socket->TransferOwnership(BackgroundWorkerSocketID);
+
 			break;
+		}
 		default:
 			break;
 		}

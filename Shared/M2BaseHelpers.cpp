@@ -29,27 +29,28 @@ std::wstring M2FormatString(
 		va_list ArgList = nullptr;
 		va_start(ArgList, Format);
 
-		// Get the length of rhe format result.
+		// Get the length of the format result.
 		size_t nLength = _vscwprintf(Format, ArgList) + 1;
 
 		// Allocate for the format result.
 		std::wstring Buffer(nLength + 1, L'\0');
 
-		// Format the string
+		// Format the string.
 		int nWritten = _vsnwprintf_s(
 			&Buffer[0],
 			Buffer.size(),
 			nLength,
 			Format,
 			ArgList);
+
+		va_end(ArgList);
+
 		if (nWritten > 0)
 		{
 			// If succeed, resize to fit and return result.
 			Buffer.resize(nWritten);
 			return Buffer;
-		}
-
-		va_end(ArgList);
+		}		
 	}
 
 	// If failed, return "N/A".

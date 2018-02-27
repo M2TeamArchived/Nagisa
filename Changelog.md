@@ -13,6 +13,9 @@
 - Sync the Changelog.md and APIChanges.md.
 - Sync the version number.
 - Start to add the BackgroundWorker.
+- Fix bug for M2MakeCXString function.
+- Fix bug for M2FormatString function.
+- Add OpenSSL for implementing SSL support.
 
 ### Nagisa 0.3 [Build 25]
 - Remove ARM64 support because the Microsoft don't provide the ARM64 Visual C++
