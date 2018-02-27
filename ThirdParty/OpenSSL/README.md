@@ -7,6 +7,9 @@ Nagisa use OpenSSL to implement SSL support.
 Nagisa contains OpenSSL static libraries binaries because the compilation 
 configuration is too complex to compile easily.
 
+## Source Code
+https://github.com/Project-Nagisa/openssl-Microsoft
+
 ## Version
 **1.0.2n**
 
