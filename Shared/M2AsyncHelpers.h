@@ -50,13 +50,6 @@ inline void M2AsyncSetProgressHandler(
 			Function...);
 }
 
-// Handle the completed asynchronous call.
-// Parameters:
-//   Async: The completed asynchronous call you want to handle.
-// Return value:
-//   Return the HRESULT determined by the asynchronous call.
-HRESULT M2AsyncHandleCompleted(Platform::Object^ Async);
-
 // Try to wait asynchronous call.
 // Parameters:
 //   Async: The asynchronous call you want to wait.
@@ -70,6 +63,8 @@ template<typename TAsync>
 auto M2AsyncWait(
 	TAsync Async, int32 Timeout = -1) -> decltype(Async->GetResults())
 {
+	HRESULT M2AsyncHandleCompleted(Platform::Object^ Async);
+	
 	using M2::CHandle;
 	using Platform::COMException;
 	using Windows::Foundation::AsyncStatus;
@@ -111,14 +106,6 @@ auto M2AsyncWait(
 
 // Execute function on the UI thread with normal priority.
 // Parameters:
-//   agileCallback: The function you want to execute.
-// Return value:
-//   The return value is Windows::Foundation::IAsyncAction^.
-Windows::Foundation::IAsyncAction^ M2ExecuteOnUIThread(
-	Windows::UI::Core::DispatchedHandler^ agileCallback);
-
-// Execute function on the UI thread with normal priority.
-// Parameters:
 //   Function: The function you want to execute.
 // Return value:
 //   The return value is Windows::Foundation::IAsyncAction^.
@@ -126,6 +113,9 @@ template<typename... TFunction>
 inline Windows::Foundation::IAsyncAction^ M2ExecuteOnUIThread(
 	const TFunction&... Function)
 {
+	Windows::Foundation::IAsyncAction^ M2ExecuteOnUIThread(
+		Windows::UI::Core::DispatchedHandler^ agileCallback);
+	
 	return M2ExecuteOnUIThread(
 		ref new Windows::UI::Core::DispatchedHandler(Function...));
 }

@@ -99,13 +99,17 @@ HRESULT M2GetLastError();
 //   value is S_OK.
 template<typename ProcedureType>
 inline HRESULT M2GetProcAddress(
-	_Out_ ProcedureType &lpProcAddress,
+	_Out_ ProcedureType& lpProcAddress,
 	_In_ HMODULE hModule,
 	_In_ LPCSTR lpProcName)
 {
-	lpProcAddress = reinterpret_cast<ProcedureType>(
-		GetProcAddress(hModule, lpProcName));
-	return (nullptr != lpProcAddress) ? S_OK : M2GetLastError();
+	HRESULT M2GetProcAddress(
+		_Out_ FARPROC& lpProcAddress,
+		_In_ HMODULE hModule,
+		_In_ LPCSTR lpProcName);
+
+	return M2GetProcAddress(
+		reinterpret_cast<FARPROC&>(lpProcAddress), hModule, lpProcName);
 }
 
 #endif // _M2_BASE_HELPERS_

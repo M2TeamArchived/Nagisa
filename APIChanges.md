@@ -17,6 +17,7 @@
   - M2GetLastError function.
   - M2::CDisableObjectCopying class.
   - M2::CMemory class.
+  - M2GetProcAddress function.
 
 **Changed APIs**
 - M2-Team Common Library

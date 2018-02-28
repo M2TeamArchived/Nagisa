@@ -13,8 +13,6 @@
 - Sync the Changelog.md.
 - Sync the version number.
 - Start to add the BackgroundWorker.
-- Add M2GetProcAddress function.
-- Update OpenSSL binaries.
 
 ### Nagisa 0.3 [Build 29]
 - Remove ARM64 support because the Microsoft don't provide the ARM64 Visual C++
