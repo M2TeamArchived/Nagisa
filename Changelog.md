@@ -10,6 +10,7 @@
 ## Changelog
 
 **Nagisa 0.3 [Build *Current*]**
+[Full Changelog](https://github.com/Project-Nagisa/Nagisa/compare/0.2...master)
 - Sync the Changelog.md.
 - Sync the version number.
 - Start to add the BackgroundWorker.
@@ -25,6 +26,7 @@
 - Add OpenSSL for implementing SSL support.
 
 ### Nagisa 0.2 [Build 22]
+[Full Changelog](https://github.com/Project-Nagisa/Nagisa/compare/0.1...0.2)
 - Change the icon.
 - Fix several bugs and improve several implementations.
 - Add configuration infrastructure.
