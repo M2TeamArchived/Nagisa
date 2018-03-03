@@ -166,11 +166,12 @@ Platform::Guid M2CreateGuid()
 byte* M2GetPointer(Windows::Storage::Streams::IBuffer^ Buffer)
 {
 	byte* pBuffer = nullptr;
-	ComPtr<Windows::Storage::Streams::IBufferByteAccess> bufferByteAccess;
-	if (SUCCEEDED(ComPtr<IInspectable>(M2GetInspectable(Buffer)).As(
-		&bufferByteAccess)))
+	Windows::Storage::Streams::IBufferByteAccess* pBufferByteAccess = nullptr;
+	IInspectable* pBufferABIObject = M2GetInspectable(Buffer);
+	if (SUCCEEDED(pBufferABIObject->QueryInterface(&pBufferByteAccess)))
 	{	
-		bufferByteAccess->Buffer(&pBuffer);
+		pBufferByteAccess->Buffer(&pBuffer);
+		pBufferByteAccess->Release();
 	}
 
 	return pBuffer;
