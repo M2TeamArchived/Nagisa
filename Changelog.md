@@ -15,7 +15,7 @@
 - Sync the version number.
 - Start to add the BackgroundWorker.
 
-### Nagisa 0.3 [Build 29]
+### Nagisa 0.3 [Build 36]
 - Remove ARM64 support because the Microsoft don't provide the ARM64 Visual C++
   Runtime for UWP.
 - Fix a bug that could cause the app to crash.
