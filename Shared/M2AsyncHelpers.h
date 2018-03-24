@@ -10,6 +10,8 @@ License: The MIT License
 #ifndef _M2_ASYNC_HELPERS_
 #define _M2_ASYNC_HELPERS_
 
+#ifdef __cplusplus_winrt
+
 #include <Windows.h>
 #include <wrl\client.h>
 
@@ -30,7 +32,7 @@ template<typename TAsync, typename... TFunction>
 inline void M2AsyncSetCompletedHandler(
 	TAsync Async, const TFunction&... Function)
 {
-	Async->Completed = 
+	Async->Completed =
 		ref new M2RemoveReference<decltype(Async->Completed)>::Type(
 			Function...);
 }
@@ -45,7 +47,7 @@ template<typename TAsync, typename... TFunction>
 inline void M2AsyncSetProgressHandler(
 	TAsync Async, const TFunction&... Function)
 {
-	Async->Progress = 
+	Async->Progress =
 		ref new M2RemoveReference<decltype(Async->Progress)>::Type(
 			Function...);
 }
@@ -64,7 +66,7 @@ auto M2AsyncWait(
 	TAsync Async, int32 Timeout = -1) -> decltype(Async->GetResults())
 {
 	HRESULT M2AsyncHandleCompleted(Platform::Object^ Async);
-	
+
 	using M2::CHandle;
 	using Platform::COMException;
 	using Windows::Foundation::AsyncStatus;
@@ -115,7 +117,7 @@ inline Windows::Foundation::IAsyncAction^ M2ExecuteOnUIThread(
 {
 	Windows::Foundation::IAsyncAction^ M2ExecuteOnUIThread(
 		Windows::UI::Core::DispatchedHandler^ agileCallback);
-	
+
 	return M2ExecuteOnUIThread(
 		ref new Windows::UI::Core::DispatchedHandler(Function...));
 }
@@ -155,10 +157,10 @@ namespace M2AsyncCreateInternal
 	struct M2AsyncType<TProgress, TReturn, true>
 	{
 		using BaseType = IAsyncOperationWithProgress<TReturn, TProgress>;
-		using ProgressHandlerType = 
+		using ProgressHandlerType =
 			AsyncOperationProgressHandler<TReturn, TProgress>;
-		using CompletedHandlerType = 
-			AsyncOperationWithProgressCompletedHandler<TReturn, TProgress>; 
+		using CompletedHandlerType =
+			AsyncOperationWithProgressCompletedHandler<TReturn, TProgress>;
 
 		using ReturnType = TReturn;
 		using ProgressType = TProgress;
@@ -173,7 +175,7 @@ namespace M2AsyncCreateInternal
 	struct M2AsyncType<TProgress, TReturn, false>
 	{
 		using BaseType = IAsyncOperation<TReturn>;
-		using ProgressHandlerType = M2EmptyRefClass ;
+		using ProgressHandlerType = M2EmptyRefClass;
 		using CompletedHandlerType = AsyncOperationCompletedHandler<TReturn>;
 
 		using ReturnType = TReturn;
@@ -191,7 +193,7 @@ namespace M2AsyncCreateInternal
 	{
 		using BaseType = IAsyncActionWithProgress<TProgress>;
 		using ProgressHandlerType = AsyncActionProgressHandler<TProgress>;
-		using CompletedHandlerType = 
+		using CompletedHandlerType =
 			AsyncActionWithProgressCompletedHandler<TProgress>;
 
 		using ReturnType = void;
@@ -364,7 +366,7 @@ namespace M2AsyncCreateInternal
 			// attempt the transition to the new state
 			// Note: if m_Status == Current, then there was no intervening 
 			// write by the async work object and the swap succeeded.
-			M2AsyncStatusInternal RetState = 
+			M2AsyncStatusInternal RetState =
 				static_cast<M2AsyncStatusInternal>(_InterlockedCompareExchange(
 					reinterpret_cast<volatile LONG*>(&this->m_Status),
 					NewState,
@@ -632,19 +634,19 @@ namespace M2AsyncCreateInternal
 
 	template<typename AsyncType, bool NeedProgressHandler>
 	ref class __declspec(no_empty_identity_interface)
-		M2AsyncProgressBase abstract : 
-		M2AsyncBase<AsyncType>
+		M2AsyncProgressBase abstract :
+	M2AsyncBase<AsyncType>
 	{
 	};
 
 	template<typename AsyncType>
 	ref class __declspec(no_empty_identity_interface)
 		M2AsyncProgressBase<AsyncType, true> abstract :
-		M2AsyncBase<AsyncType>, 
+		M2AsyncBase<AsyncType>,
 		IM2AsyncControllerEx<typename AsyncType::ProgressType>
 	{
 	internal:
-		using AsyncProgressHandlerType = 
+		using AsyncProgressHandlerType =
 			typename AsyncType::ProgressHandlerType;
 		using AsyncProgressType = typename AsyncType::ProgressType;
 
@@ -719,16 +721,16 @@ namespace M2AsyncCreateInternal
 	template<typename TFunction>
 	struct M2AsyncLambdaType
 	{
-		using ReturnType = 
+		using ReturnType =
 			decltype(M2ReturnTypeClassHelperThunk(&(TFunction::operator())));
 
-		using ControllerType = 
+		using ControllerType =
 			decltype(M2Arg1ClassHelperThunk(&(TFunction::operator())));
 		using ProgressTypeTraits = M2AsyncProgressTypeTraits<ControllerType>;
 		using ProgressType = typename ProgressTypeTraits::ProgressType;
 		static const bool NeedProgressHandler = ProgressTypeTraits::NeedProgressHandler;
 
-		using AsyncType = 
+		using AsyncType =
 			typename M2AsyncType<ProgressType, ReturnType, NeedProgressHandler>;
 	};
 
@@ -790,7 +792,7 @@ namespace M2AsyncCreateInternal
 
 		void Get()
 		{
-			
+
 		}
 	};
 
@@ -801,7 +803,7 @@ namespace M2AsyncCreateInternal
 		M2AsyncLambdaType<TFunction>::AsyncType::NeedProgressHandler>
 	{
 	internal:
-		using AsyncReturnType = 
+		using AsyncReturnType =
 			typename M2AsyncLambdaType<TFunction>::AsyncType::ReturnType;
 
 		M2AsyncFunction<TFunction, AsyncReturnType> m_Function;
@@ -891,5 +893,7 @@ M2AsyncCreateInternal::M2AsyncGenerator<TFunction>^ M2AsyncCreate(
 	return ref new M2AsyncCreateInternal::M2AsyncGenerator<TFunction>(
 		Function);
 }
+
+#endif
 
 #endif // _M2_ASYNC_HELPERS_

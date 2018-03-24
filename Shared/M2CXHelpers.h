@@ -48,6 +48,8 @@ void M2ThrowPlatformExceptionIfFailed(HRESULT hr);
 //   The function will return HRESULT.
 HRESULT M2ThrownPlatformExceptionToHResult();
 
+#ifdef __cplusplus_winrt
+
 // Finds a sub string from a source string. 
 // Parameters:
 //   SourceString: The source string.
@@ -101,7 +103,7 @@ namespace M2
 			this->m_FutureAccessList =
 				StorageApplicationPermissions::FutureAccessList;
 		}
-		
+
 		// Adds IStorageItem object to the future access list.
 		// Parameters:
 		//   Item: The IStorageItem object which you want to add. 
@@ -183,5 +185,7 @@ std::string M2MakeUTF8String(Platform::String^ PlatformString);
 // Return value:
 //   The return value is the C++/CX string.
 Platform::String^ M2MakeCXString(const std::wstring& UTF16String);
+
+#endif
 
 #endif // _M2_CX_HELPERS_

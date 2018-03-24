@@ -15,6 +15,9 @@ License: The MIT License
 template<class T> struct M2RemoveReference { typedef T Type; };
 template<class T> struct M2RemoveReference<T&> { typedef T Type; };
 template<class T> struct M2RemoveReference<T&&> { typedef T Type; };
+
+#ifdef __cplusplus_winrt
 template<class T> struct M2RemoveReference<T^> { typedef T Type; };
+#endif
 
 #endif // _M2_REMOVE_REFERENCE_
