@@ -15,7 +15,7 @@
 - Sync the version number.
 - Start to add the BackgroundWorker.
 
-### Nagisa 0.3 [Build 39]
+### Nagisa 0.3 [Build 40]
 - Remove ARM64 support because the Microsoft don't provide the ARM64 Visual C++
   Runtime for UWP.
 - Fix a bug that could cause the app to crash.
@@ -25,6 +25,7 @@
 - Improve several implementations.
 - Add OpenSSL for implementing SSL support.
 - Add Multi-language Support: Spanish.
+- Add AppVeyor CI.
 
 ### Nagisa 0.2 [Build 22]
 [Full Changelog](https://github.com/Project-Nagisa/Nagisa/compare/0.1...0.2)

@@ -1,6 +1,7 @@
 ﻿![Logo](Logo.png)
 # Nagisa - One of Download Utilities for Windows Universal Platform.
- 
+
+[![appveyor.badge]][appveyor.link] 
 [![release.badge]][release.link]
 [![latestdownloads.badge]][latestdownloads.link]
 [![totaldownloads.badge]][totaldownloads.link]
@@ -64,6 +65,8 @@ For more information, please read [Nagisa's License](LICENSE).
 - [Nagisa's Privacy Policy](Privacy.md)
 - [Nagisa's Windows Store](https://www.microsoft.com/store/apps/9NFW53N9MFJR)
 
+[appveyor.badge]: https://ci.appveyor.com/api/projects/status/b7s9h6tm0sqde2wa/branch/master?svg=true
+[appveyor.link]: https://ci.appveyor.com/project/MouriNaruto/nagisa/branch/master
 [release.badge]: https://img.shields.io/github/release/Project-Nagisa/Nagisa.svg
 [release.link]: https://github.com/Project-Nagisa/Nagisa/releases/latest
 [latestdownloads.badge]: https://img.shields.io/github/downloads/Project-Nagisa/Nagisa/latest/total.svg
