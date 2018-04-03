@@ -23,6 +23,9 @@
     <Filter Include="Xaml">
       <UniqueIdentifier>{6062f432-bcda-4b23-b38d-27fb385c3d7c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Strings\es">
+      <UniqueIdentifier>{b8bd5143-13f7-442d-ba9c-1fcc90f5482a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.xaml.cpp" />
@@ -249,6 +252,18 @@
     </PRIResource>
     <PRIResource Include="Strings\zh-Hans\SettingsDialog.resw">
       <Filter>Strings\zh-Hans</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\es\AboutDialog.resw">
+      <Filter>Strings\es</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\es\MainPage.resw">
+      <Filter>Strings\es</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\es\NewTaskDialog.resw">
+      <Filter>Strings\es</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\es\SettingsDialog.resw">
+      <Filter>Strings\es</Filter>
     </PRIResource>
   </ItemGroup>
   <ItemGroup>

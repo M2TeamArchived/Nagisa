@@ -11,11 +11,11 @@
 
 **Nagisa 0.3 [Build *Current*]**
 [Full Changelog](https://github.com/Project-Nagisa/Nagisa/compare/0.2...master)
-- Sync the Changelog.md.
+- Modify documents.
 - Sync the version number.
 - Start to add the BackgroundWorker.
 
-### Nagisa 0.3 [Build 36]
+### Nagisa 0.3 [Build 39]
 - Remove ARM64 support because the Microsoft don't provide the ARM64 Visual C++
   Runtime for UWP.
 - Fix a bug that could cause the app to crash.
@@ -24,6 +24,7 @@
   and SSE2 optimization in the x86 binaries.
 - Improve several implementations.
 - Add OpenSSL for implementing SSL support.
+- Add Multi-language Support: Spanish.
 
 ### Nagisa 0.2 [Build 22]
 [Full Changelog](https://github.com/Project-Nagisa/Nagisa/compare/0.1...0.2)
@@ -41,7 +42,7 @@
 ### Nagisa 0.1 [Build 10]
 - Supported Transfer Protocols: HTTP, HTTPS, FTP, FTPS, WebSocket and WebSocket
   Secure. (Temporarily Based on Windows.Networking.BackgroundTransfer)
-- Muitl-language Support: English and Simplified Chinese.
+- Multi-language Support: English and Simplified Chinese.
 - Support background download. 
   (Temporarily Based on Windows.Networking.BackgroundTransfer)
 - Support resume broken/dead downloads.

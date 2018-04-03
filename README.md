@@ -34,7 +34,7 @@ already a translation present in the Nagisa's GitHub Repository.
 # Finished Features
 - Supported Transfer Protocols: HTTP, HTTPS, FTP, FTPS, WebSocket and WebSocket
   Secure. (Temporarily Based on Windows.Networking.BackgroundTransfer)
-- Muitl-language Support: English and Simplified Chinese.
+- Multi-language Support: English and Simplified Chinese.
 - Support background download. 
   (Temporarily Based on Windows.Networking.BackgroundTransfer)
 - Support resume broken/dead downloads.

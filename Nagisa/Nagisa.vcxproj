@@ -334,6 +334,10 @@
     <PRIResource Include="Strings\en\MainPage.resw" />
     <PRIResource Include="Strings\en\NewTaskDialog.resw" />
     <PRIResource Include="Strings\en\SettingsDialog.resw" />
+    <PRIResource Include="Strings\es\AboutDialog.resw" />
+    <PRIResource Include="Strings\es\MainPage.resw" />
+    <PRIResource Include="Strings\es\NewTaskDialog.resw" />
+    <PRIResource Include="Strings\es\SettingsDialog.resw" />
     <PRIResource Include="Strings\zh-Hans\AboutDialog.resw" />
     <PRIResource Include="Strings\zh-Hans\MainPage.resw" />
     <PRIResource Include="Strings\zh-Hans\NewTaskDialog.resw" />
