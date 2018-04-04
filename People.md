@@ -4,6 +4,7 @@
 - Mouri_Naruto (https://github.com/MouriNaruto)
 
 ## Contributors
+- Jhovany200 (https://github.com/Jhovany200)
 
 ## Sponsors
 

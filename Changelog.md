@@ -24,7 +24,7 @@
   and SSE2 optimization in the x86 binaries.
 - Improve several implementations.
 - Add OpenSSL for implementing SSL support.
-- Add Multi-language Support: Spanish.
+- Add Multi-language Support: Spanish. (Contributed by Jhovany200.)
 - Add AppVeyor CI.
 
 ### Nagisa 0.2 [Build 22]
