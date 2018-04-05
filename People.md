@@ -17,7 +17,7 @@
 - 鳶一雨音 (https://github.com/TobiichiAmane)
 - Calyx Hikari (https://github.com/HikariCalyx)
 - Jiaen Lee (Microsoft Imagine Student Support)
-- 山宏岳 (https://social.msdn.microsoft.com/Profile/山宏岳)
+- 山宏岳 (https://github.com/shanhongyue)
 - 千风无痕 (https://github.com/QianFengWuHen)
 - vbfool (https://github.com/vbfool)
 - suwakowww (https://github.com/suwakowww)
