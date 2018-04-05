@@ -11,7 +11,7 @@ configuration is too complex to compile easily.
 https://github.com/Project-Nagisa/openssl-Microsoft
 
 ## Version
-**1.0.2n**
+**1.0.2o**
 
 ## License
 ```
