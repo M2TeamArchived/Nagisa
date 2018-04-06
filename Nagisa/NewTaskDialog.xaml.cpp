@@ -108,8 +108,10 @@ void NewTaskDialog::DownloadSourceTextBox_LostFocus(
 
 	if (nullptr != DownloadSource)
 	{
-		this->FileNameTextBox->Text = ref new String(
-			M2PathFindFileName(DownloadSource->Path->Data()));
+		this->FileNameTextBox->Text = 
+			ref new String(M2PathFindFileName(DownloadSource->Path->Data()));
+
+		this->FileNameTextBox_LostFocus(sender, e);
 	}
 
 	this->m_DownloadSource = DownloadSource;

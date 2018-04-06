@@ -18,6 +18,6 @@
 - Calyx Hikari (https://github.com/HikariCalyx)
 - Jiaen Lee (Microsoft Imagine Student Support)
 - 山宏岳 (https://github.com/shanhongyue)
-- 千风无痕 (https://github.com/QianFengWuHen)
+- 桥月梦 (https://github.com/QiaoYueMeng)
 - vbfool (https://github.com/vbfool)
 - suwakowww (https://github.com/suwakowww)

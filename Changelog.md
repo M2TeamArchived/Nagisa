@@ -26,6 +26,8 @@
 - Add OpenSSL for implementing SSL support.
 - Add Multi-language Support: Spanish. (Contributed by Jhovany200.)
 - Add AppVeyor CI.
+- Fox a bug that you need to click the "File Name" TextBox before you download 
+  a file. (Thanks to 桥月梦.)
 
 ### Nagisa 0.2 [Build 22]
 [Full Changelog](https://github.com/Project-Nagisa/Nagisa/compare/0.1...0.2)
