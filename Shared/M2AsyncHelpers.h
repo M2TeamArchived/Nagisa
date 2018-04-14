@@ -33,7 +33,7 @@ inline void M2AsyncSetCompletedHandler(
 	TAsync Async, const TFunction&... Function)
 {
 	Async->Completed =
-		ref new M2RemoveReference<decltype(Async->Completed)>::Type(
+		ref new typename M2RemoveReference<decltype(Async->Completed)>::Type(
 			Function...);
 }
 
@@ -48,7 +48,7 @@ inline void M2AsyncSetProgressHandler(
 	TAsync Async, const TFunction&... Function)
 {
 	Async->Progress =
-		ref new M2RemoveReference<decltype(Async->Progress)>::Type(
+		ref new typename M2RemoveReference<decltype(Async->Progress)>::Type(
 			Function...);
 }
 
@@ -739,7 +739,7 @@ namespace M2AsyncCreateInternal
 	{
 	private:
 		typename TFunction m_Function;
-		std::shared_ptr<typename TReturn> m_Return;
+		std::shared_ptr<TReturn> m_Return;
 
 	public:
 		M2AsyncFunction() : m_Function(nullptr)
@@ -756,7 +756,7 @@ namespace M2AsyncCreateInternal
 		template<typename... TArg>
 		void Run(const TArg&... Arg)
 		{
-			this->m_Return = std::make_shared<typename TReturn>(
+			this->m_Return = std::make_shared<TReturn>(
 				this->m_Function(Arg...));
 		}
 
