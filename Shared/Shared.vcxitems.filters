@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)NagisaVersion.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)M2AsyncHelpers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)M2RemoveReference.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)M2Object.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)M2CXHelpers.h" />
@@ -10,7 +9,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)M2BaseHelpers.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)M2AsyncHelpers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)M2CXHelpers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)M2BaseHelpers.cpp" />
   </ItemGroup>
