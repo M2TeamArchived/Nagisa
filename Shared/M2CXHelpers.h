@@ -17,12 +17,13 @@ License: The MIT License
 #include <wrl\client.h>
 
 #include "M2BaseHelpers.h"
-#include "M2RemoveReference.h"
-#include "M2Object.h"
-#include "M2Thread.h"
 
 #include <string>
 #include <memory>
+
+// If the type T is a reference type, provides the member typedef type which is
+// the type referred to by T. Otherwise type is T.
+template<class T> struct M2RemoveReference<T^> { typedef T Type; };
 
 // Set the completed handler function for asynchronous call.
 // Parameters:
