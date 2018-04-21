@@ -7,6 +7,8 @@ License: The MIT License
 
 #include "pch.h"
 
+#ifdef _M2_CX_HELPERS_
+
 #include <Windows.h>
 #include <wrl\client.h>
 #include <wrl\implements.h>
@@ -202,7 +204,7 @@ Platform::String^ M2ConvertByteSizeToString(uint64 ByteSize)
 		result /= 1024.0;
 	}
 
-	Platform::String^ ByteSizeString = 
+	Platform::String^ ByteSizeString =
 		(static_cast<uint64>(result * 100) / 100.0).ToString();
 
 	return ByteSizeString + Platform::StringReference(Systems[nSystem]);
@@ -238,7 +240,7 @@ byte* M2GetPointer(Windows::Storage::Streams::IBuffer^ Buffer)
 	Windows::Storage::Streams::IBufferByteAccess* pBufferByteAccess = nullptr;
 	IInspectable* pBufferABIObject = M2GetInspectable(Buffer);
 	if (SUCCEEDED(pBufferABIObject->QueryInterface(&pBufferByteAccess)))
-	{	
+	{
 		pBufferByteAccess->Buffer(&pBuffer);
 		pBufferByteAccess->Release();
 	}
@@ -313,7 +315,7 @@ public:
 //   of the raw pointer that's passed to this method. When the raw pointer has 
 //   been released, the IBuffer object becomes invalid and must not be used.
 Windows::Storage::Streams::IBuffer^ M2MakeIBuffer(
-	byte* Pointer, 
+	byte* Pointer,
 	UINT32 Capacity)
 {
 	using Windows::Storage::Streams::IBuffer;
@@ -385,3 +387,5 @@ Platform::String^ M2MakeCXString(const std::wstring& UTF16String)
 	return ref new Platform::String(
 		UTF16String.c_str(), static_cast<unsigned int>(UTF16String.size()));
 }
+
+#endif // _M2_CX_HELPERS_
