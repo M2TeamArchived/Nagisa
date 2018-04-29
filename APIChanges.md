@@ -5,7 +5,7 @@
 
 ## Changelog
 
-### Nagisa 0.3 [Build 25]
+### Nagisa 0.3 [Build 50]
 **New APIs**
 - M2-Team Common Library
   - M2MakeUTF16String function.
@@ -22,6 +22,10 @@
 **Changed APIs**
 - M2-Team Common Library
   - M2::CObject template.
+
+**Removed APIs**
+- M2-Team Common Library
+  - CFutureAccessList class.
 
 ### Nagisa 0.2 [Build 22]
 **New APIs**

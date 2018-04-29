@@ -32,6 +32,10 @@ TransferManager::TransferManager(
 
 	InitializeCriticalSection(&this->m_TaskListUpdateCS);
 
+	using Windows::Storage::AccessCache::StorageApplicationPermissions;
+	this->m_FutureAccessList =
+		StorageApplicationPermissions::FutureAccessList;
+
 	using Windows::Storage::ApplicationData;
 	using Windows::Storage::ApplicationDataCreateDisposition;
 
@@ -49,7 +53,7 @@ TransferManager::TransferManager(
 		try
 		{
 			this->m_LastusedFolder = dynamic_cast<IStorageFolder^>(M2AsyncWait(
-				this->m_FutureAccessList.GetItemAsync(dynamic_cast<String^>(
+				this->m_FutureAccessList->GetItemAsync(dynamic_cast<String^>(
 					this->m_RootContainer->Values->Lookup(
 						L"LastusedFolder")))));
 		}
@@ -65,7 +69,7 @@ TransferManager::TransferManager(
 		try
 		{
 			this->m_DefaultFolder = dynamic_cast<IStorageFolder^>(M2AsyncWait(
-				this->m_FutureAccessList.GetItemAsync(dynamic_cast<String^>(
+				this->m_FutureAccessList->GetItemAsync(dynamic_cast<String^>(
 					this->m_RootContainer->Values->Lookup(
 						L"DefaultFolder")))));
 		}
@@ -165,7 +169,7 @@ void TransferManager::DefaultFolder::set(
 	{
 		this->m_RootContainer->Values->Insert(
 			L"DefaultFolder", 
-			this->m_FutureAccessList.AddItem(value));
+			this->m_FutureAccessList->Add(value));
 	}
 	else
 	{
@@ -289,7 +293,7 @@ IAsyncAction^ TransferManager::AddTaskAsync(
 		StorageFile^ SaveFile = M2AsyncWait(SaveFolder->CreateFileAsync(
 			DesiredFileName, CreationCollisionOption::GenerateUniqueName));
 
-		String^ Token = this->m_FutureAccessList.AddItem(SaveFolder);
+		String^ Token = this->m_FutureAccessList->Add(SaveFolder);
 
 		this->m_LastusedFolder = SaveFolder;
 		this->m_RootContainer->Values->Insert(

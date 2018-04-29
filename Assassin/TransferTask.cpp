@@ -18,7 +18,7 @@ using Windows::Networking::BackgroundTransfer::BackgroundTransferStatus;
 TransferTask::TransferTask(
 	String^ Guid,
 	ApplicationDataCompositeValue^ TaskConfig,
-	M2::CFutureAccessList& FutureAccessList,
+	IStorageItemAccessList^ FutureAccessList,
 	std::map<String^, DownloadOperation^>& DownloadOperationMap) :
 	m_Guid(Guid),
 	m_TaskConfig(TaskConfig)
@@ -33,7 +33,7 @@ TransferTask::TransferTask(
 	try
 	{
 		this->m_SaveFolder = dynamic_cast<IStorageFolder^>(M2AsyncWait(
-			FutureAccessList.GetItemAsync(dynamic_cast<String^>(
+			FutureAccessList->GetItemAsync(dynamic_cast<String^>(
 				TaskConfig->Lookup(L"SaveFolder")))));
 		if (nullptr != this->m_SaveFolder)
 		{

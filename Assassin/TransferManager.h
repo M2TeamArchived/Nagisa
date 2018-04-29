@@ -22,6 +22,7 @@ namespace Assassin
 	using Windows::Storage::ApplicationDataContainer;
 	using Windows::Storage::IStorageFile;
 	using Windows::Storage::IStorageFolder;
+	using Windows::Storage::IStorageItem;
 	using Windows::UI::Xaml::Data::INotifyPropertyChanged;
 	using Windows::UI::Xaml::Data::PropertyChangedEventHandler;
 	using Windows::UI::Xaml::DispatcherTimer;
@@ -121,7 +122,7 @@ namespace Assassin
 		ApplicationDataContainer^ m_RootContainer = nullptr;
 		ApplicationDataContainer^ m_TasksContainer = nullptr;
 
-		M2::CFutureAccessList m_FutureAccessList;
+		IStorageItemAccessList^ m_FutureAccessList = nullptr;
 
 		IStorageFolder^ m_LastusedFolder = nullptr;
 		IStorageFolder^ m_DefaultFolder = nullptr;

@@ -23,6 +23,7 @@ namespace Assassin
 	using Platform::String;
 	using Windows::Foundation::Uri;
 	using Windows::Foundation::IAsyncAction;
+	using Windows::Storage::AccessCache::IStorageItemAccessList;
 	using Windows::Storage::ApplicationDataCompositeValue;
 	using Windows::Storage::IStorageFile;
 	using Windows::Storage::IStorageFolder;
@@ -144,7 +145,7 @@ namespace Assassin
 		TransferTask(
 			String^ Guid,
 			ApplicationDataCompositeValue^ TaskConfig,
-			M2::CFutureAccessList& FutureAccessList,
+			IStorageItemAccessList^ FutureAccessList,
 			std::map<String^, DownloadOperation^>& DownloadOperationMap);	
 
 		void UpdateChangedProperties();

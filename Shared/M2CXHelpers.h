@@ -958,64 +958,6 @@ Platform::String^ M2ConvertByteSizeToString(uint64 ByteSize);
 //   The function will return Platform::Guid object.
 Platform::Guid M2CreateGuid();
 
-namespace M2
-{
-	using Platform::String;
-	using Windows::Foundation::IAsyncOperation;
-	using Windows::Storage::AccessCache::IStorageItemAccessList;
-	using Windows::Storage::IStorageItem;
-
-	class CFutureAccessList
-	{
-	private:
-		IStorageItemAccessList ^ m_FutureAccessList = nullptr;
-
-	public:
-		// Creates a new CFutureAccessList object.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   The function does not return a value.
-		CFutureAccessList()
-		{
-			using Windows::Storage::AccessCache::StorageApplicationPermissions;
-			this->m_FutureAccessList =
-				StorageApplicationPermissions::FutureAccessList;
-		}
-
-		// Adds IStorageItem object to the future access list.
-		// Parameters:
-		//   Item: The IStorageItem object which you want to add. 
-		// Return value:
-		//   A token that the app can use later to retrieve the storage item.
-		String^ AddItem(IStorageItem^ Item)
-		{
-			return this->m_FutureAccessList->Add(Item);
-		}
-
-		// Gets IStorageItem object from the future access list.
-		// Parameters:
-		//   Token: The token of the IStorageItem object. 
-		// Return value:
-		//   When this method completes successfully, it returns the item (type
-		//   IStorageItem ) that is associated with the specified token.
-		IAsyncOperation<IStorageItem^>^ GetItemAsync(String^ Token)
-		{
-			return this->m_FutureAccessList->GetItemAsync(Token);
-		}
-
-		// Gets IStorageItemAccessList object.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   Returns an IStorageItemAccessList object.
-		IStorageItemAccessList^ Get()
-		{
-			return this->m_FutureAccessList;
-		}
-	};
-}
-
 // Retrieves the raw pointer from the provided IBuffer object. 
 // Parameters:
 //   Buffer: The IBuffer object you want to retrieve the raw pointer.
