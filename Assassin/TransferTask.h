@@ -7,6 +7,39 @@ License: The MIT License
 
 #pragma once
 
+#include <winrt\base.h>
+#include <winrt\Windows.Foundation.h>
+#include <winrt\Windows.Foundation.Collections.h>
+#include <winrt\Windows.Networking.BackgroundTransfer.h>
+#include <winrt\Windows.Storage.h>
+#include <winrt\Windows.Storage.AccessCache.h>
+#include <winrt\Windows.UI.Xaml.h>
+
+namespace winrt
+{
+	using Windows::Foundation::Collections::IKeyValuePair;
+	using Windows::Foundation::Collections::IVectorView;
+	using Windows::Foundation::IAsyncAction;
+	using Windows::Foundation::IAsyncOperation;
+	using Windows::Foundation::TimeSpan;
+	using Windows::Foundation::Uri;
+	using Windows::Networking::BackgroundTransfer::BackgroundDownloader;
+	using Windows::Networking::BackgroundTransfer::BackgroundDownloadProgress;
+	using Windows::Networking::BackgroundTransfer::BackgroundTransferStatus;
+	using Windows::Networking::BackgroundTransfer::DownloadOperation;
+	using Windows::Storage::AccessCache::IStorageItemAccessList;
+	using Windows::Storage::AccessCache::StorageApplicationPermissions;
+	using Windows::Storage::ApplicationData;
+	using Windows::Storage::ApplicationDataContainer;
+	using Windows::Storage::ApplicationDataCompositeValue;
+	using Windows::Storage::ApplicationDataCreateDisposition;
+	using Windows::Storage::CreationCollisionOption;
+	using Windows::Storage::IStorageFile;
+	using Windows::Storage::IStorageFolder;
+	using Windows::Storage::StorageDeleteOption;
+	using Windows::UI::Xaml::DispatcherTimer;
+}
+
 namespace Assassin
 {
 	// The status of task.
@@ -23,11 +56,8 @@ namespace Assassin
 	using Platform::String;
 	using Windows::Foundation::Uri;
 	using Windows::Foundation::IAsyncAction;
-	using Windows::Storage::AccessCache::IStorageItemAccessList;
-	using Windows::Storage::ApplicationDataCompositeValue;
 	using Windows::Storage::IStorageFile;
 	using Windows::Storage::IStorageFolder;
-	using Windows::Networking::BackgroundTransfer::DownloadOperation;
 	using Windows::UI::Xaml::Data::INotifyPropertyChanged;
 	using Windows::UI::Xaml::Data::PropertyChangedEventHandler;
 
@@ -121,38 +151,43 @@ namespace Assassin
 	ref class TransferTask sealed : public ITransferTask
 	{
 	private:
-		DownloadOperation^ m_Operation = nullptr;
+		winrt::DownloadOperation m_Operation = nullptr;
 
-		ApplicationDataCompositeValue^ m_TaskConfig = nullptr;
+		winrt::ApplicationDataCompositeValue m_TaskConfig = nullptr;
 
 		ULONGLONG m_TickCount = 0;
 
-		String^ m_Guid = nullptr;
-		Uri^ m_SourceUri = nullptr;
-		String^ m_FileName = nullptr;
-		IStorageFile^ m_SaveFile = nullptr;
-		IStorageFolder^ m_SaveFolder = nullptr;
+		winrt::Uri m_SourceUri = nullptr;
+		winrt::hstring m_FileName;
+		
+		winrt::IStorageFolder m_SaveFolder = nullptr;
 		TransferTaskStatus m_Status = TransferTaskStatus::Canceled;
-		uint64 m_BytesReceived = 0;
-		uint64 m_BytesReceivedSpeed = 0;
-		uint64 m_RemainTime = 0;
-		uint64 m_TotalBytesToReceive = 0;
+		uint64_t m_BytesReceived = 0;
+		uint64_t m_BytesReceivedSpeed = 0;
+		uint64_t m_RemainTime = 0;
+		uint64_t m_TotalBytesToReceive = 0;
 
 		void RaisePropertyChanged(
 			String^ PropertyName);
 
 	internal:
+		winrt::hstring GuidInternal;
+
+
+		winrt::IStorageFile SaveFileInternal = nullptr;
+
+	internal:
 		TransferTask(
-			String^ Guid,
-			ApplicationDataCompositeValue^ TaskConfig,
-			IStorageItemAccessList^ FutureAccessList,
-			std::map<String^, DownloadOperation^>& DownloadOperationMap);	
+			winrt::hstring Guid,
+			winrt::ApplicationDataCompositeValue TaskConfig,
+			winrt::IStorageItemAccessList FutureAccessList,
+			std::map<winrt::hstring, winrt::DownloadOperation>& DownloadOperationMap);
 
 		void UpdateChangedProperties();
 
 		void NotifyPropertyChanged();
 
-		ApplicationDataCompositeValue^ GetTaskConfig();
+		winrt::ApplicationDataCompositeValue GetTaskConfig();
 
 	public:
 		virtual event PropertyChangedEventHandler^ PropertyChanged;

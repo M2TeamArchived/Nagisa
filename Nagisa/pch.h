@@ -9,4 +9,4 @@
 
 #include "App.xaml.h"
 
-#include "M2CXHelpers.h"
+#include "M2WinRTHelpers.h"

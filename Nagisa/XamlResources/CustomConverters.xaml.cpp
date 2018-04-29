@@ -40,8 +40,8 @@ Object^ Uint64ByteSizeToStringConverter::Convert(
 {
 	IBox<uint64>^ status = dynamic_cast<IBox<uint64>^>(value);
 
-	return M2ConvertByteSizeToString(
-		(status != nullptr) ? status->Value : 0);
+	return winrt::to_cx<Object>(winrt::box_value(M2ConvertByteSizeToString(
+		(status != nullptr) ? status->Value : 0)));
 }
 
 Object^ Uint64ByteSizeToStringConverter::ConvertBack(
@@ -124,9 +124,6 @@ Object^ TaskStatusToVisibleConverter::Convert(
 {
 	using Assassin::TransferTaskStatus;
 	using Windows::UI::Xaml::Visibility;
-	using std::map;
-	using std::wstring;
-	using std::make_pair;
 
 	IBox<TransferTaskStatus>^ StatusObject =
 		dynamic_cast<IBox<TransferTaskStatus>^>(value);

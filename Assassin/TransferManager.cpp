@@ -28,72 +28,63 @@ void TransferManager::RaisePropertyChanged(String^ PropertyName)
 TransferManager::TransferManager(
 	bool EnableUINotify)
 {
-	this->m_Downloader = ref new BackgroundDownloader();
+	this->m_Downloader = winrt::BackgroundDownloader();
 
 	InitializeCriticalSection(&this->m_TaskListUpdateCS);
-
-	using Windows::Storage::AccessCache::StorageApplicationPermissions;
+	
 	this->m_FutureAccessList =
-		StorageApplicationPermissions::FutureAccessList;
-
-	using Windows::Storage::ApplicationData;
-	using Windows::Storage::ApplicationDataCreateDisposition;
+		winrt::StorageApplicationPermissions::FutureAccessList();
 
 	this->m_RootContainer =
-		ApplicationData::Current->LocalSettings->CreateContainer(
+		winrt::ApplicationData::Current().LocalSettings().CreateContainer(
 			L"Nagisa",
-			ApplicationDataCreateDisposition::Always);
+			winrt::ApplicationDataCreateDisposition::Always);
 	this->m_TasksContainer =
-		this->m_RootContainer->CreateContainer(
+		this->m_RootContainer.CreateContainer(
 			L"Tasks",
-			ApplicationDataCreateDisposition::Always);
+			winrt::ApplicationDataCreateDisposition::Always);
 
-	if (this->m_RootContainer->Values->HasKey(L"LastusedFolder"))
+	if (this->m_RootContainer.Values().HasKey(L"LastusedFolder"))
 	{
 		try
-		{
-			this->m_LastusedFolder = dynamic_cast<IStorageFolder^>(M2AsyncWait(
-				this->m_FutureAccessList->GetItemAsync(dynamic_cast<String^>(
-					this->m_RootContainer->Values->Lookup(
-						L"LastusedFolder")))));
+		{		
+			this->m_LastusedFolder = this->m_FutureAccessList.GetFolderAsync(
+				winrt::unbox_value<winrt::hstring>(
+					this->m_RootContainer.Values().Lookup(
+						L"LastusedFolder"))).get();
 		}
 		catch (...)
 		{
 			this->m_LastusedFolder = nullptr;
-			this->m_RootContainer->Values->Remove(L"LastusedFolder");
+			this->m_RootContainer.Values().Remove(L"LastusedFolder");
 		}
 	}
 
-	if (this->m_RootContainer->Values->HasKey(L"DefaultFolder"))
+	if (this->m_RootContainer.Values().HasKey(L"DefaultFolder"))
 	{
 		try
 		{
-			this->m_DefaultFolder = dynamic_cast<IStorageFolder^>(M2AsyncWait(
-				this->m_FutureAccessList->GetItemAsync(dynamic_cast<String^>(
-					this->m_RootContainer->Values->Lookup(
-						L"DefaultFolder")))));
+			this->m_DefaultFolder = this->m_FutureAccessList.GetFolderAsync(
+				winrt::unbox_value<winrt::hstring>(
+					this->m_RootContainer.Values().Lookup(
+						L"DefaultFolder"))).get();
 		}
 		catch (...)
 		{
 			this->m_DefaultFolder = nullptr;
-			this->m_RootContainer->Values->Remove(L"DefaultFolder");
+			this->m_RootContainer.Values().Remove(L"DefaultFolder");
 		}	
 	}
 
 	if (EnableUINotify)
 	{
-		using Windows::Foundation::EventHandler;
-		using Windows::Foundation::TimeSpan;
-		
-		this->m_UINotifyTimer = ref new DispatcherTimer();
+		this->m_UINotifyTimer = winrt::DispatcherTimer();
 
-		TimeSpan Interval;
-		Interval.Duration = 1000 * 10000; // 10,000 ticks per millisecond.
+		// 10,000 ticks per millisecond.
+		this->m_UINotifyTimer.Interval(winrt::TimeSpan(1000 * 10000));
 
-		this->m_UINotifyTimer->Interval = Interval;
-
-		this->m_UINotifyTimer->Tick += ref new EventHandler<Object^>(
-			[this](Object^ sender, Object^ args)
+		this->m_UINotifyTimer.Tick(
+			[this](const winrt::IInspectable sender, const winrt::IInspectable args)
 		{
 			EnterCriticalSection(&this->m_TaskListUpdateCS);
 
@@ -103,11 +94,12 @@ TransferManager::TransferManager(
 			for (ITransferTask^ Task : this->m_TaskList)
 			{
 				if (nullptr == Task) continue;
-				
+
 				TransferTask^ TaskInternal = dynamic_cast<TransferTask^>(Task);
 
-				this->m_TasksContainer->Values->Insert(
-					TaskInternal->Guid, TaskInternal->GetTaskConfig());
+				this->m_TasksContainer.Values().Insert(
+					TaskInternal->GuidInternal,
+					TaskInternal->GetTaskConfig());
 
 				TaskInternal->UpdateChangedProperties();
 				TaskInternal->NotifyPropertyChanged();
@@ -122,7 +114,7 @@ TransferManager::TransferManager(
 			LeaveCriticalSection(&this->m_TaskListUpdateCS);
 		});
 
-		this->m_UINotifyTimer->Start();
+		this->m_UINotifyTimer.Start();
 	}
 }
 
@@ -137,7 +129,7 @@ TransferManager::~TransferManager()
 	
 	if (nullptr != this->m_UINotifyTimer)
 	{
-		this->m_UINotifyTimer->Stop();
+		this->m_UINotifyTimer.Stop();
 	}
 }
 
@@ -150,32 +142,33 @@ String^ TransferManager::Version::get()
 // Gets the last used folder.
 IStorageFolder^ TransferManager::LastusedFolder::get()
 {
-	return this->m_LastusedFolder;
+	return winrt::to_cx<IStorageFolder>(this->m_LastusedFolder);
 }
 
 // Gets the default download folder.
 IStorageFolder^ TransferManager::DefaultFolder::get()
 {
-	return this->m_DefaultFolder;
+	return winrt::to_cx<IStorageFolder>(this->m_DefaultFolder);
 }
 
 // Sets the default download folder.
 void TransferManager::DefaultFolder::set(
 	IStorageFolder^ value)
 {
-	this->m_DefaultFolder = value;
+	this->m_DefaultFolder = winrt::from_cx<winrt::IStorageFolder>(value);
 	
-	if (nullptr != value)
+	if (nullptr != this->m_DefaultFolder)
 	{
-		this->m_RootContainer->Values->Insert(
-			L"DefaultFolder", 
-			this->m_FutureAccessList->Add(value));
+		this->m_RootContainer.Values().Insert(
+			L"DefaultFolder",
+			winrt::box_value(this->m_FutureAccessList.Add(
+				this->m_DefaultFolder)));
 	}
 	else
 	{
-		if (this->m_RootContainer->Values->HasKey(L"DefaultFolder"))
+		if (this->m_RootContainer.Values().HasKey(L"DefaultFolder"))
 		{
-			this->m_RootContainer->Values->Remove(L"DefaultFolder");
+			this->m_RootContainer.Values().Remove(L"DefaultFolder");
 		}	
 	}
 }
@@ -204,10 +197,6 @@ IAsyncOperation<ITransferTaskVector^>^ TransferManager::GetTasksAsync()
 			-> ITransferTaskVector^
 	{
 		using Platform::Collections::VectorView;
-		using Windows::Foundation::Collections::IKeyValuePair;
-		using Windows::Foundation::Collections::IVectorView;
-		using Windows::Networking::BackgroundTransfer::DownloadOperation;
-		using Windows::Storage::ApplicationDataCompositeValue;
 
 		VectorView<ITransferTask^>^ Result = nullptr;
 		
@@ -219,8 +208,9 @@ IAsyncOperation<ITransferTaskVector^>^ TransferManager::GetTasksAsync()
 
 			TransferTask^ TaskInternal = dynamic_cast<TransferTask^>(Task);
 
-			this->m_TasksContainer->Values->Insert(
-				TaskInternal->Guid, TaskInternal->GetTaskConfig());
+			this->m_TasksContainer.Values().Insert(
+				TaskInternal->GuidInternal,
+				TaskInternal->GetTaskConfig());
 		}
 
 		this->m_TaskList.clear();
@@ -231,21 +221,21 @@ IAsyncOperation<ITransferTaskVector^>^ TransferManager::GetTasksAsync()
 			nullptr != CurrentSearchFilter &&
 			!CurrentSearchFilter->IsEmpty());
 
-		std::map<String^, DownloadOperation^> DownloadsList;
+		std::map<winrt::hstring, winrt::DownloadOperation> DownloadsList;
 
-		for (DownloadOperation^ Item 
-			: M2AsyncWait(this->m_Downloader->GetCurrentDownloadsAsync()))
+		for (winrt::DownloadOperation Item 
+			: this->m_Downloader.GetCurrentDownloadsAsync().get())
 		{
-			DownloadsList.insert(std::pair<String^, DownloadOperation^>(
-				Item->Guid.ToString(), Item));
+			DownloadsList.insert(std::pair<winrt::hstring, winrt::DownloadOperation>(
+				winrt::to_hstring(Item.Guid()), Item));
 		}	
 
-		for (IKeyValuePair<String^, Object^>^ Download
-			: this->m_TasksContainer->Values)
-		{
+		for (winrt::IKeyValuePair<winrt::hstring, winrt::IInspectable> Download
+			: this->m_TasksContainer.Values())
+		{		
 			TransferTask^ Task = ref new TransferTask(
-				Download->Key,
-				dynamic_cast<ApplicationDataCompositeValue^>(Download->Value),
+				Download.Key(),
+				Download.Value().try_as<winrt::ApplicationDataCompositeValue>(),
 				this->m_FutureAccessList,
 				DownloadsList);
 
@@ -281,54 +271,59 @@ IAsyncAction^ TransferManager::AddTaskAsync(
 	String^ DesiredFileName,
 	IStorageFolder^ SaveFolder)
 {
+	winrt::Uri SourceUriInternal =
+		winrt::from_cx<winrt::Uri>(SourceUri);
+	winrt::hstring DesiredFileNameInternal(
+		DesiredFileName->Data(), DesiredFileName->Length());
+	winrt::IStorageFolder SaveFolderInternal =
+		winrt::from_cx<winrt::IStorageFolder>(SaveFolder);
+	
 	return M2AsyncCreate(
-		[this, SourceUri, DesiredFileName, SaveFolder](
+		[this, SourceUriInternal, DesiredFileNameInternal, SaveFolderInternal](
 			IM2AsyncController^ AsyncController) -> void
-	{
-		using Windows::Networking::BackgroundTransfer::DownloadOperation;
-		using Windows::Storage::ApplicationDataCompositeValue;
-		using Windows::Storage::CreationCollisionOption;
-		using Windows::Storage::StorageFile;
+	{	
+		winrt::IStorageFile SaveFile = 
+			SaveFolderInternal.CreateFileAsync(
+				DesiredFileNameInternal,
+				winrt::CreationCollisionOption::GenerateUniqueName).get();
 
-		StorageFile^ SaveFile = M2AsyncWait(SaveFolder->CreateFileAsync(
-			DesiredFileName, CreationCollisionOption::GenerateUniqueName));
+		winrt::hstring Token = this->m_FutureAccessList.Add(
+			SaveFolderInternal);
 
-		String^ Token = this->m_FutureAccessList->Add(SaveFolder);
-
-		this->m_LastusedFolder = SaveFolder;
-		this->m_RootContainer->Values->Insert(
-			L"LastusedFolder", 
-			Token);
+		this->m_LastusedFolder = SaveFolderInternal;
+		this->m_RootContainer.Values().Insert(
+			L"LastusedFolder",
+			winrt::box_value(Token));
 		
-		DownloadOperation^ Operation = this->m_Downloader->CreateDownload(
-			SourceUri, SaveFile);
+		winrt::DownloadOperation Operation = this->m_Downloader.CreateDownload(
+			SourceUriInternal, SaveFile);
 
-		ApplicationDataCompositeValue^ TaskConfig =
-			ref new ApplicationDataCompositeValue();
+		winrt::ApplicationDataCompositeValue TaskConfig =
+			winrt::ApplicationDataCompositeValue();
 
-		TaskConfig->Insert(
+		TaskConfig.Insert(
 			L"SourceUri",
-			SourceUri->RawUri);
-		TaskConfig->Insert(
+			winrt::box_value(SourceUriInternal.RawUri()));
+		TaskConfig.Insert(
 			L"FileName",
-			SaveFile->Name);
-		TaskConfig->Insert(
+			winrt::box_value(SaveFile.Name()));
+		TaskConfig.Insert(
 			L"SaveFolder",
-			Token);
-		TaskConfig->Insert(
+			winrt::box_value(Token));
+		TaskConfig.Insert(
 			L"Status",
-			Windows::Foundation::PropertyValue::CreateUInt8(
-				static_cast<uint8>(TransferTaskStatus::Queued)));
+			winrt::box_value(
+				static_cast<uint8_t>(TransferTaskStatus::Queued)));
 
-		TaskConfig->Insert(
+		TaskConfig.Insert(
 			L"BackgroundTransferGuid",
-			Operation->Guid.ToString());
+			winrt::box_value(winrt::to_hstring(Operation.Guid())));
 
-		this->m_TasksContainer->Values->Insert(
-			M2CreateGuid().ToString(),
+		this->m_TasksContainer.Values().Insert(
+			winrt::to_hstring(M2CreateGuid()),
 			TaskConfig);
 
-		Operation->StartAsync();
+		Operation.StartAsync();
 	});
 }
 
@@ -340,33 +335,34 @@ IAsyncAction^ TransferManager::AddTaskAsync(
 IAsyncAction^ TransferManager::RemoveTaskAsync(
 	ITransferTask^ Task)
 {
+	TransferTask^ TaskInternal = dynamic_cast<TransferTask^>(Task);
+
 	return M2AsyncCreate(
-		[this, Task](
+		[this, TaskInternal](
 			IM2AsyncController^ AsyncController) -> void
 	{
 		EnterCriticalSection(&this->m_TaskListUpdateCS);
 
-		switch (Task->Status)
+		switch (TaskInternal->Status)
 		{
 		case TransferTaskStatus::Paused:
 		case TransferTaskStatus::Queued:
 		case TransferTaskStatus::Running:
-			Task->Cancel();
+			TaskInternal->Cancel();
 			break;
 		default:
 			break;
 		}
 
-		if (TransferTaskStatus::Completed != Task->Status)
+		if (TransferTaskStatus::Completed != TaskInternal->Status)
 		{
-			using Windows::Storage::StorageDeleteOption;
 			try
 			{
-				IStorageFile^ SaveFile = Task->SaveFile;
+				winrt::IStorageFile SaveFile = TaskInternal->SaveFileInternal;
 				if (nullptr != SaveFile)
 				{
-					M2AsyncWait(SaveFile->DeleteAsync(
-						StorageDeleteOption::PermanentDelete));
+					SaveFile.DeleteAsync(
+						winrt::StorageDeleteOption::PermanentDelete).get();
 				}
 			}
 			catch (...)
@@ -378,13 +374,13 @@ IAsyncAction^ TransferManager::RemoveTaskAsync(
 		for (size_t i = 0; i < this->m_TaskList.size(); ++i)
 		{
 			if (nullptr == this->m_TaskList[i]) continue;
-			
-			if (Task->Guid == this->m_TaskList[i]->Guid)
+
+			if (TaskInternal->Guid == this->m_TaskList[i]->Guid)
 			{
 				this->m_TaskList[i] = nullptr;
 			}
 		}
-		this->m_TasksContainer->Values->Remove(Task->Guid);
+		this->m_TasksContainer.Values().Remove(TaskInternal->GuidInternal);
 
 		LeaveCriticalSection(&this->m_TaskListUpdateCS);
 	});

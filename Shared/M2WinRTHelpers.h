@@ -1,22 +1,150 @@
 ﻿/******************************************************************************
 Project: M2-Team Common Library
-Description: Definition for the C++/CX helper functions.
-File Name: M2CXHelpers.h
+Description: Definition for the C++/WinRT helper functions.
+File Name: M2WinRTHelpers.h
 License: The MIT License
 ******************************************************************************/
 
 #pragma once
 
-#ifndef _M2_CX_HELPERS_
-#define _M2_CX_HELPERS_
+#ifndef _M2_WINRT_HELPERS_
+#define _M2_WINRT_HELPERS_
+
+#include <Windows.h>
+#include "M2BaseHelpers.h"
+
+#include <winrt\base.h>
+#include <winrt\Windows.ApplicationModel.Core.h>
+#include <winrt\Windows.Foundation.h>
+#include <winrt\Windows.Storage.Streams.h>
+#include <winrt\Windows.UI.Core.h>
+
+namespace winrt
+{
+	using Windows::ApplicationModel::Core::CoreApplication;
+	using Windows::Foundation::IAsyncAction;
+	using Windows::Foundation::IInspectable;
+	using Windows::Storage::Streams::IBuffer;
+	using Windows::UI::Core::CoreDispatcherPriority;
+	using Windows::UI::Core::DispatchedHandler;
+	
+	
 
 #ifdef __cplusplus_winrt
 
-#include <Windows.h>
+	template <typename T>
+	T from_cx(Platform::Object^ from)
+	{
+		T to{ nullptr };
+
+		winrt::check_hresult(reinterpret_cast<::IUnknown*>(from)
+			->QueryInterface(winrt::guid_of<T>(),
+				reinterpret_cast<void**>(winrt::put_abi(to))));
+
+		return to;
+	}
+
+	template <typename T>
+	T^ to_cx(winrt::Windows::Foundation::IUnknown const& from)
+	{
+		return safe_cast<T^>(reinterpret_cast<Platform::Object^>(
+			winrt::get_abi(from)));
+	}
+
+#endif
+}
+
+// Throw the appropriate Platform::Exception for the given HRESULT.
+// Parameters:
+//   hr: The error HRESULT that is represented by the exception. 
+// Return value:
+//   This function does not return a value, but will throw Platform::Exception.
+__declspec(noreturn) void M2ThrowPlatformException(HRESULT hr);
+
+// Throw the appropriate Platform::Exception for the given HRESULT.
+// Parameters:
+//   hr: The error HRESULT that is represented by the exception. 
+// Return value:
+//   This function does not return a value, but will throw Platform::Exception
+//   if it is a failed HRESULT value.
+void M2ThrowPlatformExceptionIfFailed(HRESULT hr);
+
+// Convert C++/CX exceptions in the callable code into HRESULTs.
+// Parameters:
+//   The function does not have parameters.
+// Return value:
+//   The function will return HRESULT.
+HRESULT M2ThrownPlatformExceptionToHResult();
+
+// Creates a GUID, a unique 128-bit integer used for CLSIDs and interface 
+// identifiers. 
+// Parameters:
+//   The function does not have parameters.
+// Return value:
+//   The function will return GUID struct.
+GUID M2CreateGuid();
+
+// Execute function on the UI thread with normal priority.
+// Parameters:
+//   agileCallback: The function you want to execute.
+// Return value:
+//   The return value is Windows::Foundation::IAsyncAction.
+template<typename... TFunction>
+inline winrt::IAsyncAction M2ExecuteOnUIThread(
+	const TFunction&... Function)
+{
+	winrt::IAsyncAction M2ExecuteOnUIThread(
+		winrt::DispatchedHandler agileCallback);
+
+	return M2ExecuteOnUIThread(Function...);
+}
+
+// Retrieves the IBuffer object from the provided raw pointer.
+// Parameters:
+//   Pointer: The raw pointer you want to retrieve the IBuffer object.
+//   Capacity: The size of raw pointer you want to retrieve the IBuffer object.
+// Return value:
+//   If the function succeeds, the return value is the IBuffer object from the 
+//   provided raw pointer. If the function fails, the return value is nullptr.
+// Warning: 
+//   The lifetime of the returned IBuffer object is controlled by the lifetime 
+//   of the raw pointer that's passed to this method. When the raw pointer has 
+//   been released, the IBuffer object becomes invalid and must not be used.
+winrt::IBuffer M2MakeIBuffer(
+	uint8_t* Pointer,
+	uint32_t Capacity);
+
+// Retrieves the raw pointer from the provided IBuffer object. 
+// Parameters:
+//   Buffer: The IBuffer object you want to retrieve the raw pointer.
+// Return value:
+//   If the function succeeds, the return value is the raw pointer from the 
+//   provided IBuffer object. If the function fails, the return value is 
+//   nullptr.
+// Warning: 
+//   The lifetime of the returned buffer is controlled by the lifetime of the 
+//   buffer object that's passed to this method. When the buffer has been 
+//   released, the pointer becomes invalid and must not be used.
+uint8_t* M2GetPointer(winrt::IBuffer Buffer);
+
+// Converts a numeric value into a string that represents the number expressed 
+// as a size value in byte, bytes, kibibytes, mebibytes, gibibytes, tebibytes,
+// pebibytes or exbibytes, depending on the size.
+// Parameters:
+//   ByteSize: The numeric byte size value to be converted.
+// Return value:
+//   Returns a winrt::hstring object which represents the converted string.
+winrt::hstring M2ConvertByteSizeToString(uint64 ByteSize);
+
+
+
+
+
+
+#ifdef __cplusplus_winrt
+
 #include <inspectable.h>
 #include <wrl\client.h>
-
-#include "M2BaseHelpers.h"
 
 #include <string>
 #include <memory>
@@ -107,22 +235,6 @@ auto M2AsyncWait(
 
 	// Return the result of asynchronous call.
 	return Async->GetResults();
-}
-
-// Execute function on the UI thread with normal priority.
-// Parameters:
-//   Function: The function you want to execute.
-// Return value:
-//   The return value is Windows::Foundation::IAsyncAction^.
-template<typename... TFunction>
-inline Windows::Foundation::IAsyncAction^ M2ExecuteOnUIThread(
-	const TFunction&... Function)
-{
-	Windows::Foundation::IAsyncAction^ M2ExecuteOnUIThread(
-		Windows::UI::Core::DispatchedHandler^ agileCallback);
-
-	return M2ExecuteOnUIThread(
-		ref new Windows::UI::Core::DispatchedHandler(Function...));
 }
 
 // Async Controller Interface
@@ -907,28 +1019,6 @@ inline IInspectable* M2GetInspectable(Platform::Object^ object)
 	return reinterpret_cast<IInspectable*>(object);
 }
 
-// Throw the appropriate Platform::Exception for the given HRESULT.
-// Parameters:
-//   hr: The error HRESULT that is represented by the exception. 
-// Return value:
-//   This function does not return a value, but will throw Platform::Exception.
-__declspec(noreturn) void M2ThrowPlatformException(HRESULT hr);
-
-// Throw the appropriate Platform::Exception for the given HRESULT.
-// Parameters:
-//   hr: The error HRESULT that is represented by the exception. 
-// Return value:
-//   This function does not return a value, but will throw Platform::Exception
-//   if it is a failed HRESULT value.
-void M2ThrowPlatformExceptionIfFailed(HRESULT hr);
-
-// Convert C++/CX exceptions in the callable code into HRESULTs.
-// Parameters:
-//   The function does not have parameters.
-// Return value:
-//   The function will return HRESULT.
-HRESULT M2ThrownPlatformExceptionToHResult();
-
 // Finds a sub string from a source string. 
 // Parameters:
 //   SourceString: The source string.
@@ -940,51 +1030,6 @@ bool M2FindSubString(
 	Platform::String^ SourceString,
 	Platform::String^ SubString,
 	bool IgnoreCase);
-
-// Converts a numeric value into a string that represents the number expressed 
-// as a size value in byte, bytes, kibibytes, mebibytes, gibibytes, tebibytes,
-// pebibytes or exbibytes, depending on the size.
-// Parameters:
-//   ByteSize: The numeric byte size value to be converted.
-// Return value:
-//   Returns a Platform::String object which represents the converted string.
-Platform::String^ M2ConvertByteSizeToString(uint64 ByteSize);
-
-// Creates a GUID, a unique 128-bit integer used for CLSIDs and interface 
-// identifiers. 
-// Parameters:
-//   The function does not have parameters.
-// Return value:
-//   The function will return Platform::Guid object.
-Platform::Guid M2CreateGuid();
-
-// Retrieves the raw pointer from the provided IBuffer object. 
-// Parameters:
-//   Buffer: The IBuffer object you want to retrieve the raw pointer.
-// Return value:
-//   If the function succeeds, the return value is the raw pointer from the 
-//   provided IBuffer object. If the function fails, the return value is 
-//   nullptr.
-// Warning: 
-//   The lifetime of the returned buffer is controlled by the lifetime of the 
-//   buffer object that's passed to this method. When the buffer has been 
-//   released, the pointer becomes invalid and must not be used.
-byte* M2GetPointer(Windows::Storage::Streams::IBuffer^ Buffer);
-
-// Retrieves the IBuffer object from the provided raw pointer.
-// Parameters:
-//   Pointer: The raw pointer you want to retrieve the IBuffer object.
-//   Capacity: The size of raw pointer you want to retrieve the IBuffer object.
-// Return value:
-//   If the function succeeds, the return value is the IBuffer object from the 
-//   provided raw pointer. If the function fails, the return value is nullptr.
-// Warning: 
-//   The lifetime of the returned IBuffer object is controlled by the lifetime 
-//   of the raw pointer that's passed to this method. When the raw pointer has 
-//   been released, the IBuffer object becomes invalid and must not be used.
-Windows::Storage::Streams::IBuffer^ M2MakeIBuffer(
-	byte* Pointer,
-	UINT32 Capacity);
 
 // Converts from the C++/CX string to the UTF-16 string.
 // Parameters:
@@ -1009,4 +1054,4 @@ Platform::String^ M2MakeCXString(const std::wstring& UTF16String);
 
 #endif
 
-#endif // _M2_CX_HELPERS_
+#endif // _M2_WINRT_HELPERS_

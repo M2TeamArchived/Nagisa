@@ -18,14 +18,11 @@ namespace Assassin
 	using Windows::Foundation::IAsyncOperation;
 	using Windows::Foundation::Uri;
 	using Windows::Foundation::Collections::IVectorView;
-	using Windows::Networking::BackgroundTransfer::BackgroundDownloader;	
-	using Windows::Storage::ApplicationDataContainer;
 	using Windows::Storage::IStorageFile;
 	using Windows::Storage::IStorageFolder;
 	using Windows::Storage::IStorageItem;
 	using Windows::UI::Xaml::Data::INotifyPropertyChanged;
 	using Windows::UI::Xaml::Data::PropertyChangedEventHandler;
-	using Windows::UI::Xaml::DispatcherTimer;
 
 	using ITransferTaskVector = IVectorView<ITransferTask^>;
 
@@ -113,22 +110,22 @@ namespace Assassin
 	ref class TransferManager sealed : public ITransferManager
 	{
 	private:
-		BackgroundDownloader^ m_Downloader = nullptr;
-		DispatcherTimer^ m_UINotifyTimer = nullptr;
+		winrt::BackgroundDownloader m_Downloader = nullptr;
+		winrt::DispatcherTimer m_UINotifyTimer = nullptr;
 
 		CRITICAL_SECTION m_TaskListUpdateCS;
 		std::vector<ITransferTask^> m_TaskList;
 
-		ApplicationDataContainer^ m_RootContainer = nullptr;
-		ApplicationDataContainer^ m_TasksContainer = nullptr;
+		winrt::ApplicationDataContainer m_RootContainer = nullptr;
+		winrt::ApplicationDataContainer m_TasksContainer = nullptr;
 
-		IStorageItemAccessList^ m_FutureAccessList = nullptr;
+		winrt::IStorageItemAccessList m_FutureAccessList = nullptr;
 
-		IStorageFolder^ m_LastusedFolder = nullptr;
-		IStorageFolder^ m_DefaultFolder = nullptr;
+		winrt::IStorageFolder m_LastusedFolder = nullptr;
+		winrt::IStorageFolder m_DefaultFolder = nullptr;
 
-		uint64 m_TotalDownloadBandwidth = 0;
-		uint64 m_TotalUploadBandwidth = 0;
+		uint64_t m_TotalDownloadBandwidth = 0;
+		uint64_t m_TotalUploadBandwidth = 0;
 
 	internal:
 		void RaisePropertyChanged(

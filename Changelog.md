@@ -4,8 +4,6 @@
 - This is the changelog about project Nagisa.
 - For more information on the names of persons mentioned here, please read 
   [People.md](People.md).
-- For more information on the changes for project Nagisa API implementations, 
-  please read [APIChanges.md](APIChanges.md).
 
 ## Changelog
 
@@ -14,6 +12,9 @@
 - Modify documents.
 - Sync the version number.
 - Start to add the BackgroundWorker.
+- Update to Windows 10 SDK Build 17134.
+- Update to C++17 standard.
+- Refactor the whole project with C++/WinRT.
 
 ### Nagisa 0.3 [Build 50]
 - Add Multi-language Support: Spanish. (Contributed by Jhovany200.)

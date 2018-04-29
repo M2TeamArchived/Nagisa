@@ -4,7 +4,7 @@
 #include <ppltasks.h>
 
 #include "NagisaVersion.h"
-#include "M2CXHelpers.h"
+#include "M2WinRTHelpers.h"
 
 #include "OpenSSL\crypto.h"
 #include "OpenSSL\bio.h"
