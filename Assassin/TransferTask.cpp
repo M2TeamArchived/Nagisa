@@ -9,32 +9,29 @@ License: The MIT License
 #include "TransferManager.h"
 #include "TransferTask.h"
 
-using namespace Assassin;
-using namespace Platform;
-
 TransferTask::TransferTask(
 	winrt::hstring Guid,
 	winrt::ApplicationDataCompositeValue TaskConfig,
 	winrt::IStorageItemAccessList FutureAccessList,
 	std::map<winrt::hstring, winrt::DownloadOperation>& DownloadOperationMap) :
-	GuidInternal(Guid),
+	m_Guid(Guid),
 	m_TaskConfig(TaskConfig)
 {
 	this->m_SourceUri = winrt::Uri(
-		winrt::unbox_value<winrt::hstring>(TaskConfig.Lookup(L"SourceUri")));		
-	this->m_FileName = 
+		winrt::unbox_value<winrt::hstring>(TaskConfig.Lookup(L"SourceUri")));
+	this->m_FileName =
 		winrt::unbox_value<winrt::hstring>(TaskConfig.Lookup(L"FileName"));
-	this->m_Status = static_cast<TransferTaskStatus>(
+	this->m_Status = static_cast<winrt::TransferTaskStatus>(
 		winrt::unbox_value<uint8_t>(TaskConfig.Lookup(L"Status")));
 	try
-	{	
-		this->m_SaveFolder = FutureAccessList.GetFolderAsync(
+	{
+		this->m_SaveFolder = M2AsyncWait(FutureAccessList.GetFolderAsync(
 			winrt::unbox_value<winrt::hstring>(
-				TaskConfig.Lookup(L"SaveFolder"))).get();
+				TaskConfig.Lookup(L"SaveFolder"))));
 		if (nullptr != this->m_SaveFolder)
 		{
-			this->SaveFileInternal = this->m_SaveFolder.GetFileAsync(
-				this->m_FileName).get();
+			this->m_SaveFile = M2AsyncWait(this->m_SaveFolder.GetFileAsync(
+				this->m_FileName));
 		}
 
 		std::map<winrt::hstring, winrt::DownloadOperation>::iterator iterator =
@@ -51,7 +48,7 @@ TransferTask::TransferTask(
 		this->m_BytesReceived = Progress.BytesReceived;
 		this->m_TotalBytesToReceive = Progress.TotalBytesToReceive;
 
-		if (TransferTaskStatus::Running == this->Status)
+		if (winrt::TransferTaskStatus::Running == this->m_Status)
 		{
 			this->m_Operation.AttachAsync();
 		}
@@ -60,10 +57,10 @@ TransferTask::TransferTask(
 	{
 		switch (this->m_Status)
 		{
-		case TransferTaskStatus::Paused:
-		case TransferTaskStatus::Queued:
-		case TransferTaskStatus::Running:
-			this->m_Status = TransferTaskStatus::Error;
+		case winrt::TransferTaskStatus::Paused:
+		case winrt::TransferTaskStatus::Queued:
+		case winrt::TransferTaskStatus::Running:
+			this->m_Status = winrt::TransferTaskStatus::Error;
 			break;
 		default:
 			break;
@@ -76,44 +73,44 @@ void TransferTask::UpdateChangedProperties()
 	if (nullptr != this->m_Operation)
 	{
 		winrt::BackgroundDownloadProgress Progress = this->m_Operation.Progress();
-		
+
 		switch (Progress.Status)
 		{
 		case winrt::BackgroundTransferStatus::Idle:
-			this->m_Status = TransferTaskStatus::Queued;
+			this->m_Status = winrt::TransferTaskStatus::Queued;
 			break;
 		case winrt::BackgroundTransferStatus::Running:
 		case winrt::BackgroundTransferStatus::PausedCostedNetwork:
 		case winrt::BackgroundTransferStatus::PausedNoNetwork:
 		case winrt::BackgroundTransferStatus::PausedSystemPolicy:
-			this->m_Status = TransferTaskStatus::Running;
+			this->m_Status = winrt::TransferTaskStatus::Running;
 			break;
 		case winrt::BackgroundTransferStatus::PausedByApplication:
-			this->m_Status = TransferTaskStatus::Paused;
+			this->m_Status = winrt::TransferTaskStatus::Paused;
 			break;
 		case winrt::BackgroundTransferStatus::Completed:
-			this->m_Status = TransferTaskStatus::Completed;
+			this->m_Status = winrt::TransferTaskStatus::Completed;
 			break;
 		case winrt::BackgroundTransferStatus::Canceled:
-			this->m_Status = TransferTaskStatus::Canceled;
+			this->m_Status = winrt::TransferTaskStatus::Canceled;
 			break;
 		case winrt::BackgroundTransferStatus::Error:
 		default:
-			this->m_Status = TransferTaskStatus::Error;
+			this->m_Status = winrt::TransferTaskStatus::Error;
 			break;
 		}
-		if (TransferTaskStatus::Running != this->m_Status)
+		if (winrt::TransferTaskStatus::Running != this->m_Status)
 			return;
 
 		ULONGLONG LastTickCount = this->m_TickCount;
 		this->m_TickCount = M2GetTickCount();
 
-		uint64 LastBytesReceived = this->m_BytesReceived;
+		uint64_t LastBytesReceived = this->m_BytesReceived;
 		this->m_BytesReceived = Progress.BytesReceived;
 
 		this->m_TotalBytesToReceive = Progress.TotalBytesToReceive;
 
-		uint64 DeltaBytesReceived = this->m_BytesReceived - LastBytesReceived;
+		uint64_t DeltaBytesReceived = this->m_BytesReceived - LastBytesReceived;
 		ULONGLONG DeltaPassedTime = this->m_TickCount - LastTickCount;
 		this->m_BytesReceivedSpeed =
 			DeltaBytesReceived * 1000 / DeltaPassedTime;
@@ -121,11 +118,11 @@ void TransferTask::UpdateChangedProperties()
 		if (0 == this->m_BytesReceivedSpeed ||
 			0 == this->m_TotalBytesToReceive)
 		{
-			this->m_RemainTime = static_cast<uint64>(-1);
+			this->m_RemainTime = static_cast<uint64_t>(-1);
 		}
 		else
 		{
-			uint64 RemainBytesToReceive =
+			uint64_t RemainBytesToReceive =
 				this->m_TotalBytesToReceive - this->m_BytesReceived;
 			this->m_RemainTime =
 				RemainBytesToReceive / this->m_BytesReceivedSpeed;
@@ -134,99 +131,107 @@ void TransferTask::UpdateChangedProperties()
 }
 
 void TransferTask::RaisePropertyChanged(
-	String ^ PropertyName)
+	winrt::hstring PropertyName)
 {
-	using Windows::UI::Xaml::Data::PropertyChangedEventArgs;
-	this->PropertyChanged(
-		this, ref new PropertyChangedEventArgs(PropertyName));
+	this->m_PropertyChanged(
+		*this, winrt::PropertyChangedEventArgs(PropertyName));
+}
+
+winrt::event_token TransferTask::PropertyChanged(
+	winrt::PropertyChangedEventHandler const& value)
+{
+	return this->m_PropertyChanged.add(value);
+}
+
+void TransferTask::PropertyChanged(
+	winrt::event_token const& token)
+{
+	this->m_PropertyChanged.remove(token);
 }
 
 void TransferTask::NotifyPropertyChanged()
 {
-	using Windows::Networking::BackgroundTransfer::BackgroundDownloadProgress;
-	
 	if (nullptr != this->m_Operation)
 	{
 		this->RaisePropertyChanged(L"Status");
-		if (TransferTaskStatus::Running == this->m_Status)
+		if (winrt::TransferTaskStatus::Running == this->m_Status)
 		{
 			this->RaisePropertyChanged(L"BytesReceived");
 			this->RaisePropertyChanged(L"TotalBytesToReceive");
 			this->RaisePropertyChanged(L"BytesReceivedSpeed");
 			this->RaisePropertyChanged(L"RemainTime");
-		}	
+		}
 	}
 }
 
 winrt::ApplicationDataCompositeValue TransferTask::GetTaskConfig()
 {
 	this->m_TaskConfig.Insert(
-		L"Status", 
-		winrt::box_value(static_cast<uint8>(this->Status)));
+		L"Status",
+		winrt::box_value(static_cast<uint32_t>(this->m_Status)));
 
 	return this->m_TaskConfig;
 }
 
 // Gets the Guid string of the task.
-String^ TransferTask::Guid::get()
+winrt::hstring TransferTask::Guid() const
 {
-	return ref new String(this->GuidInternal.data(), this->GuidInternal.size());
+	return this->m_Guid;
 }
 
 // Gets the URI which to download the file.
-Uri^ TransferTask::SourceUri::get()
+winrt::Uri TransferTask::SourceUri() const
 {
-	return winrt::to_cx<Uri>(this->m_SourceUri);
+	return this->m_SourceUri;
 }
 
 // Gets the file name which to download the file.
-String^ TransferTask::FileName::get()
+winrt::hstring TransferTask::FileName() const
 {
-	return StringReference(
-		this->m_FileName.data(), this->m_FileName.size());
+	return this->m_FileName.data();
 }
 
 // Gets the save file object which to download the file.
-IStorageFile^ TransferTask::SaveFile::get()
+winrt::IStorageFile TransferTask::SaveFile() const
 {
-	return winrt::to_cx<IStorageFile>(this->SaveFileInternal);
+	return this->m_SaveFile;
 }
 
 // Gets the save folder object which to download the file.
-IStorageFolder^ TransferTask::SaveFolder::get()
+winrt::IStorageFolder TransferTask::SaveFolder() const
 {
-	return winrt::to_cx<IStorageFolder>(this->m_SaveFolder);
+	return this->m_SaveFolder;
 }
 
 // The current status of the task.
-TransferTaskStatus TransferTask::Status::get()
-{	
+winrt::TransferTaskStatus TransferTask::Status() const
+{
 	return this->m_Status;
 }
 
-// The total number of bytes received. This value does not include 
-// bytes received as response headers. If the task has restarted, 
-// this value may be smaller than in the previous progress report.
-uint64 TransferTask::BytesReceived::get()
+// The total number of bytes received. This value does not include bytes 
+// received as response headers. If the task has restarted, this value may
+// be smaller than in the previous progress report.
+uint64_t TransferTask::BytesReceived() const
 {
 	return this->m_BytesReceived;
 }
 
 // The speed of bytes received in one second.
-uint64 TransferTask::BytesReceivedSpeed::get()
-{	
+uint64_t TransferTask::BytesReceivedSpeed() const
+{
 	return this->m_BytesReceivedSpeed;
 }
 
 // The remain time, in seconds.
-uint64 TransferTask::RemainTime::get()
+uint64_t TransferTask::RemainTime() const
 {
 	return this->m_RemainTime;
 }
 
 // The total number of bytes of data to download. If this number is
 // unknown, this value is set to 0.
-uint64 TransferTask::TotalBytesToReceive::get()
+uint64_t TransferTask::TotalBytesToReceive() const
 {
 	return this->m_TotalBytesToReceive;
 }
@@ -237,8 +242,8 @@ uint64 TransferTask::TotalBytesToReceive::get()
 // Return value:
 //   The function does not return a value.
 void TransferTask::Pause()
-{	
-	if (TransferTaskStatus::Running == this->Status)
+{
+	if (winrt::TransferTaskStatus::Running == this->m_Status)
 	{
 		if (nullptr != this->m_Operation)
 		{
@@ -246,7 +251,7 @@ void TransferTask::Pause()
 		}
 		else
 		{
-			this->m_Status = TransferTaskStatus::Error;
+			this->m_Status = winrt::TransferTaskStatus::Error;
 		}
 	}
 }
@@ -258,7 +263,7 @@ void TransferTask::Pause()
 //   The function does not return a value.
 void TransferTask::Resume()
 {
-	if (TransferTaskStatus::Paused == this->Status)
+	if (winrt::TransferTaskStatus::Paused == this->m_Status)
 	{
 		if (nullptr != this->m_Operation)
 		{
@@ -267,7 +272,7 @@ void TransferTask::Resume()
 		}
 		else
 		{
-			this->m_Status = TransferTaskStatus::Error;
+			this->m_Status = winrt::TransferTaskStatus::Error;
 		}
 	}
 }
@@ -279,18 +284,18 @@ void TransferTask::Resume()
 //   The function does not return a value.
 void TransferTask::Cancel()
 {
-	switch (this->Status)
+	switch (this->m_Status)
 	{
-	case TransferTaskStatus::Paused:
-	case TransferTaskStatus::Queued:
-	case TransferTaskStatus::Running:
+	case winrt::TransferTaskStatus::Paused:
+	case winrt::TransferTaskStatus::Queued:
+	case winrt::TransferTaskStatus::Running:
 		if (nullptr != this->m_Operation)
 		{
 			this->m_Operation.AttachAsync().Cancel();
 		}
 		else
 		{
-			this->m_Status = TransferTaskStatus::Error;
+			this->m_Status = winrt::TransferTaskStatus::Error;
 		}
 		break;
 	default:

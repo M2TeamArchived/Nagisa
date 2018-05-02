@@ -7,25 +7,36 @@ License: The MIT License
 
 #pragma once
 
-namespace Assassin
+#include "BackgroundWorker.g.h"
+
+namespace winrt
 {
-	using Platform::String;
-	using Platform::StringReference;
+	using Windows::Foundation::IInspectable;
 	using Windows::ApplicationModel::Background::IBackgroundTask;
 	using Windows::ApplicationModel::Background::IBackgroundTaskInstance;
+	using Windows::Networking::Sockets::SocketActivityInformation;
+	using Windows::Networking::Sockets::SocketActivityTriggerDetails;
+	using Windows::Networking::Sockets::SocketActivityTriggerReason;
+	using Windows::Networking::Sockets::StreamSocket;
+}
 
-	String^ BackgroundWorkerSocketID = 
-		StringReference(L"Assassin.BackgroundWorker");
-	
-	[Windows::Foundation::Metadata::WebHostHidden]
-	public ref class BackgroundWorker sealed : public IBackgroundTask
+namespace winrt::Assassin::implementation
+{
+	struct BackgroundWorker : BackgroundWorkerT<BackgroundWorker>
 	{
-	private:
-
 	public:
 		BackgroundWorker();
 		virtual ~BackgroundWorker();
 
-		virtual void Run(IBackgroundTaskInstance^ taskInstance);
+		void Run(
+			winrt::IBackgroundTaskInstance const& taskInstance) const;
+	};
+}
+
+namespace winrt::Assassin::factory_implementation
+{
+	struct BackgroundWorker : BackgroundWorkerT<
+		BackgroundWorker, implementation::BackgroundWorker>
+	{
 	};
 }

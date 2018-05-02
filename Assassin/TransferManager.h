@@ -9,237 +9,130 @@ License: The MIT License
 
 #include "TransferTask.h"
 
-#include <vector>
-
-namespace Assassin
+struct TransferManager : winrt::implements<
+	TransferManager, winrt::ITransferManager, winrt::INotifyPropertyChanged>
 {
-	using Platform::String;
-	using Platform::Collections::Vector;
-	using Windows::Foundation::IAsyncOperation;
-	using Windows::Foundation::Uri;
-	using Windows::Foundation::Collections::IVectorView;
-	using Windows::Storage::IStorageFile;
-	using Windows::Storage::IStorageFolder;
-	using Windows::Storage::IStorageItem;
-	using Windows::UI::Xaml::Data::INotifyPropertyChanged;
-	using Windows::UI::Xaml::Data::PropertyChangedEventHandler;
+private:
+	winrt::BackgroundDownloader m_Downloader = nullptr;
+	winrt::DispatcherTimer m_UINotifyTimer = nullptr;
 
-	using ITransferTaskVector = IVectorView<ITransferTask^>;
+	CRITICAL_SECTION m_TaskListUpdateCS;
+	std::vector<winrt::ITransferTask> m_TaskList;
 
-	public interface class ITransferManager : INotifyPropertyChanged
-	{
-		// Gets the version of Nagisa.
-		property String^ Version
-		{
-			String^ get();
-		}
+	winrt::ApplicationDataContainer m_RootContainer = nullptr;
+	winrt::ApplicationDataContainer m_TasksContainer = nullptr;
 
-		// Gets or sets the filter to use for searching the task list.
-		property String^ SearchFilter;
+	winrt::IStorageItemAccessList m_FutureAccessList = nullptr;
 
-		// Gets the last used folder.
-		property IStorageFolder^ LastusedFolder
-		{
-			IStorageFolder^ get();
-		}
+	winrt::IStorageFolder m_LastusedFolder = nullptr;
+	winrt::IStorageFolder m_DefaultFolder = nullptr;
 
-		// Gets or sets the default download folder.
-		property IStorageFolder^ DefaultFolder;
+	uint64_t m_TotalDownloadBandwidth = 0;
+	uint64_t m_TotalUploadBandwidth = 0;
 
-		// Gets the total download bandwidth.
-		property uint64 TotalDownloadBandwidth
-		{
-			uint64 get();
-		}
+	winrt::hstring m_SearchFilter;
 
-		// Gets the total upload bandwidth.
-		property uint64 TotalUploadBandwidth
-		{
-			uint64 get();
-		}
+	
 
-		// Gets the task list.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   Returns an object which represents the task list.
-		IAsyncOperation<ITransferTaskVector^>^ GetTasksAsync();
+public:
+	void RaisePropertyChanged(
+		winrt::hstring PropertyName);
 
-		// Add a task to the task list.
-		// Parameters:
-		//   SourceUri: The source uri object of task.
-		//   DesiredFileName: The file name you desire.
-		//   SaveFolder: The object of the folder which you want to save.
-		// Return value:
-		//   Returns an asynchronous object used to wait.
-		IAsyncAction^ AddTaskAsync(
-			Uri^ SourceUri,
-			String^ DesiredFileName,
-			IStorageFolder^ SaveFolder);
+	winrt::event<winrt::PropertyChangedEventHandler> m_PropertyChanged;
 
-		// Removes a task to the task list.
-		// Parameters:
-		//   Task: The task object. 
-		// Return value:
-		//   Returns an asynchronous object used to wait.
-		IAsyncAction^ RemoveTaskAsync(
-			ITransferTask^ Task);
+public:
+	// Creates a new TransferManager object.
+	// Parameters:
+	//   EnableUINotify: Enable the UI notify timer if true. 
+	// Return value:
+	//   The function does not return a value.
+	TransferManager(
+		bool EnableUINotify);
 
-		// Start all tasks.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   The function does not return a value.
-		void StartAllTasks();
+	// Destroys a TransferManager object.
+	// Parameters:
+	//   The function does not have parameters.
+	// Return value:
+	//   The function does not return a value.
+	virtual ~TransferManager();
 
-		// Pause all tasks.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   The function does not return a value.
-		void PauseAllTasks();
+	winrt::event_token PropertyChanged(
+		winrt::PropertyChangedEventHandler const& value);
+	void PropertyChanged(
+		winrt::event_token const& token);
 
-		// Clears the task list.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   The function does not return a value.
-		void ClearTaskList();
-	};
+	// Gets the version of Nagisa.
+	winrt::hstring Version() const;
 
-	ref class TransferManager sealed : public ITransferManager
-	{
-	private:
-		winrt::BackgroundDownloader m_Downloader = nullptr;
-		winrt::DispatcherTimer m_UINotifyTimer = nullptr;
+	// Gets the filter to use for searching the task list.
+	winrt::hstring SearchFilter() const;
 
-		CRITICAL_SECTION m_TaskListUpdateCS;
-		std::vector<ITransferTask^> m_TaskList;
+	// Sets the filter to use for searching the task list.
+	void SearchFilter(
+		winrt::hstring const& value);
 
-		winrt::ApplicationDataContainer m_RootContainer = nullptr;
-		winrt::ApplicationDataContainer m_TasksContainer = nullptr;
+	// Gets the last used folder.
+	winrt::IStorageFolder LastusedFolder();
 
-		winrt::IStorageItemAccessList m_FutureAccessList = nullptr;
+	// Gets the default download folder.
+	winrt::IStorageFolder DefaultFolder();
 
-		winrt::IStorageFolder m_LastusedFolder = nullptr;
-		winrt::IStorageFolder m_DefaultFolder = nullptr;
+	// Sets the default download folder.
+	void DefaultFolder(
+		winrt::IStorageFolder const& value);
 
-		uint64_t m_TotalDownloadBandwidth = 0;
-		uint64_t m_TotalUploadBandwidth = 0;
+	// Gets the total download bandwidth.
+	uint64_t TotalDownloadBandwidth() const;
 
-	internal:
-		void RaisePropertyChanged(
-			String^ PropertyName);
+	// Gets the total upload bandwidth.
+	uint64_t TotalUploadBandwidth() const;
 
-	public:
-		// Creates a new TransferManager object.
-		// Parameters:
-		//   EnableUINotify: Enable the UI notify timer if true. 
-		// Return value:
-		//   The function does not return a value.
-		TransferManager(
-			bool EnableUINotify);
+	// Gets the task list.
+	// Parameters:
+	//   The function does not have parameters.
+	// Return value:
+	//   Returns an object which represents the task list.
+	winrt::IAsyncOperation<winrt::IVectorView<winrt::ITransferTask>> 
+		GetTasksAsync();
 
-		// Destroys a TransferManager object.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   The function does not return a value.
-		virtual ~TransferManager();
+	// Add a task to the task list.
+	// Parameters:
+	//   SourceUri: The source uri object of task.
+	//   DesiredFileName: The file name you desire.
+	//   SaveFolder: The object of the folder which you want to save.
+	// Return value:
+	//   Returns an asynchronous object used to wait.
+	winrt::IAsyncAction AddTaskAsync(
+		winrt::Uri const& SourceUri,
+		winrt::param::hstring const& DesiredFileName,
+		winrt::IStorageFolder const& SaveFolder);
 
-		virtual event PropertyChangedEventHandler^ PropertyChanged;
+	// Removes a task to the task list.
+	// Parameters:
+	//   Task: The task object. 
+	// Return value:
+	//   Returns an asynchronous object used to wait.
+	winrt::IAsyncAction RemoveTaskAsync(
+		winrt::ITransferTask const& Task);
 
-		// Gets the version of Nagisa.
-		virtual property String^ Version
-		{
-			String^ get();
-		}
+	// Start all tasks.
+	// Parameters:
+	//   The function does not have parameters.
+	// Return value:
+	//   The function does not return a value.
+	void StartAllTasks();
 
-		// Gets or sets the filter to use for searching the task list.
-		virtual property String^ SearchFilter;
+	// Pause all tasks.
+	// Parameters:
+	//   The function does not have parameters.
+	// Return value:
+	//   The function does not return a value.
+	void PauseAllTasks();
 
-		// Gets the last used folder.
-		virtual property IStorageFolder^ LastusedFolder
-		{
-			IStorageFolder^ get();
-		}
-
-		// Gets or sets the default download folder.
-		virtual property IStorageFolder^ DefaultFolder
-		{
-			IStorageFolder^ get();
-			void set(IStorageFolder^ value);
-		}
-
-		// Gets the total download bandwidth.
-		virtual property uint64 TotalDownloadBandwidth
-		{
-			uint64 get();
-		}
-
-		// Gets the total upload bandwidth.
-		virtual property uint64 TotalUploadBandwidth
-		{
-			uint64 get();
-		}
-
-		// Gets the task list.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   Returns an object which represents the task list.
-		virtual IAsyncOperation<ITransferTaskVector^>^ GetTasksAsync();
-
-		// Add a task to the task list.
-		// Parameters:
-		//   SourceUri: The source uri object of task.
-		//   DesiredFileName: The file name you desire.
-		//   SaveFolder: The object of the folder which you want to save.
-		// Return value:
-		//   Returns an asynchronous object used to wait.
-		virtual IAsyncAction^ AddTaskAsync(
-			Uri^ SourceUri,
-			String^ DesiredFileName,
-			IStorageFolder^ SaveFolder);
-
-		// Removes a task to the task list.
-		// Parameters:
-		//   Task: The task object. 
-		// Return value:
-		//   Returns an asynchronous object used to wait.
-		virtual IAsyncAction^ RemoveTaskAsync(
-			ITransferTask^ Task);
-
-		// Start all tasks.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   The function does not return a value.
-		virtual void StartAllTasks();
-
-		// Pause all tasks.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   The function does not return a value.
-		virtual void PauseAllTasks();
-
-		// Clears the task list.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   The function does not return a value.
-		virtual void ClearTaskList();
-	};
-
-	public ref class TransferManagerFactory sealed
-	{
-	public:
-		// Creates a new TransferManager object.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   Returns a new TransferManager object.
-		static ITransferManager^ CreateInstance();
-	};
-}
+	// Clears the task list.
+	// Parameters:
+	//   The function does not have parameters.
+	// Return value:
+	//   The function does not return a value.
+	void ClearTaskList();
+};

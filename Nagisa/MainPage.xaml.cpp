@@ -24,8 +24,8 @@ using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 
 MainPage::MainPage() : 
-	m_TransferManager(Assassin::TransferManagerFactory::CreateInstance())
-{
+	m_TransferManager((ref new Assassin::TransferManagerFactory())->CreateInstance())
+{	
 	InitializeComponent();
 }
 
@@ -88,7 +88,7 @@ void MainPage::NewTaskButton_Click(
 	Object^ sender, 
 	RoutedEventArgs^ e)
 {
-	IAsyncOperation<ContentDialogResult>^ Operation = 
+	IAsyncOperation<ContentDialogResult>^ Operation =
 		this->ShowContentDialogAsync(
 			ref new NewTaskDialog(this->m_TransferManager));
 

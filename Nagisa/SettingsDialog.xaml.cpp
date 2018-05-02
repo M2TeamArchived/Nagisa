@@ -24,14 +24,14 @@ SettingsDialog::SettingsDialog(
 	m_TransferManager(TransferManager)
 {
 	InitializeComponent();
-
-	this->m_LastusedFolder = this->m_TransferManager->LastusedFolder;
 }
 
 void SettingsDialog::ContentDialog_Loaded(
 	Object^ sender,
 	RoutedEventArgs^ e)
 {
+	this->m_LastusedFolder = this->m_TransferManager->LastusedFolder;
+	
 	IStorageFolder^ DefaultFolder = this->m_TransferManager->DefaultFolder;
 	
 	bool IsUseCustomFolder = (nullptr != DefaultFolder);

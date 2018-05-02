@@ -1,42 +1,63 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="TransferManager">
-      <UniqueIdentifier>{81a127d8-7948-4712-8275-534b8e890add}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="TransferTask">
-      <UniqueIdentifier>{bf5cc4f9-e41a-47ed-a22d-77a054fe16a3}</UniqueIdentifier>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{79d2532a-80d3-4747-8e96-6ddac6db874c}</UniqueIdentifier>
     </Filter>
     <Filter Include="BackgroundWorker">
-      <UniqueIdentifier>{539b1046-02d3-446b-a2c1-12d9cf8c825e}</UniqueIdentifier>
+      <UniqueIdentifier>{a0f17a88-8cd0-43d2-8dfe-1eb0e2b7d0c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TransferTask">
+      <UniqueIdentifier>{ede5abd6-edb2-47f3-8203-793e850e0e9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TransferManager">
+      <UniqueIdentifier>{edc7ca39-1cc4-406e-b2fc-dbd879f73849}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TransferManagerFactory">
+      <UniqueIdentifier>{e0a30f7a-84df-4596-aaba-f1801e7c9a66}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="TransferManager.cpp">
-      <Filter>TransferManager</Filter>
+    <ClCompile Include="Generated Files\module.g.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BackgroundWorker.cpp">
+      <Filter>BackgroundWorker</Filter>
     </ClCompile>
     <ClCompile Include="TransferTask.cpp">
       <Filter>TransferTask</Filter>
     </ClCompile>
-    <ClCompile Include="BackgroundWorker.cpp">
-      <Filter>BackgroundWorker</Filter>
+    <ClCompile Include="TransferManager.cpp">
+      <Filter>TransferManager</Filter>
+    </ClCompile>
+    <ClCompile Include="TransferManagerFactory.cpp">
+      <Filter>TransferManagerFactory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="TransferManager.h">
-      <Filter>TransferManager</Filter>
+    <ClInclude Include="BackgroundWorker.h">
+      <Filter>BackgroundWorker</Filter>
     </ClInclude>
     <ClInclude Include="TransferTask.h">
       <Filter>TransferTask</Filter>
     </ClInclude>
-    <ClInclude Include="BackgroundWorker.h">
-      <Filter>BackgroundWorker</Filter>
+    <ClInclude Include="TransferManager.h">
+      <Filter>TransferManager</Filter>
+    </ClInclude>
+    <ClInclude Include="TransferManagerFactory.h">
+      <Filter>TransferManagerFactory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Assassin.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assassin.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <Midl Include="Assassin.idl" />
   </ItemGroup>
 </Project>
