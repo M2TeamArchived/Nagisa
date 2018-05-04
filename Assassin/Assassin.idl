@@ -209,15 +209,15 @@ namespace Assassin
     }
 
 	[version(1.0)]
-    runtimeclass TransferManagerFactory
+    runtimeclass TransferManager :
+		[default] ITransferManager
     {
-		TransferManagerFactory();
-		
 		// Creates a new TransferManager object.
 		// Parameters:
-		//   The function does not have parameters.
+		//   EnableUINotify: Enable the UI notify timer if true. 
 		// Return value:
-		//   Returns a new TransferManager object.
-		ITransferManager CreateInstance();
+		//   The function does not return a value.
+		TransferManager(
+			Boolean EnableUINotify);
     }
 }

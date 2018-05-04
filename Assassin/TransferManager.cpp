@@ -8,6 +8,8 @@ License: The MIT License
 #include "pch.h"
 #include "TransferManager.h"
 
+using namespace winrt::Assassin::implementation;
+
 void TransferManager::RaisePropertyChanged(
 	winrt::hstring PropertyName)
 {
@@ -250,22 +252,29 @@ winrt::IAsyncOperation<winrt::IVectorView<winrt::ITransferTask>>
 	for (winrt::IKeyValuePair<winrt::hstring, winrt::IInspectable> Download
 		: this->m_TasksContainer.Values())
 	{
-		winrt::ITransferTask Task = winrt::make<TransferTask>(
-			Download.Key(),
-			Download.Value().try_as<winrt::ApplicationDataCompositeValue>(),
-			this->m_FutureAccessList,
-			DownloadsList);
-
-		if (NeedSearchFilter)
+		try
 		{
-			if (!M2FindSubString(
-				Task.FileName(), CurrentSearchFilter, true))
-			{
-				continue;
-			}
-		}
+			winrt::ITransferTask Task = winrt::make<TransferTask>(
+				Download.Key(),
+				Download.Value().try_as<winrt::ApplicationDataCompositeValue>(),
+				this->m_FutureAccessList,
+				DownloadsList);
 
-		this->m_TaskList.push_back(Task);
+			if (NeedSearchFilter)
+			{
+				if (!M2FindSubString(
+					Task.FileName(), CurrentSearchFilter, true))
+				{
+					continue;
+				}
+			}
+
+			this->m_TaskList.push_back(Task);
+		}
+		catch (...)
+		{
+
+		}
 	}
 
 	/*winrt::IVector<winrt::ITransferTask> x = winrt::IVector<winrt::ITransferTask>();
@@ -275,10 +284,20 @@ winrt::IAsyncOperation<winrt::IVectorView<winrt::ITransferTask>>
 
 		x.Append(Task);
 	}*/
-	Result = winrt::com_array<winrt::ITransferTask>(this->m_TaskList);
+
+	auto TempVector = winrt::single_threaded_vector(std::move(std::vector<winrt::ITransferTask>(this->m_TaskList)));
+		
+		//winrt::make<single_threaded_observable_vector<winrt::ITransferTask>>();
+
+	/*for (winrt::ITransferTask Task : this->m_TaskList)
+	{
+		if (nullptr == Task) continue;
+
+		TempVector.Append(Task);
+	}*/
 
 
-	Result = winrt::single_threaded_vector(std::move(this->m_TaskList)).GetView();
+	Result = TempVector.GetView();
 		
 		//winrt::make<winrt::impl::input_vector<std::vector<winrt::ITransferTask>, std::vector<std::vector<winrt::ITransferTask>, std::allocator<std::vector<winrt::ITransferTask>>>>>(this->m_TaskList).GetView();
 

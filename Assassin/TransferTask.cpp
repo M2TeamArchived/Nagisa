@@ -9,6 +9,8 @@ License: The MIT License
 #include "TransferManager.h"
 #include "TransferTask.h"
 
+using namespace winrt::Assassin::implementation;
+
 TransferTask::TransferTask(
 	winrt::hstring Guid,
 	winrt::ApplicationDataCompositeValue TaskConfig,

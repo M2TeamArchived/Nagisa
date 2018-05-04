@@ -167,6 +167,238 @@ auto M2AsyncWait(
 	return Async.GetResults();
 }
 
+template <typename T>
+struct single_threaded_observable_vector : winrt::implements<single_threaded_observable_vector<T>,
+	winrt::Windows::Foundation::Collections::IObservableVector<T>,
+	winrt::Windows::Foundation::Collections::IVector<T>,
+	winrt::Windows::Foundation::Collections::IVectorView<T>,
+	winrt::Windows::Foundation::Collections::IIterable<T>>
+{
+	winrt::event_token VectorChanged(winrt::Windows::Foundation::Collections::VectorChangedEventHandler<T> const& handler)
+	{
+		return m_changed.add(handler);
+	}
+
+	void VectorChanged(winrt::event_token const cookie)
+	{
+		m_changed.remove(cookie);
+	}
+
+	T GetAt(uint32_t const index) const
+	{
+		if (index >= m_values.size())
+		{
+			throw winrt::hresult_out_of_bounds();
+		}
+
+		return m_values[index];
+	}
+
+	uint32_t Size() const noexcept
+	{
+		return static_cast<uint32_t>(m_values.size());
+	}
+
+	winrt::Windows::Foundation::Collections::IVectorView<T> GetView()
+	{
+		return *this;
+	}
+
+	bool IndexOf(T const& value, uint32_t& index) const noexcept
+	{
+		index = static_cast<uint32_t>(std::find(m_values.begin(), m_values.end(), value) - m_values.begin());
+		return index < m_values.size();
+	}
+
+	void SetAt(uint32_t const index, T const& value)
+	{
+		if (index >= m_values.size())
+		{
+			throw winrt::hresult_out_of_bounds();
+		}
+
+		++m_version;
+		m_values[index] = value;
+		m_changed(*this, winrt::make<args>(winrt::Windows::Foundation::Collections::CollectionChange::ItemChanged, index));
+	}
+
+	void InsertAt(uint32_t const index, T const& value)
+	{
+		if (index > m_values.size())
+		{
+			throw winrt::hresult_out_of_bounds();
+		}
+
+		++m_version;
+		m_values.insert(m_values.begin() + index, value);
+		m_changed(*this, winrt::make<args>(winrt::Windows::Foundation::Collections::CollectionChange::ItemInserted, index));
+	}
+
+	void RemoveAt(uint32_t const index)
+	{
+		if (index >= m_values.size())
+		{
+			throw winrt::hresult_out_of_bounds();
+		}
+
+		++m_version;
+		m_values.erase(m_values.begin() + index);
+		m_changed(*this, winrt::make<args>(winrt::Windows::Foundation::Collections::CollectionChange::ItemRemoved, index));
+	}
+
+	void Append(T const& value)
+	{
+		++m_version;
+		m_values.push_back(value);
+		m_changed(*this, winrt::make<args>(winrt::Windows::Foundation::Collections::CollectionChange::ItemInserted, Size() - 1));
+	}
+
+	void RemoveAtEnd()
+	{
+		if (m_values.empty())
+		{
+			throw winrt::hresult_out_of_bounds();
+		}
+
+		++m_version;
+		m_values.pop_back();
+		m_changed(*this, winrt::make<args>(winrt::Windows::Foundation::Collections::CollectionChange::ItemRemoved, Size()));
+	}
+
+	void Clear() noexcept
+	{
+		++m_version;
+		m_values.clear();
+		m_changed(*this, winrt::make<args>(winrt::Windows::Foundation::Collections::CollectionChange::Reset, 0));
+	}
+
+	uint32_t GetMany(uint32_t const startIndex, winrt::array_view<T> values) const
+	{
+		if (startIndex >= m_values.size())
+		{
+			return 0;
+		}
+
+		uint32_t actual = static_cast<uint32_t>(m_values.size() - startIndex);
+
+		if (actual > values.size())
+		{
+			actual = values.size();
+		}
+
+		std::copy_n(m_values.begin() + startIndex, actual, values.begin());
+		return actual;
+	}
+
+	void ReplaceAll(winrt::array_view<T const> value)
+	{
+		++m_version;
+		m_values.assign(value.begin(), value.end());
+		m_changed(*this, winrt::make<args>(winrt::Windows::Foundation::Collections::CollectionChange::Reset, 0));
+	}
+
+	winrt::Windows::Foundation::Collections::IIterator<T> First()
+	{
+		return winrt::make<iterator>(this);
+	}
+
+private:
+
+	std::vector<T> m_values;
+	winrt::event<winrt::Windows::Foundation::Collections::VectorChangedEventHandler<T>> m_changed;
+	uint32_t m_version{};
+
+	struct args : winrt::implements<args, winrt::Windows::Foundation::Collections::IVectorChangedEventArgs>
+	{
+		args(winrt::Windows::Foundation::Collections::CollectionChange const change, uint32_t const index) :
+			m_change(change),
+			m_index(index)
+		{
+		}
+
+		winrt::Windows::Foundation::Collections::CollectionChange CollectionChange() const
+		{
+			return m_change;
+		}
+
+		uint32_t Index() const
+		{
+			return m_index;
+		}
+
+	private:
+
+		winrt::Windows::Foundation::Collections::CollectionChange const m_change{};
+		uint32_t const m_index{};
+	};
+
+	struct iterator : winrt::implements<iterator, winrt::Windows::Foundation::Collections::IIterator<T>>
+	{
+		explicit iterator(single_threaded_observable_vector<T>* owner) noexcept :
+		m_version(owner->m_version),
+			m_current(owner->m_values.begin()),
+			m_end(owner->m_values.end())
+		{
+			m_owner.copy_from(owner);
+		}
+
+		void abi_enter() const
+		{
+			if (m_version != m_owner->m_version)
+			{
+				throw winrt::hresult_changed_state();
+			}
+		}
+
+		T Current() const
+		{
+			if (m_current == m_end)
+			{
+				throw winrt::hresult_out_of_bounds();
+			}
+
+			return *m_current;
+		}
+
+		bool HasCurrent() const noexcept
+		{
+			return m_current != m_end;
+		}
+
+		bool MoveNext() noexcept
+		{
+			if (m_current != m_end)
+			{
+				++m_current;
+			}
+
+			return HasCurrent();
+		}
+
+		uint32_t GetMany(winrt::array_view<T> values)
+		{
+			uint32_t actual = static_cast<uint32_t>(std::distance(m_current, m_end));
+
+			if (actual > values.size())
+			{
+				actual = values.size();
+			}
+
+			std::copy_n(m_current, actual, values.begin());
+			std::advance(m_current, actual);
+			return actual;
+		}
+
+	private:
+
+		winrt::com_ptr<single_threaded_observable_vector<T>> m_owner;
+		uint32_t const m_version;
+		typename std::vector<T>::const_iterator m_current;
+		typename std::vector<T>::const_iterator const m_end;
+	};
+};
+	
+
 #include "OpenSSL\crypto.h"
 #include "OpenSSL\bio.h"
 

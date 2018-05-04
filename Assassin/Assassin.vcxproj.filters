@@ -13,9 +13,6 @@
     <Filter Include="TransferManager">
       <UniqueIdentifier>{edc7ca39-1cc4-406e-b2fc-dbd879f73849}</UniqueIdentifier>
     </Filter>
-    <Filter Include="TransferManagerFactory">
-      <UniqueIdentifier>{e0a30f7a-84df-4596-aaba-f1801e7c9a66}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -31,9 +28,6 @@
     <ClCompile Include="TransferManager.cpp">
       <Filter>TransferManager</Filter>
     </ClCompile>
-    <ClCompile Include="TransferManagerFactory.cpp">
-      <Filter>TransferManagerFactory</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -46,9 +40,6 @@
     </ClInclude>
     <ClInclude Include="TransferManager.h">
       <Filter>TransferManager</Filter>
-    </ClInclude>
-    <ClInclude Include="TransferManagerFactory.h">
-      <Filter>TransferManagerFactory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

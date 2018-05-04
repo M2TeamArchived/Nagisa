@@ -7,7 +7,7 @@ License: The MIT License
 
 #pragma once
 
-#include "TransferManagerFactory.g.h"
+#include "TransferManager.g.h"
 
 namespace winrt
 {
@@ -42,99 +42,103 @@ namespace winrt
 	using Windows::UI::Xaml::DispatcherTimer;
 }
 
-struct TransferTask : winrt::implements<
-	TransferTask, winrt::ITransferTask, winrt::INotifyPropertyChanged>
+namespace winrt::Assassin::implementation
 {
-private:
-	winrt::DownloadOperation m_Operation = nullptr;
+	struct TransferTask : winrt::implements<
+		TransferTask, winrt::ITransferTask, winrt::INotifyPropertyChanged>
+	{
+	private:
+		winrt::DownloadOperation m_Operation = nullptr;
 
-	winrt::ApplicationDataCompositeValue m_TaskConfig = nullptr;
+		winrt::ApplicationDataCompositeValue m_TaskConfig = nullptr;
 
-	ULONGLONG m_TickCount = 0;
-	winrt::hstring m_Guid;
-	winrt::Uri m_SourceUri = nullptr;
-	winrt::hstring m_FileName;
-	winrt::IStorageFile m_SaveFile = nullptr;
-	winrt::IStorageFolder m_SaveFolder = nullptr;
-	winrt::TransferTaskStatus m_Status = winrt::TransferTaskStatus::Canceled;
-	uint64_t m_BytesReceived = 0;
-	uint64_t m_BytesReceivedSpeed = 0;
-	uint64_t m_RemainTime = 0;
-	uint64_t m_TotalBytesToReceive = 0;
+		ULONGLONG m_TickCount = 0;
+		winrt::hstring m_Guid;
+		winrt::Uri m_SourceUri = nullptr;
+		winrt::hstring m_FileName;
+		winrt::IStorageFile m_SaveFile = nullptr;
+		winrt::IStorageFolder m_SaveFolder = nullptr;
+		winrt::TransferTaskStatus m_Status = winrt::TransferTaskStatus::Canceled;
+		uint64_t m_BytesReceived = 0;
+		uint64_t m_BytesReceivedSpeed = 0;
+		uint64_t m_RemainTime = 0;
+		uint64_t m_TotalBytesToReceive = 0;
 
-	void RaisePropertyChanged(
-		winrt::hstring PropertyName);
+		void RaisePropertyChanged(
+			winrt::hstring PropertyName);
 
-	winrt::event<winrt::PropertyChangedEventHandler> m_PropertyChanged;
+		winrt::event<winrt::PropertyChangedEventHandler> m_PropertyChanged;
 
-public:
-	TransferTask(
-		winrt::hstring Guid,
-		winrt::ApplicationDataCompositeValue TaskConfig,
-		winrt::IStorageItemAccessList FutureAccessList,
-		std::map<winrt::hstring, winrt::DownloadOperation>& DownloadOperationMap);
+	public:
+		TransferTask(
+			winrt::hstring Guid,
+			winrt::ApplicationDataCompositeValue TaskConfig,
+			winrt::IStorageItemAccessList FutureAccessList,
+			std::map<winrt::hstring, winrt::DownloadOperation>& DownloadOperationMap);
 
-	void UpdateChangedProperties();
-	void NotifyPropertyChanged();
-	winrt::ApplicationDataCompositeValue GetTaskConfig();
+		void UpdateChangedProperties();
+		void NotifyPropertyChanged();
+		winrt::ApplicationDataCompositeValue GetTaskConfig();
 
-public:
-	winrt::event_token PropertyChanged(
-		winrt::PropertyChangedEventHandler const& value);
-	void PropertyChanged(
-		winrt::event_token const& token);
+	public:
+		winrt::event_token PropertyChanged(
+			winrt::PropertyChangedEventHandler const& value);
+		void PropertyChanged(
+			winrt::event_token const& token);
 
-	// Gets the Guid string of the task.
-	winrt::hstring Guid() const;
+		// Gets the Guid string of the task.
+		winrt::hstring Guid() const;
 
-	// Gets the URI which to download the file.
-	winrt::Uri SourceUri() const;
+		// Gets the URI which to download the file.
+		winrt::Uri SourceUri() const;
 
-	// Gets the file name which to download the file.
-	winrt::hstring FileName() const;
+		// Gets the file name which to download the file.
+		winrt::hstring FileName() const;
 
-	// Gets the save file object which to download the file.
-	winrt::IStorageFile SaveFile() const;
+		// Gets the save file object which to download the file.
+		winrt::IStorageFile SaveFile() const;
 
-	// Gets the save folder object which to download the file.
-	winrt::IStorageFolder SaveFolder() const;
+		// Gets the save folder object which to download the file.
+		winrt::IStorageFolder SaveFolder() const;
 
-	// The current status of the task.
-	winrt::TransferTaskStatus Status() const;
+		// The current status of the task.
+		winrt::TransferTaskStatus Status() const;
 
-	// The total number of bytes received. This value does not include bytes 
-	// received as response headers. If the task has restarted, this value may
-	// be smaller than in the previous progress report.
-	uint64_t BytesReceived() const;
+		// The total number of bytes received. This value does not include bytes 
+		// received as response headers. If the task has restarted, this value may
+		// be smaller than in the previous progress report.
+		uint64_t BytesReceived() const;
 
-	// The speed of bytes received in one second.
-	uint64_t BytesReceivedSpeed() const;
+		// The speed of bytes received in one second.
+		uint64_t BytesReceivedSpeed() const;
 
-	// The remain time, in seconds.
-	uint64_t RemainTime() const;
+		// The remain time, in seconds.
+		uint64_t RemainTime() const;
 
-	// The total number of bytes of data to download. If this number is 
-	// unknown, this value is set to 0.
-	uint64_t TotalBytesToReceive() const;
+		// The total number of bytes of data to download. If this number is 
+		// unknown, this value is set to 0.
+		uint64_t TotalBytesToReceive() const;
 
-	// Pauses a download operation.
-	// Parameters:
-	//   The function does not have parameters.
-	// Return value:
-	//   The function does not return a value.
-	void Pause();
+		// Pauses a download operation.
+		// Parameters:
+		//   The function does not have parameters.
+		// Return value:
+		//   The function does not return a value.
+		void Pause();
 
-	// Resumes a paused download operation.
-	// Parameters:
-	//   The function does not have parameters.
-	// Return value:
-	//   The function does not return a value.
-	void Resume();
+		// Resumes a paused download operation.
+		// Parameters:
+		//   The function does not have parameters.
+		// Return value:
+		//   The function does not return a value.
+		void Resume();
 
-	// Cancels a download operation.
-	// Parameters:
-	//   The function does not have parameters.
-	// Return value:
-	//   The function does not return a value.
-	void Cancel();
-};
+		// Cancels a download operation.
+		// Parameters:
+		//   The function does not have parameters.
+		// Return value:
+		//   The function does not return a value.
+		void Cancel();
+	};
+
+}

@@ -253,7 +253,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="TransferManagerFactory.h" />
     <ClInclude Include="BackgroundWorker.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
@@ -261,7 +260,6 @@
     <ClInclude Include="TransferTask.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="TransferManagerFactory.cpp" />
     <ClCompile Include="BackgroundWorker.cpp" />
     <ClCompile Include="Generated Files\module.g.cpp" />
     <ClCompile Include="pch.cpp">

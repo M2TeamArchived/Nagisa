@@ -24,7 +24,7 @@ using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 
 MainPage::MainPage() : 
-	m_TransferManager((ref new Assassin::TransferManagerFactory())->CreateInstance())
+	m_TransferManager(ref new Assassin::TransferManager(true))
 {	
 	InitializeComponent();
 }
