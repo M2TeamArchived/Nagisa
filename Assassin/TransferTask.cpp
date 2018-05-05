@@ -11,6 +11,20 @@ License: The MIT License
 
 using namespace winrt::Assassin::implementation;
 
+bool TransferTask::IsFinalStatus()
+{
+	winrt::TransferTaskStatus CurrentStatus = this->m_Status;
+	
+	if (winrt::TransferTaskStatus::Canceled == CurrentStatus ||
+		winrt::TransferTaskStatus::Completed == CurrentStatus ||
+		winrt::TransferTaskStatus::Error == CurrentStatus)
+	{
+		return true;
+	}
+	
+	return false;
+}
+
 TransferTask::TransferTask(
 	winrt::hstring Guid,
 	winrt::ApplicationDataCompositeValue TaskConfig,
@@ -18,13 +32,13 @@ TransferTask::TransferTask(
 	std::map<winrt::hstring, winrt::DownloadOperation>& DownloadOperationMap) :
 	m_Guid(Guid),
 	m_TaskConfig(TaskConfig)
-{
+{	
 	this->m_SourceUri = winrt::Uri(
 		winrt::unbox_value<winrt::hstring>(TaskConfig.Lookup(L"SourceUri")));
 	this->m_FileName =
 		winrt::unbox_value<winrt::hstring>(TaskConfig.Lookup(L"FileName"));
 	this->m_Status = static_cast<winrt::TransferTaskStatus>(
-		winrt::unbox_value<uint8_t>(TaskConfig.Lookup(L"Status")));
+		winrt::unbox_value<uint32_t>(TaskConfig.Lookup(L"Status")));
 	try
 	{
 		this->m_SaveFolder = M2AsyncWait(FutureAccessList.GetFolderAsync(
@@ -43,7 +57,7 @@ TransferTask::TransferTask(
 			? iterator->second : nullptr;
 		if (nullptr == this->m_Operation)
 		{
-			M2ThrowPlatformException(E_FAIL);
+			winrt::throw_hresult(E_FAIL);
 		}
 
 		winrt::BackgroundDownloadProgress Progress = this->m_Operation.Progress();
@@ -57,15 +71,9 @@ TransferTask::TransferTask(
 	}
 	catch (...)
 	{
-		switch (this->m_Status)
+		if (!this->IsFinalStatus())
 		{
-		case winrt::TransferTaskStatus::Paused:
-		case winrt::TransferTaskStatus::Queued:
-		case winrt::TransferTaskStatus::Running:
 			this->m_Status = winrt::TransferTaskStatus::Error;
-			break;
-		default:
-			break;
 		}
 	}
 }
@@ -286,11 +294,8 @@ void TransferTask::Resume()
 //   The function does not return a value.
 void TransferTask::Cancel()
 {
-	switch (this->m_Status)
+	if (!this->IsFinalStatus())
 	{
-	case winrt::TransferTaskStatus::Paused:
-	case winrt::TransferTaskStatus::Queued:
-	case winrt::TransferTaskStatus::Running:
 		if (nullptr != this->m_Operation)
 		{
 			this->m_Operation.AttachAsync().Cancel();
@@ -299,8 +304,5 @@ void TransferTask::Cancel()
 		{
 			this->m_Status = winrt::TransferTaskStatus::Error;
 		}
-		break;
-	default:
-		break;
 	}
 }

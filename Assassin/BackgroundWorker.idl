@@ -1,0 +1,16 @@
+﻿/******************************************************************************
+Project: Assassin
+Description: Definition for the BackgroundWorker.
+File Name: BackgroundWorker.idl
+License: The MIT License
+******************************************************************************/
+
+namespace Assassin
+{
+	[version(1.0)]
+    runtimeclass BackgroundWorker :
+		Windows.ApplicationModel.Background.IBackgroundTask
+    {
+		BackgroundWorker();
+    }
+}

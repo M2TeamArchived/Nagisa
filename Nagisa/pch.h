@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <winrt\base.h>
+
 #include <collection.h>
 #include <ppltasks.h>
 

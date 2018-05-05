@@ -13,39 +13,16 @@
 #include <winrt\Windows.Storage.AccessCache.h>
 #include <winrt\Windows.UI.Xaml.h>
 #include <winrt\Windows.UI.Xaml.Data.h>
+#include <winrt\Windows.UI.Xaml.Interop.h>
 
 #include <map>
 #include <string>
 #include <vector>
 
-#include <ppltasks.h>
+//#include <ppltasks.h>
 
 #include "M2BaseHelpers.h"
 //#include "M2WinRTHelpers.h"
-
-// Throw the appropriate Platform::Exception for the given HRESULT.
-// Parameters:
-//   hr: The error HRESULT that is represented by the exception. 
-// Return value:
-//   This function does not return a value, but will throw Platform::Exception.
-__declspec(noreturn) inline void M2ThrowPlatformException(HRESULT hr)
-{
-	throw winrt::hresult_error(hr);
-}
-
-// Throw the appropriate Platform::Exception for the given HRESULT.
-// Parameters:
-//   hr: The error HRESULT that is represented by the exception. 
-// Return value:
-//   This function does not return a value, but will throw Platform::Exception
-//   if it is a failed HRESULT value.
-void inline M2ThrowPlatformExceptionIfFailed(HRESULT hr)
-{
-	if (FAILED(hr))
-	{
-		M2ThrowPlatformException(hr);
-	}
-}
 
 // Creates a GUID, a unique 128-bit integer used for CLSIDs and interface 
 // identifiers. 
@@ -56,7 +33,7 @@ void inline M2ThrowPlatformExceptionIfFailed(HRESULT hr)
 inline GUID M2CreateGuid()
 {
 	GUID guid = { 0 };
-	M2ThrowPlatformExceptionIfFailed(CoCreateGuid(&guid));
+	winrt::check_hresult(CoCreateGuid(&guid));
 	return guid;
 }
 
@@ -161,243 +138,228 @@ auto M2AsyncWait(
 	}
 
 	// Throw a COM exception if failed.
-	M2ThrowPlatformExceptionIfFailed(hr);
+	winrt::check_hresult(hr);
 
 	// Return the result of asynchronous call.
 	return Async.GetResults();
 }
 
-template <typename T>
-struct single_threaded_observable_vector : winrt::implements<single_threaded_observable_vector<T>,
-	winrt::Windows::Foundation::Collections::IObservableVector<T>,
-	winrt::Windows::Foundation::Collections::IVector<T>,
-	winrt::Windows::Foundation::Collections::IVectorView<T>,
-	winrt::Windows::Foundation::Collections::IIterable<T>>
+namespace M2
 {
-	winrt::event_token VectorChanged(winrt::Windows::Foundation::Collections::VectorChangedEventHandler<T> const& handler)
+	template <typename Type>
+	struct BindableVectorView : winrt::implements<
+		BindableVectorView<Type>,
+		winrt::Windows::Foundation::Collections::IVectorView<Type>,
+		winrt::Windows::Foundation::Collections::IIterable<Type>,
+		winrt::Windows::UI::Xaml::Interop::IBindableVectorView,
+		winrt::Windows::UI::Xaml::Interop::IBindableIterable>
 	{
-		return m_changed.add(handler);
-	}
-
-	void VectorChanged(winrt::event_token const cookie)
-	{
-		m_changed.remove(cookie);
-	}
-
-	T GetAt(uint32_t const index) const
-	{
-		if (index >= m_values.size())
-		{
-			throw winrt::hresult_out_of_bounds();
-		}
-
-		return m_values[index];
-	}
-
-	uint32_t Size() const noexcept
-	{
-		return static_cast<uint32_t>(m_values.size());
-	}
-
-	winrt::Windows::Foundation::Collections::IVectorView<T> GetView()
-	{
-		return *this;
-	}
-
-	bool IndexOf(T const& value, uint32_t& index) const noexcept
-	{
-		index = static_cast<uint32_t>(std::find(m_values.begin(), m_values.end(), value) - m_values.begin());
-		return index < m_values.size();
-	}
-
-	void SetAt(uint32_t const index, T const& value)
-	{
-		if (index >= m_values.size())
-		{
-			throw winrt::hresult_out_of_bounds();
-		}
-
-		++m_version;
-		m_values[index] = value;
-		m_changed(*this, winrt::make<args>(winrt::Windows::Foundation::Collections::CollectionChange::ItemChanged, index));
-	}
-
-	void InsertAt(uint32_t const index, T const& value)
-	{
-		if (index > m_values.size())
-		{
-			throw winrt::hresult_out_of_bounds();
-		}
-
-		++m_version;
-		m_values.insert(m_values.begin() + index, value);
-		m_changed(*this, winrt::make<args>(winrt::Windows::Foundation::Collections::CollectionChange::ItemInserted, index));
-	}
-
-	void RemoveAt(uint32_t const index)
-	{
-		if (index >= m_values.size())
-		{
-			throw winrt::hresult_out_of_bounds();
-		}
-
-		++m_version;
-		m_values.erase(m_values.begin() + index);
-		m_changed(*this, winrt::make<args>(winrt::Windows::Foundation::Collections::CollectionChange::ItemRemoved, index));
-	}
-
-	void Append(T const& value)
-	{
-		++m_version;
-		m_values.push_back(value);
-		m_changed(*this, winrt::make<args>(winrt::Windows::Foundation::Collections::CollectionChange::ItemInserted, Size() - 1));
-	}
-
-	void RemoveAtEnd()
-	{
-		if (m_values.empty())
-		{
-			throw winrt::hresult_out_of_bounds();
-		}
-
-		++m_version;
-		m_values.pop_back();
-		m_changed(*this, winrt::make<args>(winrt::Windows::Foundation::Collections::CollectionChange::ItemRemoved, Size()));
-	}
-
-	void Clear() noexcept
-	{
-		++m_version;
-		m_values.clear();
-		m_changed(*this, winrt::make<args>(winrt::Windows::Foundation::Collections::CollectionChange::Reset, 0));
-	}
-
-	uint32_t GetMany(uint32_t const startIndex, winrt::array_view<T> values) const
-	{
-		if (startIndex >= m_values.size())
-		{
-			return 0;
-		}
-
-		uint32_t actual = static_cast<uint32_t>(m_values.size() - startIndex);
-
-		if (actual > values.size())
-		{
-			actual = values.size();
-		}
-
-		std::copy_n(m_values.begin() + startIndex, actual, values.begin());
-		return actual;
-	}
-
-	void ReplaceAll(winrt::array_view<T const> value)
-	{
-		++m_version;
-		m_values.assign(value.begin(), value.end());
-		m_changed(*this, winrt::make<args>(winrt::Windows::Foundation::Collections::CollectionChange::Reset, 0));
-	}
-
-	winrt::Windows::Foundation::Collections::IIterator<T> First()
-	{
-		return winrt::make<iterator>(this);
-	}
-
-private:
-
-	std::vector<T> m_values;
-	winrt::event<winrt::Windows::Foundation::Collections::VectorChangedEventHandler<T>> m_changed;
-	uint32_t m_version{};
-
-	struct args : winrt::implements<args, winrt::Windows::Foundation::Collections::IVectorChangedEventArgs>
-	{
-		args(winrt::Windows::Foundation::Collections::CollectionChange const change, uint32_t const index) :
-			m_change(change),
-			m_index(index)
-		{
-		}
-
-		winrt::Windows::Foundation::Collections::CollectionChange CollectionChange() const
-		{
-			return m_change;
-		}
-
-		uint32_t Index() const
-		{
-			return m_index;
-		}
-
 	private:
+		std::vector<Type> m_values;
 
-		winrt::Windows::Foundation::Collections::CollectionChange const m_change{};
-		uint32_t const m_index{};
-	};
-
-	struct iterator : winrt::implements<iterator, winrt::Windows::Foundation::Collections::IIterator<T>>
-	{
-		explicit iterator(single_threaded_observable_vector<T>* owner) noexcept :
-		m_version(owner->m_version),
-			m_current(owner->m_values.begin()),
-			m_end(owner->m_values.end())
+		class WinRTObject
 		{
-			m_owner.copy_from(owner);
-		}
+		private:
+			Type m_value;
 
-		void abi_enter() const
-		{
-			if (m_version != m_owner->m_version)
+		public:
+			WinRTObject(Type value) :
+				m_value(value)
 			{
-				throw winrt::hresult_changed_state();
+
 			}
+
+			operator Type()
+			{
+				return this->m_value;
+			}
+
+			operator winrt::Windows::Foundation::IInspectable()
+			{
+				return winrt::box_value(this->m_value);
+			}
+		};
+
+		struct iterator : winrt::implements<
+			iterator,
+			winrt::Windows::Foundation::Collections::IIterator<Type>,
+			winrt::Windows::UI::Xaml::Interop::IBindableIterator>
+		{
+		private:
+			winrt::com_ptr<BindableVectorView<Type>> m_owner;
+			typename std::vector<Type>::const_iterator m_current;
+			typename std::vector<Type>::const_iterator const m_end;
+
+		public:	
+			explicit iterator(BindableVectorView<Type>* owner) noexcept :
+				m_current(owner->m_values.begin()),
+				m_end(owner->m_values.end())
+			{
+				m_owner.copy_from(owner);
+			}
+
+			WinRTObject Current() const
+			{
+				if (m_current == m_end)
+				{
+					throw winrt::hresult_out_of_bounds();
+				}
+
+				return WinRTObject(*m_current);
+			}
+
+			bool HasCurrent() const noexcept
+			{
+				return m_current != m_end;
+			}
+
+			bool MoveNext() noexcept
+			{
+				if (m_current != m_end)
+				{
+					++m_current;
+				}
+
+				return HasCurrent();
+			}
+
+			uint32_t GetMany(winrt::array_view<Type> values)
+			{
+				uint32_t actual = static_cast<uint32_t>(std::distance(m_current, m_end));
+
+				if (actual > values.size())
+				{
+					actual = values.size();
+				}
+
+				std::copy_n(m_current, actual, values.begin());
+				std::advance(m_current, actual);
+				return actual;
+			}
+		};
+
+	public:
+		explicit BindableVectorView(std::vector<Type>& values) :
+			m_values(values)
+		{
 		}
 
-		T Current() const
+		uint32_t Size() const noexcept
 		{
-			if (m_current == m_end)
+			return static_cast<uint32_t>(m_values.size());
+		}
+
+		WinRTObject GetAt(uint32_t const index) const
+		{
+			if (index >= m_values.size())
 			{
 				throw winrt::hresult_out_of_bounds();
 			}
 
-			return *m_current;
+			return WinRTObject(m_values[index]);
 		}
 
-		bool HasCurrent() const noexcept
+		uint32_t GetMany(uint32_t const startIndex, winrt::array_view<Type> values) const
 		{
-			return m_current != m_end;
-		}
-
-		bool MoveNext() noexcept
-		{
-			if (m_current != m_end)
+			if (startIndex >= m_values.size())
 			{
-				++m_current;
+				return 0;
 			}
 
-			return HasCurrent();
-		}
-
-		uint32_t GetMany(winrt::array_view<T> values)
-		{
-			uint32_t actual = static_cast<uint32_t>(std::distance(m_current, m_end));
+			uint32_t actual = static_cast<uint32_t>(m_values.size() - startIndex);
 
 			if (actual > values.size())
 			{
 				actual = values.size();
 			}
 
-			std::copy_n(m_current, actual, values.begin());
-			std::advance(m_current, actual);
+			std::copy_n(m_values.begin() + startIndex, actual, values.begin());
 			return actual;
 		}
 
-	private:
+		bool IndexOf(Type const& value, uint32_t& index) const noexcept
+		{
+			index = static_cast<uint32_t>(std::find(m_values.begin(), m_values.end(), value) - m_values.begin());
+			return index < m_values.size();
+		}
 
-		winrt::com_ptr<single_threaded_observable_vector<T>> m_owner;
-		uint32_t const m_version;
-		typename std::vector<T>::const_iterator m_current;
-		typename std::vector<T>::const_iterator const m_end;
+
+		class IIteratorCreator
+		{
+		private:
+			BindableVectorView<Type>* m_owner;
+
+		public:
+			IIteratorCreator(BindableVectorView<Type>* owner) :
+				m_owner(owner)
+			{
+
+			}
+
+			operator winrt::Windows::Foundation::Collections::IIterator<Type>()
+			{
+				return winrt::make<iterator>(this->m_owner);
+			}
+
+			operator winrt::Windows::UI::Xaml::Interop::IBindableIterator()
+			{
+				return winrt::make<iterator>(this->m_owner).try_as<winrt::Windows::UI::Xaml::Interop::IBindableIterator>();
+			}
+		};
+
+		IIteratorCreator First()
+		{
+			return IIteratorCreator(this);
+		}
+
+		bool IndexOf(winrt::Windows::Foundation::IInspectable const& value, uint32_t& index) const
+		{
+			return this->IndexOf(winrt::unbox_value<Type>(value), index);
+		}
 	};
-};
-	
+}
+
+// Converts a numeric value into a string that represents the number expressed 
+// as a size value in byte, bytes, kibibytes, mebibytes, gibibytes, tebibytes,
+// pebibytes or exbibytes, depending on the size.
+// Parameters:
+//   ByteSize: The numeric byte size value to be converted.
+// Return value:
+//   Returns a winrt::hstring object which represents the converted string.
+inline winrt::hstring M2ConvertByteSizeToString(uint64_t ByteSize)
+{
+	double result = static_cast<double>(ByteSize);
+
+	if (0.0 == result)
+	{
+		return L"0 Byte";
+	}
+
+	const wchar_t* Systems[] =
+	{
+		L"Bytes",
+		L"KiB",
+		L"MiB",
+		L"GiB",
+		L"TiB",
+		L"PiB",
+		L"EiB"
+	};
+
+	size_t nSystem = 0;
+	for (; nSystem < sizeof(Systems) / sizeof(*Systems); ++nSystem)
+	{
+		if (1024.0 > result)
+			break;
+
+		result /= 1024.0;
+	}
+
+	winrt::hstring ByteSizeString = winrt::to_hstring(
+		static_cast<uint64_t>(result * 100) / 100.0);
+
+	return ByteSizeString + L" " + Systems[nSystem];
+}
 
 #include "OpenSSL\crypto.h"
 #include "OpenSSL\bio.h"

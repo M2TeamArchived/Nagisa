@@ -1,7 +1,7 @@
 ﻿/******************************************************************************
 Project: Assassin
-Description: Definition of Assassin Windows Runtime Interfaces.
-File Name: Assassin.idl
+Description: Definition for the TransferManager.
+File Name: TransferManager.idl
 License: The MIT License
 ******************************************************************************/
 
@@ -199,13 +199,6 @@ namespace Assassin
 		// Return value:
 		//   The function does not return a value.
 		void ClearTaskList();
-    }
-
-	[version(1.0)]
-    runtimeclass BackgroundWorker :
-		Windows.ApplicationModel.Background.IBackgroundTask
-    {
-		BackgroundWorker();
     }
 
 	[version(1.0)]

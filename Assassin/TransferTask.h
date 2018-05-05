@@ -69,6 +69,8 @@ namespace winrt::Assassin::implementation
 
 		winrt::event<winrt::PropertyChangedEventHandler> m_PropertyChanged;
 
+		bool IsFinalStatus();
+
 	public:
 		TransferTask(
 			winrt::hstring Guid,

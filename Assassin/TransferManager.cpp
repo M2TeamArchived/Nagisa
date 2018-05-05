@@ -37,9 +37,11 @@ void TransferManager::PropertyChanged(
 TransferManager::TransferManager(
 	bool EnableUINotify)
 {
-	this->m_Downloader = winrt::BackgroundDownloader();
-
 	InitializeCriticalSection(&this->m_TaskListUpdateCS);
+
+	EnterCriticalSection(&this->m_TaskListUpdateCS);
+
+	this->m_Downloader = winrt::BackgroundDownloader();
 
 	this->m_FutureAccessList =
 		winrt::StorageApplicationPermissions::FutureAccessList();
@@ -94,8 +96,9 @@ TransferManager::TransferManager(
 		// 10,000 ticks per millisecond.
 		this->m_UINotifyTimer.Interval(winrt::TimeSpan(1000 * 10000));
 
-		this->m_UINotifyTimer.Tick(
-			[this](const winrt::IInspectable sender, const winrt::IInspectable args)
+		this->m_UINotifyTimer.Tick([this](
+			const winrt::IInspectable sender,
+			const winrt::IInspectable args)
 		{
 			EnterCriticalSection(&this->m_TaskListUpdateCS);
 
@@ -127,6 +130,8 @@ TransferManager::TransferManager(
 
 		this->m_UINotifyTimer.Start();
 	}
+
+	LeaveCriticalSection(&this->m_TaskListUpdateCS);
 }
 
 // Destroys a TransferManager object.
@@ -252,56 +257,26 @@ winrt::IAsyncOperation<winrt::IVectorView<winrt::ITransferTask>>
 	for (winrt::IKeyValuePair<winrt::hstring, winrt::IInspectable> Download
 		: this->m_TasksContainer.Values())
 	{
-		try
-		{
-			winrt::ITransferTask Task = winrt::make<TransferTask>(
-				Download.Key(),
-				Download.Value().try_as<winrt::ApplicationDataCompositeValue>(),
-				this->m_FutureAccessList,
-				DownloadsList);
+		winrt::ITransferTask Task = winrt::make<TransferTask>(
+			Download.Key(),
+			Download.Value().try_as<winrt::ApplicationDataCompositeValue>(),
+			this->m_FutureAccessList,
+			DownloadsList);
 
-			if (NeedSearchFilter)
+		if (NeedSearchFilter)
+		{
+			if (!M2FindSubString(
+				Task.FileName(), CurrentSearchFilter, true))
 			{
-				if (!M2FindSubString(
-					Task.FileName(), CurrentSearchFilter, true))
-				{
-					continue;
-				}
+				continue;
 			}
-
-			this->m_TaskList.push_back(Task);
 		}
-		catch (...)
-		{
 
-		}
+		this->m_TaskList.push_back(Task);
 	}
 
-	/*winrt::IVector<winrt::ITransferTask> x = winrt::IVector<winrt::ITransferTask>();
-	for (winrt::ITransferTask Task : this->m_TaskList)
-	{
-		if (nullptr == Task) continue;
-
-		x.Append(Task);
-	}*/
-
-	auto TempVector = winrt::single_threaded_vector(std::move(std::vector<winrt::ITransferTask>(this->m_TaskList)));
-		
-		//winrt::make<single_threaded_observable_vector<winrt::ITransferTask>>();
-
-	/*for (winrt::ITransferTask Task : this->m_TaskList)
-	{
-		if (nullptr == Task) continue;
-
-		TempVector.Append(Task);
-	}*/
-
-
-	Result = TempVector.GetView();
-		
-		//winrt::make<winrt::impl::input_vector<std::vector<winrt::ITransferTask>, std::vector<std::vector<winrt::ITransferTask>, std::allocator<std::vector<winrt::ITransferTask>>>>>(this->m_TaskList).GetView();
-
-	//((IUnknown*)winrt::get_abi(Result))->AddRef();
+	Result = winrt::make<M2::BindableVectorView<winrt::ITransferTask>>(
+		this->m_TaskList);
 
 	LeaveCriticalSection(&this->m_TaskListUpdateCS);
 
@@ -350,7 +325,7 @@ winrt::IAsyncAction TransferManager::AddTaskAsync(
 	TaskConfig.Insert(
 		L"Status",
 		winrt::box_value(
-			static_cast<uint8_t>(winrt::TransferTaskStatus::Queued)));
+			static_cast<uint32_t>(winrt::TransferTaskStatus::Queued)));
 
 	TaskConfig.Insert(
 		L"BackgroundTransferGuid",

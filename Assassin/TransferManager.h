@@ -33,13 +33,10 @@ namespace winrt::Assassin::implementation
 
 		winrt::hstring m_SearchFilter;
 
+		winrt::event<winrt::PropertyChangedEventHandler> m_PropertyChanged;
 
-
-	public:
 		void RaisePropertyChanged(
 			winrt::hstring PropertyName);
-
-		winrt::event<winrt::PropertyChangedEventHandler> m_PropertyChanged;
 
 	public:
 		winrt::event_token PropertyChanged(
