@@ -216,9 +216,6 @@
     <ClInclude Include="SettingsDialog.xaml.h">
       <DependentUpon>SettingsDialog.xaml</DependentUpon>
     </ClInclude>
-    <ClInclude Include="XamlResources\CustomConverters.xaml.h">
-      <DependentUpon>XamlResources\CustomConverters.xaml</DependentUpon>
-    </ClInclude>
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h">
       <DependentUpon>App.xaml</DependentUpon>
@@ -323,9 +320,6 @@
     </ClCompile>
     <ClCompile Include="SettingsDialog.xaml.cpp">
       <DependentUpon>SettingsDialog.xaml</DependentUpon>
-    </ClCompile>
-    <ClCompile Include="XamlResources\CustomConverters.xaml.cpp">
-      <DependentUpon>XamlResources\CustomConverters.xaml</DependentUpon>
     </ClCompile>
     <ClCompile Include="MainPage.xaml.cpp">
       <DependentUpon>MainPage.xaml</DependentUpon>

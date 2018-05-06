@@ -6,7 +6,6 @@
 #pragma once
 
 #include "MainPage.g.h"
-#include "XamlResources\CustomConverters.xaml.h"
 
 namespace Nagisa
 {

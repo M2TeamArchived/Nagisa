@@ -8,7 +8,7 @@
     <Assassin:Uint64ByteSizeToStringConverter x:Name="Uint64ByteSizeToStringConverter"/>
     <Assassin:Uint64RemainTimeToStringConverter x:Name="Uint64RemainTimeToStringConverter"/>
     <Assassin:TaskListEmptyToVisibilityConverter x:Name="TaskListEmptyToVisibilityConverter"/>
-    <local:TaskStatusToVisibleConverter x:Name="TaskStatusToVisibleConverter"/>
-    <local:NullableBooleanToBooleanConverter x:Key="NullableBooleanToBooleanConverter"/>
+    <Assassin:TaskStatusToVisibleConverter x:Name="TaskStatusToVisibleConverter"/>
+    <Assassin:NullableBooleanToBooleanConverter x:Key="NullableBooleanToBooleanConverter"/>
 
 </ResourceDictionary>
