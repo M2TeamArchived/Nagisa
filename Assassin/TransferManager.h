@@ -17,7 +17,7 @@ namespace winrt::Assassin::implementation
 		winrt::BackgroundDownloader m_Downloader = nullptr;
 		winrt::DispatcherTimer m_UINotifyTimer = nullptr;
 
-		CRITICAL_SECTION m_TaskListUpdateCS;
+		M2::CCriticalSection m_TaskListUpdateCS;
 		std::vector<winrt::ITransferTask> m_TaskList;
 
 		winrt::ApplicationDataContainer m_RootContainer = nullptr;
@@ -38,6 +38,13 @@ namespace winrt::Assassin::implementation
 		void RaisePropertyChanged(
 			winrt::hstring PropertyName);
 
+		winrt::IAsyncAction Initialize(
+			bool EnableUINotify);
+
+		void UINotifyTimerTick(
+			const winrt::IInspectable sender,
+			const winrt::IInspectable args);
+
 	public:
 		winrt::event_token PropertyChanged(
 			winrt::PropertyChangedEventHandler const& value);
@@ -57,7 +64,14 @@ namespace winrt::Assassin::implementation
 		//   The function does not have parameters.
 		// Return value:
 		//   The function does not return a value.
-		virtual ~TransferManager();
+		~TransferManager();
+
+		// Destroys a TransferManager object.
+		// Parameters:
+		//   The function does not have parameters.
+		// Return value:
+		//   The function does not return a value.
+		void Close();
 
 		// Gets the version of Nagisa.
 		winrt::hstring Version() const;
@@ -101,9 +115,9 @@ namespace winrt::Assassin::implementation
 		// Return value:
 		//   Returns an asynchronous object used to wait.
 		winrt::IAsyncAction AddTaskAsync(
-			winrt::Uri const& SourceUri,
-			winrt::param::hstring const& DesiredFileName,
-			winrt::IStorageFolder const& SaveFolder);
+			winrt::Uri const SourceUri,
+			winrt::hstring const DesiredFileName,
+			winrt::IStorageFolder const SaveFolder);
 
 		// Removes a task to the task list.
 		// Parameters:
@@ -111,7 +125,7 @@ namespace winrt::Assassin::implementation
 		// Return value:
 		//   Returns an asynchronous object used to wait.
 		winrt::IAsyncAction RemoveTaskAsync(
-			winrt::ITransferTask const& Task);
+			winrt::ITransferTask const Task);
 
 		// Start all tasks.
 		// Parameters:

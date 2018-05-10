@@ -12,6 +12,7 @@ License: The MIT License
 using namespace winrt::Assassin::implementation;
 
 #include <winrt\Assassin.h>
+#include <winrt\Windows.UI.Xaml.h>
 
 namespace winrt
 {

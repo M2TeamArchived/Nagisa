@@ -23,38 +23,9 @@ using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 
-
-#include <winrt\Windows.ApplicationModel.DataTransfer.h>
-#include <winrt\Windows.Foundation.h>
-#include <winrt\Windows.Storage.h>
-#include <winrt\Windows.System.h>
-#include <winrt\Windows.UI.Xaml.h>
-#include <winrt\Windows.UI.Xaml.Controls.h>
-
-#include <winrt\Assassin.h>
-
-namespace winrt
-{
-	using Assassin::ITransferTask;
-	using Windows::ApplicationModel::DataTransfer::Clipboard;
-	using Windows::ApplicationModel::DataTransfer::DataPackage;
-	using Windows::Foundation::EventHandler;
-	using Windows::Foundation::IAsyncAction;
-	using Windows::Foundation::TimeSpan;
-	using Windows::Storage::IStorageFile;
-	using Windows::Storage::IStorageFolder;
-	using Windows::System::FolderLauncherOptions;
-	using Windows::System::Launcher;
-	using Windows::UI::Xaml::Controls::AutoSuggestBox;
-	using Windows::UI::Xaml::DispatcherTimer;
-}
-
-
-
-
-MainPage::MainPage() : 
+MainPage::MainPage() :
 	m_TransferManager(ref new Assassin::TransferManager(true))
-{	
+{
 	InitializeComponent();
 }
 
@@ -101,12 +72,12 @@ IAsyncOperation<ContentDialogResult>^ MainPage::ShowContentDialogAsync(
 	double PageActualHeight = this->ActualHeight;
 	if (Dialog->MaxHeight > PageActualHeight)
 		Dialog->MaxHeight = PageActualHeight;
-	
+
 	return Dialog->ShowAsync();
 }
 
 void MainPage::AboutButton_Click(
-	Object^ sender, 
+	Object^ sender,
 	RoutedEventArgs^ e)
 {
 	this->ShowContentDialogAsync(
@@ -114,7 +85,7 @@ void MainPage::AboutButton_Click(
 }
 
 void MainPage::NewTaskButton_Click(
-	Object^ sender, 
+	Object^ sender,
 	RoutedEventArgs^ e)
 {
 	IAsyncOperation<ContentDialogResult>^ Operation =
@@ -131,9 +102,9 @@ void MainPage::NewTaskButton_Click(
 }
 
 void MainPage::Page_Loaded(
-	Object^ sender, 
+	Object^ sender,
 	RoutedEventArgs^ e)
-{	
+{
 	this->RefreshTaskListAsync();
 }
 
@@ -143,63 +114,68 @@ void MainPage::CopyLinkMenuItem_Click(
 {
 	try
 	{
-		winrt::ITransferTask Task = winrt::from_cx<winrt::ITransferTask>(
+		ITransferTask^ Task = dynamic_cast<ITransferTask^>(
 			dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
-		winrt::DataPackage data = winrt::DataPackage();
-		data.SetText(Task.SourceUri().RawUri());
+		using Windows::ApplicationModel::DataTransfer::Clipboard;
+		using Windows::ApplicationModel::DataTransfer::DataPackage;
 
-		winrt::Clipboard::SetContent(data);
+		DataPackage^ data = ref new DataPackage();
+		data->SetText(Task->SourceUri->RawUri);
+
+		Clipboard::SetContent(data);
 	}
 	catch (...)
 	{
-		
+
 	}
 }
 
 void MainPage::SearchAutoSuggestBox_QuerySubmitted(
-	AutoSuggestBox^ sender, 
+	AutoSuggestBox^ sender,
 	AutoSuggestBoxQuerySubmittedEventArgs^ args)
 {
 	this->SearchTaskList(sender->Text);
 }
 
 void MainPage::SearchAutoSuggestBox_TextChanged(
-	AutoSuggestBox^ sender, 
+	AutoSuggestBox^ sender,
 	AutoSuggestBoxTextChangedEventArgs^ args)
 {
-	winrt::AutoSuggestBox SenderInternal =
-		winrt::from_cx<winrt::AutoSuggestBox>(sender);
-	
-	if (nullptr == SenderInternal.DataContext())
+	using Windows::UI::Xaml::DispatcherTimer;
+	using Windows::Foundation::EventHandler;
+	using Windows::Foundation::TimeSpan;
+
+	if (nullptr == sender->DataContext)
 	{
-		winrt::DispatcherTimer Timer = winrt::DispatcherTimer();
+		DispatcherTimer^ Timer = ref new DispatcherTimer();
 		AutoSuggestBox^ SearchAutoSuggestBox = sender;
 
-		// 10,000 ticks per millisecond.
-		Timer.Interval(winrt::TimeSpan(250 * 10000));
+		TimeSpan Interval;
+		Interval.Duration = 250 * 10000; // 10,000 ticks per millisecond.
 
-		Timer.Tick([this, SearchAutoSuggestBox, Timer](
-			const winrt::IInspectable sender,
-			const winrt::IInspectable args)
+		Timer->Interval = Interval;
+
+		Timer->Tick += ref new EventHandler<Object^>(
+			[this, SearchAutoSuggestBox, Timer](Object^ sender, Object^ args)
 		{
 			this->SearchTaskList(SearchAutoSuggestBox->Text);
-			
-			sender.try_as<winrt::DispatcherTimer>().Stop();
+
+			dynamic_cast<DispatcherTimer^>(sender)->Stop();
 		});
 
-		SenderInternal.DataContext(Timer);
+		sender->DataContext = Timer;
 	}
 
-	winrt::DispatcherTimer Timer = 
-		SenderInternal.DataContext().try_as<winrt::DispatcherTimer>();
+	DispatcherTimer^ Timer = dynamic_cast<DispatcherTimer^>(
+		sender->DataContext);
 
-	Timer.Stop();
-	Timer.Start();
+	Timer->Stop();
+	Timer->Start();
 }
 
 void MainPage::RetryButton_Click(
-	Object^ sender, 
+	Object^ sender,
 	RoutedEventArgs^ e)
 {
 	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
@@ -210,7 +186,7 @@ void MainPage::RetryButton_Click(
 		auto SourceUri = Task->SourceUri;
 		auto FileName = Task->FileName;
 		auto SaveFolder = Task->SaveFolder;
-		
+
 		M2AsyncWait(this->m_TransferManager->RemoveTaskAsync(Task));
 
 		M2AsyncWait(this->m_TransferManager->AddTaskAsync(
@@ -219,17 +195,17 @@ void MainPage::RetryButton_Click(
 			SaveFolder));
 
 		this->RefreshTaskList();
-	});	
+	});
 }
 
 void MainPage::ResumeButton_Click(
 	Object^ sender,
 	RoutedEventArgs^ e)
 {
-	winrt::ITransferTask Task = winrt::from_cx<winrt::ITransferTask>(
+	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
 		dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
-	Task.Resume();
+	Task->Resume();
 
 	this->RefreshTaskListAsync();
 }
@@ -238,10 +214,10 @@ void MainPage::PauseButton_Click(
 	Object^ sender,
 	RoutedEventArgs^ e)
 {
-	winrt::ITransferTask Task = winrt::from_cx<winrt::ITransferTask>(
+	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
 		dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
-	Task.Pause();
+	Task->Pause();
 
 	this->RefreshTaskListAsync();
 }
@@ -252,17 +228,17 @@ void MainPage::CancelMenuItem_Click(
 {
 	try
 	{
-		winrt::ITransferTask Task = winrt::from_cx<winrt::ITransferTask>(
+		ITransferTask^ Task = dynamic_cast<ITransferTask^>(
 			dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
-		Task.Cancel();
+		Task->Cancel();
 
 		this->RefreshTaskListAsync();
 	}
 	catch (...)
 	{
 
-	}	
+	}
 }
 
 void MainPage::RemoveMenuItem_Click(
@@ -284,15 +260,18 @@ void MainPage::OpenFolderMenuItem_Click(
 	Object^ sender,
 	RoutedEventArgs^ e)
 {
+	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
+		dynamic_cast<FrameworkElement^>(sender)->DataContext);
+
 	try
 	{
-		winrt::ITransferTask Task = winrt::from_cx<winrt::ITransferTask>(
-			dynamic_cast<FrameworkElement^>(sender)->DataContext);
+		using Windows::System::Launcher;
+		using Windows::System::FolderLauncherOptions;
 
-		winrt::FolderLauncherOptions Options = winrt::FolderLauncherOptions();
-		Options.ItemsToSelect().Append(Task.SaveFile());
+		FolderLauncherOptions^ Options = ref new FolderLauncherOptions();
+		Options->ItemsToSelect->Append(Task->SaveFile);
 
-		winrt::Launcher::LaunchFolderAsync(Task.SaveFolder(), Options);
+		Launcher::LaunchFolderAsync(Task->SaveFolder, Options);
 	}
 	catch (...)
 	{
@@ -319,7 +298,7 @@ void MainPage::PauseAllAppBarButton_Click(
 }
 
 void MainPage::ClearListAppBarButton_Click(
-	Object^ sender, 
+	Object^ sender,
 	RoutedEventArgs^ e)
 {
 	this->m_TransferManager->ClearTaskList();
@@ -334,9 +313,9 @@ void MainPage::OpenDownloadsFolderAppBarButton_Click(
 	try
 	{
 		using Windows::Storage::IStorageFolder;
+		using Windows::System::Launcher;
 
 		IStorageFolder^ Folder = this->m_TransferManager->DefaultFolder;
-
 		if (nullptr == Folder)
 		{
 			Folder = this->m_TransferManager->LastusedFolder;
@@ -344,9 +323,8 @@ void MainPage::OpenDownloadsFolderAppBarButton_Click(
 
 		if (nullptr != Folder)
 		{
-			winrt::Launcher::LaunchFolderAsync(
-				winrt::from_cx<winrt::IStorageFolder>(Folder));
-		}	
+			Launcher::LaunchFolderAsync(Folder);
+		}
 	}
 	catch (...)
 	{

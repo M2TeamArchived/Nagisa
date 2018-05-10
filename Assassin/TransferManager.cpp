@@ -29,17 +29,10 @@ void TransferManager::PropertyChanged(
 	this->m_PropertyChanged.remove(token);
 }
 
-// Creates a new TransferManager object.
-// Parameters:
-//   EnableUINotify: Enable the UI notify timer if true. 
-// Return value:
-//   The function does not return a value.
-TransferManager::TransferManager(
+winrt::IAsyncAction TransferManager::Initialize(
 	bool EnableUINotify)
 {
-	InitializeCriticalSection(&this->m_TaskListUpdateCS);
-
-	EnterCriticalSection(&this->m_TaskListUpdateCS);
+	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
 	this->m_Downloader = winrt::BackgroundDownloader();
 
@@ -60,10 +53,10 @@ TransferManager::TransferManager(
 		try
 		{
 			this->m_LastusedFolder =
-				M2AsyncWait(this->m_FutureAccessList.GetFolderAsync(
+				co_await this->m_FutureAccessList.GetFolderAsync(
 					winrt::unbox_value<winrt::hstring>(
 						this->m_RootContainer.Values().Lookup(
-							L"LastusedFolder"))));
+							L"LastusedFolder")));
 		}
 		catch (...)
 		{
@@ -77,10 +70,10 @@ TransferManager::TransferManager(
 		try
 		{
 			this->m_DefaultFolder =
-				M2AsyncWait(this->m_FutureAccessList.GetFolderAsync(
+				co_await this->m_FutureAccessList.GetFolderAsync(
 					winrt::unbox_value<winrt::hstring>(
 						this->m_RootContainer.Values().Lookup(
-							L"DefaultFolder"))));
+							L"DefaultFolder")));
 		}
 		catch (...)
 		{
@@ -96,42 +89,53 @@ TransferManager::TransferManager(
 		// 10,000 ticks per millisecond.
 		this->m_UINotifyTimer.Interval(winrt::TimeSpan(1000 * 10000));
 
-		this->m_UINotifyTimer.Tick([this](
-			const winrt::IInspectable sender,
-			const winrt::IInspectable args)
-		{
-			EnterCriticalSection(&this->m_TaskListUpdateCS);
-
-			this->m_TotalDownloadBandwidth = 0;
-			this->m_TotalUploadBandwidth = 0;
-
-			for (winrt::ITransferTask Task : this->m_TaskList)
-			{
-				if (nullptr == Task) continue;
-
-				TransferTask& TaskInternal = *Task.try_as<TransferTask>();
-
-				this->m_TasksContainer.Values().Insert(
-					TaskInternal.Guid(),
-					TaskInternal.GetTaskConfig());
-
-				TaskInternal.UpdateChangedProperties();
-				TaskInternal.NotifyPropertyChanged();
-
-				this->m_TotalDownloadBandwidth += TaskInternal.BytesReceivedSpeed();
-				this->m_TotalUploadBandwidth += 0;
-			}
-
-			this->RaisePropertyChanged(L"TotalDownloadBandwidth");
-			this->RaisePropertyChanged(L"TotalUploadBandwidth");
-
-			LeaveCriticalSection(&this->m_TaskListUpdateCS);
-		});
+		this->m_UINotifyTimer.Tick(
+			{ this, &TransferManager::UINotifyTimerTick });
 
 		this->m_UINotifyTimer.Start();
 	}
+}
 
-	LeaveCriticalSection(&this->m_TaskListUpdateCS);
+void TransferManager::UINotifyTimerTick(
+	const winrt::IInspectable sender,
+	const winrt::IInspectable args)
+{
+	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+
+	this->m_TotalDownloadBandwidth = 0;
+	this->m_TotalUploadBandwidth = 0;
+
+	for (winrt::ITransferTask Task : this->m_TaskList)
+	{
+		if (nullptr == Task) continue;
+
+		TransferTask& TaskInternal = *Task.try_as<TransferTask>();
+
+		this->m_TasksContainer.Values().Insert(
+			TaskInternal.Guid(),
+			TaskInternal.GetTaskConfig());
+
+		TaskInternal.UpdateChangedProperties();
+		TaskInternal.NotifyPropertyChanged();
+
+		this->m_TotalDownloadBandwidth +=
+			TaskInternal.BytesReceivedSpeed();
+		this->m_TotalUploadBandwidth += 0;
+	}
+
+	this->RaisePropertyChanged(L"TotalDownloadBandwidth");
+	this->RaisePropertyChanged(L"TotalUploadBandwidth");
+}
+
+// Creates a new TransferManager object.
+// Parameters:
+//   EnableUINotify: Enable the UI notify timer if true. 
+// Return value:
+//   The function does not return a value.
+TransferManager::TransferManager(
+	bool EnableUINotify)
+{
+	this->Initialize(EnableUINotify);
 }
 
 // Destroys a TransferManager object.
@@ -141,12 +145,22 @@ TransferManager::TransferManager(
 //   The function does not return a value.
 TransferManager::~TransferManager()
 {
-	DeleteCriticalSection(&this->m_TaskListUpdateCS);
+	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
 	if (nullptr != this->m_UINotifyTimer)
 	{
 		this->m_UINotifyTimer.Stop();
 	}
+}
+
+// Destroys a TransferManager object.
+// Parameters:
+//   The function does not have parameters.
+// Return value:
+//   The function does not return a value.
+void TransferManager::Close()
+{
+	delete this;
 }
 
 // Gets the version of Nagisa.
@@ -214,8 +228,6 @@ uint64_t TransferManager::TotalUploadBandwidth() const
 	return this->m_TotalUploadBandwidth;
 }
 
-std::vector<winrt::ITransferTask> x{ nullptr,nullptr };
-
 // Gets the task list.
 // Parameters:
 //   The function does not have parameters.
@@ -224,9 +236,9 @@ std::vector<winrt::ITransferTask> x{ nullptr,nullptr };
 winrt::IAsyncOperation<winrt::IVectorView<winrt::ITransferTask>>
 	TransferManager::GetTasksAsync()
 {
-	winrt::IVectorView<winrt::ITransferTask> Result = nullptr;
+	co_await winrt::resume_background();
 
-	EnterCriticalSection(&this->m_TaskListUpdateCS);
+	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
 	for (winrt::ITransferTask Task : this->m_TaskList)
 	{
@@ -248,7 +260,7 @@ winrt::IAsyncOperation<winrt::IVectorView<winrt::ITransferTask>>
 	std::map<winrt::hstring, winrt::DownloadOperation> DownloadsList;
 
 	for (winrt::DownloadOperation Item
-		: M2AsyncWait(this->m_Downloader.GetCurrentDownloadsAsync()))
+		: co_await this->m_Downloader.GetCurrentDownloadsAsync())
 	{
 		DownloadsList.insert(std::pair<winrt::hstring, winrt::DownloadOperation>(
 			winrt::to_hstring(Item.Guid()), Item));
@@ -257,7 +269,9 @@ winrt::IAsyncOperation<winrt::IVectorView<winrt::ITransferTask>>
 	for (winrt::IKeyValuePair<winrt::hstring, winrt::IInspectable> Download
 		: this->m_TasksContainer.Values())
 	{
-		winrt::ITransferTask Task = winrt::make<TransferTask>(
+		winrt::ITransferTask Task = winrt::make<TransferTask>();
+
+		co_await Task.try_as<TransferTask>()->Initialize(
 			Download.Key(),
 			Download.Value().try_as<winrt::ApplicationDataCompositeValue>(),
 			this->m_FutureAccessList,
@@ -275,13 +289,9 @@ winrt::IAsyncOperation<winrt::IVectorView<winrt::ITransferTask>>
 		this->m_TaskList.push_back(Task);
 	}
 
-	Result = winrt::make<M2::BindableVectorView<winrt::ITransferTask>>(
-		this->m_TaskList);
-
-	LeaveCriticalSection(&this->m_TaskListUpdateCS);
-
 	// Asynchronous call return.
-	co_return Result;
+	co_return winrt::make<M2::BindableVectorView<winrt::ITransferTask>>(
+		this->m_TaskList);
 }
 
 // Add a task to the task list.
@@ -292,13 +302,15 @@ winrt::IAsyncOperation<winrt::IVectorView<winrt::ITransferTask>>
 // Return value:
 //   Returns an asynchronous object used to wait.
 winrt::IAsyncAction TransferManager::AddTaskAsync(
-	winrt::Uri const& SourceUri,
-	winrt::param::hstring const& DesiredFileName,
-	winrt::IStorageFolder const& SaveFolder)
+	winrt::Uri const SourceUri,
+	winrt::hstring const DesiredFileName,
+	winrt::IStorageFolder const SaveFolder)
 {
-	winrt::IStorageFile SaveFile = M2AsyncWait(SaveFolder.CreateFileAsync(
+	co_await winrt::resume_background();
+	
+	winrt::IStorageFile SaveFile = co_await SaveFolder.CreateFileAsync(
 		DesiredFileName,
-		winrt::CreationCollisionOption::GenerateUniqueName));
+		winrt::CreationCollisionOption::GenerateUniqueName);
 
 	winrt::hstring Token = this->m_FutureAccessList.Add(SaveFolder);
 
@@ -347,19 +359,15 @@ winrt::IAsyncAction TransferManager::AddTaskAsync(
 // Return value:
 //   Returns an asynchronous object used to wait.
 winrt::IAsyncAction TransferManager::RemoveTaskAsync(
-	winrt::ITransferTask const& Task)
+	winrt::ITransferTask const Task)
 {
-	EnterCriticalSection(&this->m_TaskListUpdateCS);
+	co_await winrt::resume_background();
+	
+	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
-	switch (Task.Status())
+	if (!NAIsFinalTransferTaskStatus(Task.Status()))
 	{
-	case winrt::TransferTaskStatus::Paused:
-	case winrt::TransferTaskStatus::Queued:
-	case winrt::TransferTaskStatus::Running:
 		Task.Cancel();
-		break;
-	default:
-		break;
 	}
 
 	if (winrt::TransferTaskStatus::Completed != Task.Status())
@@ -369,8 +377,8 @@ winrt::IAsyncAction TransferManager::RemoveTaskAsync(
 			winrt::IStorageFile SaveFile = Task.SaveFile();
 			if (nullptr != SaveFile)
 			{
-				M2AsyncWait(SaveFile.DeleteAsync(
-					winrt::StorageDeleteOption::PermanentDelete));
+				co_await SaveFile.DeleteAsync(
+					winrt::StorageDeleteOption::PermanentDelete);
 			}
 		}
 		catch (...)
@@ -390,8 +398,6 @@ winrt::IAsyncAction TransferManager::RemoveTaskAsync(
 	}
 	this->m_TasksContainer.Values().Remove(Task.Guid());
 
-	LeaveCriticalSection(&this->m_TaskListUpdateCS);
-
 	// Asynchronous call return.
 	co_return;
 }
@@ -403,7 +409,7 @@ winrt::IAsyncAction TransferManager::RemoveTaskAsync(
 //   The function does not return a value.
 void TransferManager::StartAllTasks()
 {
-	EnterCriticalSection(&this->m_TaskListUpdateCS);
+	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
 	for (winrt::ITransferTask Task : this->m_TaskList)
 	{
@@ -411,8 +417,6 @@ void TransferManager::StartAllTasks()
 
 		Task.Resume();
 	}
-
-	LeaveCriticalSection(&this->m_TaskListUpdateCS);
 }
 
 // Pause all tasks.
@@ -422,7 +426,7 @@ void TransferManager::StartAllTasks()
 //   The function does not return a value.
 void TransferManager::PauseAllTasks()
 {
-	EnterCriticalSection(&this->m_TaskListUpdateCS);
+	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
 	for (winrt::ITransferTask Task : this->m_TaskList)
 	{
@@ -430,8 +434,6 @@ void TransferManager::PauseAllTasks()
 
 		Task.Pause();
 	}
-
-	LeaveCriticalSection(&this->m_TaskListUpdateCS);
 }
 
 // Clears the task list.
@@ -441,21 +443,13 @@ void TransferManager::PauseAllTasks()
 //   The function does not return a value.
 void TransferManager::ClearTaskList()
 {
-	EnterCriticalSection(&this->m_TaskListUpdateCS);
+	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
 	for (winrt::ITransferTask Task : this->m_TaskList)
 	{
-		switch (Task.Status())
+		if (NAIsFinalTransferTaskStatus(Task.Status()))
 		{
-		case winrt::TransferTaskStatus::Canceled:
-		case winrt::TransferTaskStatus::Completed:
-		case winrt::TransferTaskStatus::Error:
 			this->RemoveTaskAsync(Task);
-			break;
-		default:
-			break;
 		}
 	}
-
-	LeaveCriticalSection(&this->m_TaskListUpdateCS);
 }

@@ -285,6 +285,55 @@ namespace M2
 
 	};
 
+	// Wraps a critical section
+	class CCriticalSection
+	{
+	private:
+		CRITICAL_SECTION m_CriticalSection;
+
+	public:
+		CCriticalSection()
+		{
+			InitializeCriticalSection(&this->m_CriticalSection);
+		}
+
+		~CCriticalSection()
+		{
+			DeleteCriticalSection(&this->m_CriticalSection);
+		}
+
+		_Acquires_lock_(m_CriticalSection) void Lock()
+		{
+			EnterCriticalSection(&this->m_CriticalSection);
+		}
+	
+		_Releases_lock_(m_CriticalSection) void Unlock()
+		{
+			LeaveCriticalSection(&this->m_CriticalSection);
+		}
+	};
+
+	// Provides automatic locking and unlocking of a critical section.
+	// Note: The AutoLock object must go out of scope before the CritSec.
+	class AutoCriticalSectionLock
+	{
+	private:
+		CCriticalSection* m_pCriticalSection;
+
+	public:
+		_Acquires_lock_(m_pCriticalSection) AutoCriticalSectionLock(
+			CCriticalSection& CriticalSection)
+		{
+			m_pCriticalSection = &CriticalSection;
+			m_pCriticalSection->Lock();
+		}
+
+		_Releases_lock_(m_pCriticalSection) ~AutoCriticalSectionLock()
+		{
+			m_pCriticalSection->Unlock();
+		}
+	};
+
 }
 
 // Retrieves the number of logical processors in the current group. 

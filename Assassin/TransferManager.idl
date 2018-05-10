@@ -112,7 +112,9 @@ namespace Assassin
 	[version(1.0)]
     [uuid(976D09B5-65EE-39DE-9C00-26E47D6538D7)] 
 	interface ITransferManager : IInspectable
-		requires Windows.UI.Xaml.Data.INotifyPropertyChanged
+		requires 
+			Windows.Foundation.IClosable, 
+			Windows.UI.Xaml.Data.INotifyPropertyChanged
 	{
 		// Gets the version of Nagisa.
 		String Version

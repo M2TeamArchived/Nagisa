@@ -32,7 +32,6 @@
     <ClCompile Include="MainPage.xaml.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="AboutDialog.xaml.cpp" />
-    <ClCompile Include="XamlResources\CustomConverters.xaml.cpp" />
     <ClCompile Include="NewTaskDialog.xaml.cpp" />
     <ClCompile Include="SettingsDialog.xaml.cpp" />
   </ItemGroup>
@@ -42,7 +41,6 @@
     <ClInclude Include="MainPage.xaml.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="AboutDialog.xaml.h" />
-    <ClInclude Include="XamlResources\CustomConverters.xaml.h" />
     <ClInclude Include="NewTaskDialog.xaml.h" />
     <ClInclude Include="SettingsDialog.xaml.h" />
   </ItemGroup>

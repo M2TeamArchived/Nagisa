@@ -4,9 +4,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)NagisaVersion.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)M2BaseHelpers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)M2WinRTHelpers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)M2CXHelpers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)M2BaseHelpers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)M2WinRTHelpers.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)M2CXHelpers.cpp" />
   </ItemGroup>
 </Project>

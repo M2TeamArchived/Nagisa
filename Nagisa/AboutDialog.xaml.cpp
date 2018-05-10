@@ -9,14 +9,6 @@
 using namespace Nagisa;
 using namespace Assassin;
 
-#include <winrt\Windows.System.h>
-
-namespace winrt
-{
-	using Windows::Foundation::Uri;
-	using Windows::System::Launcher;
-}
-
 AboutDialog::AboutDialog(
 	ITransferManager^ TransferManager) :
 	m_TransferManager(TransferManager)
@@ -35,8 +27,11 @@ void AboutDialog::GitHubButtonClick(
 	ContentDialog^ sender, 
 	ContentDialogButtonClickEventArgs^ args)
 {
-	winrt::Launcher::LaunchUriAsync(
-		winrt::Uri(L"https://github.com/Project-Nagisa/Nagisa"));
+	using Windows::Foundation::Uri;
+	using Windows::System::Launcher;
+	
+	Launcher::LaunchUriAsync(
+		ref new Uri(L"https://github.com/Project-Nagisa/Nagisa"));
 
 	args->Cancel = true;
 }

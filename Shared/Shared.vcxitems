@@ -15,11 +15,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)M2BaseHelpers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)M2CXHelpers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)M2WinRTHelpers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)NagisaVersion.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)M2BaseHelpers.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)M2CXHelpers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)M2WinRTHelpers.cpp" />
   </ItemGroup>
 </Project>

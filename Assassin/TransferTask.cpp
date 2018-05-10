@@ -11,51 +11,49 @@ License: The MIT License
 
 using namespace winrt::Assassin::implementation;
 
-bool TransferTask::IsFinalStatus()
+bool NAIsFinalTransferTaskStatus(
+	winrt::TransferTaskStatus Status) noexcept
 {
-	winrt::TransferTaskStatus CurrentStatus = this->m_Status;
-	
-	if (winrt::TransferTaskStatus::Canceled == CurrentStatus ||
-		winrt::TransferTaskStatus::Completed == CurrentStatus ||
-		winrt::TransferTaskStatus::Error == CurrentStatus)
-	{
-		return true;
-	}
-	
-	return false;
+	return (
+		winrt::TransferTaskStatus::Canceled == Status ||
+		winrt::TransferTaskStatus::Completed == Status ||
+		winrt::TransferTaskStatus::Error == Status);
 }
 
-TransferTask::TransferTask(
+winrt::IAsyncAction TransferTask::Initialize(
 	winrt::hstring Guid,
 	winrt::ApplicationDataCompositeValue TaskConfig,
 	winrt::IStorageItemAccessList FutureAccessList,
-	std::map<winrt::hstring, winrt::DownloadOperation>& DownloadOperationMap) :
-	m_Guid(Guid),
-	m_TaskConfig(TaskConfig)
+	std::map<winrt::hstring, winrt::DownloadOperation>& DownloadOperationMap)
 {	
-	this->m_SourceUri = winrt::Uri(
-		winrt::unbox_value<winrt::hstring>(TaskConfig.Lookup(L"SourceUri")));
-	this->m_FileName =
-		winrt::unbox_value<winrt::hstring>(TaskConfig.Lookup(L"FileName"));
+	this->m_Guid = Guid;
+	this->m_TaskConfig = TaskConfig;
+
+	this->m_SourceUri = winrt::Uri(winrt::unbox_value<winrt::hstring>(
+		TaskConfig.Lookup(L"SourceUri")));
+	this->m_FileName = winrt::unbox_value<winrt::hstring>(
+		TaskConfig.Lookup(L"FileName"));
 	this->m_Status = static_cast<winrt::TransferTaskStatus>(
 		winrt::unbox_value<uint32_t>(TaskConfig.Lookup(L"Status")));
 	try
 	{
-		this->m_SaveFolder = M2AsyncWait(FutureAccessList.GetFolderAsync(
+		this->m_SaveFolder = co_await FutureAccessList.GetFolderAsync(
 			winrt::unbox_value<winrt::hstring>(
-				TaskConfig.Lookup(L"SaveFolder"))));
+				TaskConfig.Lookup(L"SaveFolder")));
 		if (nullptr != this->m_SaveFolder)
 		{
-			this->m_SaveFile = M2AsyncWait(this->m_SaveFolder.GetFileAsync(
-				this->m_FileName));
+			this->m_SaveFile = co_await this->m_SaveFolder.GetFileAsync(
+				this->m_FileName);
 		}
 
 		std::map<winrt::hstring, winrt::DownloadOperation>::iterator iterator =
 			DownloadOperationMap.find(winrt::unbox_value<winrt::hstring>(
 				TaskConfig.Lookup(L"BackgroundTransferGuid")));
-		this->m_Operation = (DownloadOperationMap.end() != iterator)
-			? iterator->second : nullptr;
-		if (nullptr == this->m_Operation)
+		if (DownloadOperationMap.end() != iterator)
+		{
+			this->m_Operation = iterator->second;
+		}
+		else
 		{
 			winrt::throw_hresult(E_FAIL);
 		}
@@ -71,7 +69,7 @@ TransferTask::TransferTask(
 	}
 	catch (...)
 	{
-		if (!this->IsFinalStatus())
+		if (!NAIsFinalTransferTaskStatus(this->m_Status))
 		{
 			this->m_Status = winrt::TransferTaskStatus::Error;
 		}
@@ -198,7 +196,7 @@ winrt::Uri TransferTask::SourceUri() const
 // Gets the file name which to download the file.
 winrt::hstring TransferTask::FileName() const
 {
-	return this->m_FileName.data();
+	return this->m_FileName;
 }
 
 // Gets the save file object which to download the file.
@@ -294,7 +292,7 @@ void TransferTask::Resume()
 //   The function does not return a value.
 void TransferTask::Cancel()
 {
-	if (!this->IsFinalStatus())
+	if (!NAIsFinalTransferTaskStatus(this->m_Status))
 	{
 		if (nullptr != this->m_Operation)
 		{

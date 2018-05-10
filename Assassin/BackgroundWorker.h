@@ -9,6 +9,10 @@ License: The MIT License
 
 #include "BackgroundWorker.g.h"
 
+#include <winrt\Windows.Foundation.h>
+#include <winrt\Windows.ApplicationModel.Background.h>
+#include <winrt\Windows.Networking.Sockets.h>
+
 namespace winrt
 {
 	using Windows::Foundation::IInspectable;

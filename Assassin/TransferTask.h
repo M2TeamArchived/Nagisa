@@ -9,6 +9,14 @@ License: The MIT License
 
 #include "TransferManager.g.h"
 
+#include <winrt\Windows.Foundation.h>
+#include <winrt\Windows.Foundation.Collections.h>
+#include <winrt\Windows.Networking.BackgroundTransfer.h>
+#include <winrt\Windows.Storage.h>
+#include <winrt\Windows.Storage.AccessCache.h>
+#include <winrt\Windows.UI.Xaml.h>
+#include <winrt\Windows.UI.Xaml.Data.h>
+
 namespace winrt
 {
 	using Assassin::ITransferManager;
@@ -19,6 +27,7 @@ namespace winrt
 	using Windows::Foundation::Collections::IVectorView;
 	using Windows::Foundation::IAsyncAction;
 	using Windows::Foundation::IAsyncOperation;
+	using Windows::Foundation::IClosable;
 	using Windows::Foundation::IInspectable;
 	using Windows::Foundation::TimeSpan;
 	using Windows::Foundation::Uri;
@@ -41,6 +50,9 @@ namespace winrt
 	using Windows::UI::Xaml::Data::PropertyChangedEventHandler;
 	using Windows::UI::Xaml::DispatcherTimer;
 }
+
+bool NAIsFinalTransferTaskStatus(
+	winrt::TransferTaskStatus Status) noexcept;
 
 namespace winrt::Assassin::implementation
 {
@@ -69,10 +81,10 @@ namespace winrt::Assassin::implementation
 
 		winrt::event<winrt::PropertyChangedEventHandler> m_PropertyChanged;
 
-		bool IsFinalStatus();
-
 	public:
-		TransferTask(
+		TransferTask() = default;
+
+		winrt::IAsyncAction Initialize(
 			winrt::hstring Guid,
 			winrt::ApplicationDataCompositeValue TaskConfig,
 			winrt::IStorageItemAccessList FutureAccessList,
