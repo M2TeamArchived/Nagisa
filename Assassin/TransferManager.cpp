@@ -8,6 +8,8 @@ License: The MIT License
 #include "pch.h"
 #include "TransferManager.h"
 
+#include "M2BindableVectorView.h"
+
 using namespace winrt::Assassin::implementation;
 
 void TransferManager::RaisePropertyChanged(
@@ -96,15 +98,15 @@ winrt::IAsyncAction TransferManager::Initialize(
 	}
 }
 
-void TransferManager::UINotifyTimerTick(
-	const winrt::IInspectable sender,
-	const winrt::IInspectable args)
+void TransferManager::UpdateTransferTaskStatusWithoutLock(
+	bool NotifyUI)
 {
-	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
-
-	this->m_TotalDownloadBandwidth = 0;
-	this->m_TotalUploadBandwidth = 0;
-
+	if (NotifyUI)
+	{
+		this->m_TotalDownloadBandwidth = 0;
+		this->m_TotalUploadBandwidth = 0;
+	}
+	
 	for (winrt::ITransferTask Task : this->m_TaskList)
 	{
 		if (nullptr == Task) continue;
@@ -115,16 +117,31 @@ void TransferManager::UINotifyTimerTick(
 			TaskInternal.Guid(),
 			TaskInternal.GetTaskConfig());
 
-		TaskInternal.UpdateChangedProperties();
-		TaskInternal.NotifyPropertyChanged();
+		if (NotifyUI)
+		{
+			TaskInternal.UpdateChangedProperties();
+			TaskInternal.NotifyPropertyChanged();
 
-		this->m_TotalDownloadBandwidth +=
-			TaskInternal.BytesReceivedSpeed();
-		this->m_TotalUploadBandwidth += 0;
+			this->m_TotalDownloadBandwidth +=
+				TaskInternal.BytesReceivedSpeed();
+			this->m_TotalUploadBandwidth += 0;
+		}
 	}
 
-	this->RaisePropertyChanged(L"TotalDownloadBandwidth");
-	this->RaisePropertyChanged(L"TotalUploadBandwidth");
+	if (NotifyUI)
+	{
+		this->RaisePropertyChanged(L"TotalDownloadBandwidth");
+		this->RaisePropertyChanged(L"TotalUploadBandwidth");
+	}	
+}
+
+void TransferManager::UINotifyTimerTick(
+	const winrt::IInspectable sender,
+	const winrt::IInspectable args)
+{
+	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+
+	this->UpdateTransferTaskStatusWithoutLock(true);
 }
 
 // Creates a new TransferManager object.
@@ -240,16 +257,7 @@ winrt::IAsyncOperation<winrt::IVectorView<winrt::ITransferTask>>
 
 	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
-	for (winrt::ITransferTask Task : this->m_TaskList)
-	{
-		if (nullptr == Task) continue;
-
-		TransferTask& TaskInternal = *Task.try_as<TransferTask>();
-
-		this->m_TasksContainer.Values().Insert(
-			TaskInternal.Guid(),
-			TaskInternal.GetTaskConfig());
-	}
+	this->UpdateTransferTaskStatusWithoutLock(false);
 
 	this->m_TaskList.clear();
 

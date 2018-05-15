@@ -41,6 +41,9 @@ namespace winrt::Assassin::implementation
 		winrt::IAsyncAction Initialize(
 			bool EnableUINotify);
 
+		void UpdateTransferTaskStatusWithoutLock(
+			bool NotifyUI);
+
 		void UINotifyTimerTick(
 			const winrt::IInspectable sender,
 			const winrt::IInspectable args);

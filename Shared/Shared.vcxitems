@@ -15,6 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)M2BaseHelpers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)M2BindableVectorView.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)M2CXHelpers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)M2WinRTHelpers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)NagisaVersion.h" />
