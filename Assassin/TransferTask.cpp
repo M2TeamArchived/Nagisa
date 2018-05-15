@@ -138,25 +138,6 @@ void TransferTask::UpdateChangedProperties()
 	}
 }
 
-void TransferTask::RaisePropertyChanged(
-	winrt::hstring PropertyName)
-{
-	this->m_PropertyChanged(
-		*this, winrt::PropertyChangedEventArgs(PropertyName));
-}
-
-winrt::event_token TransferTask::PropertyChanged(
-	winrt::PropertyChangedEventHandler const& value)
-{
-	return this->m_PropertyChanged.add(value);
-}
-
-void TransferTask::PropertyChanged(
-	winrt::event_token const& token)
-{
-	this->m_PropertyChanged.remove(token);
-}
-
 void TransferTask::NotifyPropertyChanged()
 {
 	if (nullptr != this->m_Operation)

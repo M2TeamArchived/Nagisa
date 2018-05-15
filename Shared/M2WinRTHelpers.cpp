@@ -60,15 +60,9 @@ bool M2FindSubString(
 //   Returns a winrt::hstring object which represents the converted string.
 winrt::hstring M2ConvertByteSizeToString(uint64_t ByteSize)
 {
-	double result = static_cast<double>(ByteSize);
-
-	if (0.0 == result)
-	{
-		return L"0 Byte";
-	}
-
 	const wchar_t* Systems[] =
 	{
+		L"Byte",
 		L"Bytes",
 		L"KiB",
 		L"MiB",
@@ -79,18 +73,47 @@ winrt::hstring M2ConvertByteSizeToString(uint64_t ByteSize)
 	};
 
 	size_t nSystem = 0;
-	for (; nSystem < sizeof(Systems) / sizeof(*Systems); ++nSystem)
-	{
-		if (1024.0 > result)
-			break;
+	double result = static_cast<double>(ByteSize);
 
-		result /= 1024.0;
+	if (ByteSize > 1)
+	{
+		for (
+			nSystem = 1; 
+			nSystem < sizeof(Systems) / sizeof(*Systems); 
+			++nSystem)
+		{
+			if (1024.0 > result)
+				break;
+
+			result /= 1024.0;
+		}
+
+		result = static_cast<uint64_t>(result * 100) / 100.0;
 	}
 
-	winrt::hstring ByteSizeString = winrt::to_hstring(
-		static_cast<uint64_t>(result * 100) / 100.0);
+	return winrt::to_hstring(result) + L" " + Systems[nSystem];
+}
 
-	return ByteSizeString + L" " + Systems[nSystem];
+namespace M2
+{
+	void NotifyPropertyChangedBase::RaisePropertyChanged(
+		winrt::hstring PropertyName)
+	{
+		this->m_PropertyChanged(
+			*this, winrt::PropertyChangedEventArgs(PropertyName));
+	}
+
+	winrt::event_token NotifyPropertyChangedBase::PropertyChanged(
+		winrt::PropertyChangedEventHandler const& value)
+	{
+		return this->m_PropertyChanged.add(value);
+	}
+
+	void NotifyPropertyChangedBase::PropertyChanged(
+		winrt::event_token const & token)
+	{
+		this->m_PropertyChanged.remove(token);
+	}
 }
 
 #endif // _M2_WINRT_HELPERS_

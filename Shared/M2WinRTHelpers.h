@@ -14,10 +14,18 @@ License: The MIT License
 #include "M2BaseHelpers.h"
 
 #include <winrt\Windows.Foundation.h>
+#include <winrt\Windows.UI.Xaml.Data.h>
 
 #include <map>
 #include <string>
 #include <vector>
+
+namespace winrt
+{
+	using Windows::UI::Xaml::Data::INotifyPropertyChanged;
+	using Windows::UI::Xaml::Data::PropertyChangedEventArgs;
+	using Windows::UI::Xaml::Data::PropertyChangedEventHandler;
+}
 
 // Creates a GUID, a unique 128-bit integer used for CLSIDs and interface 
 // identifiers. 
@@ -47,5 +55,28 @@ bool M2FindSubString(
 // Return value:
 //   Returns a winrt::hstring object which represents the converted string.
 winrt::hstring M2ConvertByteSizeToString(uint64_t ByteSize);
+
+namespace M2
+{
+	struct NotifyPropertyChangedBase : winrt::implements<
+		NotifyPropertyChangedBase, winrt::INotifyPropertyChanged>
+	{
+	private:
+		winrt::event<winrt::PropertyChangedEventHandler> m_PropertyChanged;
+
+	protected:
+		void RaisePropertyChanged(
+			winrt::hstring PropertyName);
+
+	public:
+		NotifyPropertyChangedBase() = default;
+
+		winrt::event_token PropertyChanged(
+			winrt::PropertyChangedEventHandler const& value);
+
+		void PropertyChanged(
+			winrt::event_token const& token);
+	};
+}
 
 #endif // _M2_WINRT_HELPERS_

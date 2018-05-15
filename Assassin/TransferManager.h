@@ -11,7 +11,8 @@ License: The MIT License
 
 namespace winrt::Assassin::implementation
 {
-	struct TransferManager : TransferManagerT<TransferManager>
+	struct TransferManager : TransferManagerT<
+		TransferManager, M2::NotifyPropertyChangedBase>
 	{
 	private:
 		winrt::BackgroundDownloader m_Downloader = nullptr;
@@ -33,11 +34,6 @@ namespace winrt::Assassin::implementation
 
 		winrt::hstring m_SearchFilter;
 
-		winrt::event<winrt::PropertyChangedEventHandler> m_PropertyChanged;
-
-		void RaisePropertyChanged(
-			winrt::hstring PropertyName);
-
 		winrt::IAsyncAction Initialize(
 			bool EnableUINotify);
 
@@ -49,11 +45,6 @@ namespace winrt::Assassin::implementation
 			const winrt::IInspectable args);
 
 	public:
-		winrt::event_token PropertyChanged(
-			winrt::PropertyChangedEventHandler const& value);
-		void PropertyChanged(
-			winrt::event_token const& token);
-
 		// Creates a new TransferManager object.
 		// Parameters:
 		//   EnableUINotify: Enable the UI notify timer if true. 

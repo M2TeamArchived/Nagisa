@@ -12,25 +12,6 @@ License: The MIT License
 
 using namespace winrt::Assassin::implementation;
 
-void TransferManager::RaisePropertyChanged(
-	winrt::hstring PropertyName)
-{
-	this->m_PropertyChanged(
-		*this, winrt::PropertyChangedEventArgs(PropertyName));
-}
-
-winrt::event_token TransferManager::PropertyChanged(
-	winrt::PropertyChangedEventHandler const& value)
-{
-	return this->m_PropertyChanged.add(value);
-}
-
-void TransferManager::PropertyChanged(
-	winrt::event_token const& token)
-{
-	this->m_PropertyChanged.remove(token);
-}
-
 winrt::IAsyncAction TransferManager::Initialize(
 	bool EnableUINotify)
 {

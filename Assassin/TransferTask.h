@@ -15,7 +15,6 @@ License: The MIT License
 #include <winrt\Windows.Storage.h>
 #include <winrt\Windows.Storage.AccessCache.h>
 #include <winrt\Windows.UI.Xaml.h>
-#include <winrt\Windows.UI.Xaml.Data.h>
 
 namespace winrt
 {
@@ -45,9 +44,6 @@ namespace winrt
 	using Windows::Storage::IStorageFile;
 	using Windows::Storage::IStorageFolder;
 	using Windows::Storage::StorageDeleteOption;
-	using Windows::UI::Xaml::Data::INotifyPropertyChanged;
-	using Windows::UI::Xaml::Data::PropertyChangedEventArgs;
-	using Windows::UI::Xaml::Data::PropertyChangedEventHandler;
 	using Windows::UI::Xaml::DispatcherTimer;
 }
 
@@ -57,7 +53,7 @@ bool NAIsFinalTransferTaskStatus(
 namespace winrt::Assassin::implementation
 {
 	struct TransferTask : winrt::implements<
-		TransferTask, winrt::ITransferTask, winrt::INotifyPropertyChanged>
+		TransferTask, winrt::ITransferTask, M2::NotifyPropertyChangedBase>
 	{
 	private:
 		winrt::DownloadOperation m_Operation = nullptr;
@@ -76,11 +72,6 @@ namespace winrt::Assassin::implementation
 		uint64_t m_RemainTime = 0;
 		uint64_t m_TotalBytesToReceive = 0;
 
-		void RaisePropertyChanged(
-			winrt::hstring PropertyName);
-
-		winrt::event<winrt::PropertyChangedEventHandler> m_PropertyChanged;
-
 	public:
 		TransferTask() = default;
 
@@ -95,11 +86,6 @@ namespace winrt::Assassin::implementation
 		winrt::ApplicationDataCompositeValue GetTaskConfig();
 
 	public:
-		winrt::event_token PropertyChanged(
-			winrt::PropertyChangedEventHandler const& value);
-		void PropertyChanged(
-			winrt::event_token const& token);
-
 		// Gets the Guid string of the task.
 		winrt::hstring Guid() const;
 
