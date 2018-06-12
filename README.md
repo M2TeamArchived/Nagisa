@@ -28,7 +28,7 @@ already a translation present in the Nagisa's GitHub Repository.
 
 > P.S. The above introduction is inspired by the Notepad++ project.
 
-# Roadmap
+# Development Roadmap
 **For more information, please 
 [click here](https://github.com/Project-Nagisa/Nagisa/issues/6)**
 
@@ -57,7 +57,7 @@ issues are welcome.**
 - Supported OS Version: Windows 10 Build 10240 or later
 - Support Platforms: x86, x86-64(AMD64), ARM and ARM64.
 
-# Finished Features
+# Features
 - Supported Transfer Protocols: HTTP, HTTPS, FTP, FTPS, WebSocket and WebSocket
   Secure. (Temporarily Based on Windows.Networking.BackgroundTransfer)
 - Multi-language Support: English and Simplified Chinese.
@@ -68,14 +68,10 @@ issues are welcome.**
 - Support single-threaded multi-tasking download.
   (Temporarily Based on Windows.Networking.BackgroundTransfer)
 
-# Unfininshed Features
-- Cortana Integration
-- SFTP Support
-- BitTorrent Support
-- ED2K Support
-
 # How to contribute the code for Nagisa
-- You should send an e-mail to Mouri_Naruto@Outlook.com first.
+- **Send pull request directly.**
+- You should send an e-mail to Mouri_Naruto@Outlook.com first if you have any
+  doubts.
 
 # License
 Nagisa is distributed under the MIT License except the third-party libraries. 
