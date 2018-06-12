@@ -28,6 +28,31 @@ already a translation present in the Nagisa's GitHub Repository.
 
 > P.S. The above introduction is inspired by the Notepad++ project.
 
+# Roadmap
+**For more information, please 
+[click here](https://github.com/Project-Nagisa/Nagisa/issues/6)**
+
+Here are the features we will implement for Nagisa in the future. (The **blod**
+text represents the features we **have not** implemented it yet.)
+
+- Assassin Transfer Engine for replacing Windows.Networking.BackgroundTransfer
+  - Support background download. 
+  - Support resume broken/dead downloads.
+  - Support **multi**-threaded multi-tasking download. 
+  - Support HTTP 1.1 and **HTTP/2** protocol for HTTP and HTTPS support.
+  - Support FTP, FTPS and **SFTP**.
+  - Support WebSocket and WebSocket Secure.
+  - Support **BitTorrent, Magnet and ED2K.**
+  - Support **downloading a file from multiple URIs**.
+- Experience
+  - Support **providing HASH value for downloaded files**.
+  - Support **get download URI from QR code and texts on the paper**.
+  - Support **building a download server on devices like Raspberry Pi.** 
+  - Support **pushing a download task to the other devices**.
+
+**I hope someone can help this project. All suggestions, pull requests and 
+issues are welcome.**
+
 # System Requirement
 - Supported OS Version: Windows 10 Build 10240 or later
 - Support Platforms: x86, x86-64(AMD64), ARM and ARM64.

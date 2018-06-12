@@ -14,6 +14,7 @@
 - Start to add the BackgroundWorker.
 
 ### Nagisa 0.4 [Build 63]
+- Improve several implementations.
 
 ### Nagisa 0.3 [Build 62]
 [Full Changelog](https://github.com/Project-Nagisa/Nagisa/compare/0.2...0.3)
