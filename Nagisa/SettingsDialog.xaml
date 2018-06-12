@@ -26,7 +26,7 @@
         <Button x:Uid="/SettingsDialog/CustomDownloadFolderBrowseButton"
                 Content="[Browse to modify]"
                 Click="CustomDownloadFolderBrowseButton_Click"
-                IsEnabled="{x:Bind UseCustomFolder.IsChecked, Converter={StaticResource NullableBooleanToBooleanConverter}, Mode=OneWay}"/>
+                IsEnabled="{x:Bind UseCustomFolder.IsChecked, Converter={StaticResource CustomConverter}, ConverterParameter=NullableBooleanToBoolean, Mode=OneWay}"/>
         <TextBlock x:Uid="/SettingsDialog/AdvancedTitle" 
                    Style="{StaticResource SubtitleTextBlockStyle}" 
                    Text="[Advanced]"/>

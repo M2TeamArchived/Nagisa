@@ -107,12 +107,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BackgroundWorker.h" />
-    <ClInclude Include="NullableBooleanToBooleanConverter.h" />
-    <ClInclude Include="TaskListEmptyToVisibilityConverter.h" />
-    <ClInclude Include="TaskStatusToVisibleConverter.h" />
-    <ClInclude Include="Uint64ByteSizeToStringConverter.h" />
-    <ClInclude Include="Uint64RemainTimeToStringConverter.h" />
-    <ClInclude Include="Uint64ToDoubleConverter.h" />
+    <ClInclude Include="CustomConverter.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="TransferManager.h" />
@@ -120,12 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BackgroundWorker.cpp" />
-    <ClCompile Include="NullableBooleanToBooleanConverter.cpp" />
-    <ClCompile Include="TaskListEmptyToVisibilityConverter.cpp" />
-    <ClCompile Include="TaskStatusToVisibleConverter.cpp" />
-    <ClCompile Include="Uint64ByteSizeToStringConverter.cpp" />
-    <ClCompile Include="Uint64RemainTimeToStringConverter.cpp" />
-    <ClCompile Include="Uint64ToDoubleConverter.cpp" />
+    <ClCompile Include="CustomConverter.cpp" />
     <ClCompile Include="Generated Files\module.g.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
@@ -137,12 +127,7 @@
     <ResourceCompile Include="Assassin.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="NullableBooleanToBooleanConverter.idl" />
-    <Midl Include="TaskListEmptyToVisibilityConverter.idl" />
-    <Midl Include="TaskStatusToVisibleConverter.idl" />
-    <Midl Include="Uint64ByteSizeToStringConverter.idl" />
-    <Midl Include="Uint64RemainTimeToStringConverter.idl" />
-    <Midl Include="Uint64ToDoubleConverter.idl" />
+    <Midl Include="CustomConverter.idl" />
     <Midl Include="TransferManager.idl" />
     <Midl Include="BackgroundWorker.idl" />
   </ItemGroup>

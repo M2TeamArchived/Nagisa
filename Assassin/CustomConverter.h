@@ -1,7 +1,7 @@
 ﻿/******************************************************************************
 Project: Assassin
-Description: Definition for the Uint64ByteSizeToStringConverter.
-File Name: Uint64ByteSizeToStringConverter.h
+Description: Definition for the CustomConverter.
+File Name: CustomConverter.h
 License: The MIT License
 ******************************************************************************/
 
@@ -11,7 +11,7 @@ License: The MIT License
 #include <winrt\Windows.Foundation.h>
 #include <winrt\Windows.UI.Xaml.Interop.h>
 
-#include "Uint64ByteSizeToStringConverter.g.h"
+#include "CustomConverter.g.h"
 
 namespace winrt
 {
@@ -21,10 +21,10 @@ namespace winrt
 
 namespace winrt::Assassin::implementation
 {
-    struct Uint64ByteSizeToStringConverter : 
-		Uint64ByteSizeToStringConverterT<Uint64ByteSizeToStringConverter>
+    struct CustomConverter : 
+		CustomConverterT<CustomConverter>
     {
-		Uint64ByteSizeToStringConverter() = default;
+		CustomConverter() = default;
 
 		winrt::IInspectable Convert(
 			winrt::IInspectable const& value,
@@ -42,9 +42,9 @@ namespace winrt::Assassin::implementation
 
 namespace winrt::Assassin::factory_implementation
 {
-    struct Uint64ByteSizeToStringConverter : Uint64ByteSizeToStringConverterT<
-		Uint64ByteSizeToStringConverter,
-		implementation::Uint64ByteSizeToStringConverter>
+    struct CustomConverter : CustomConverterT<
+		CustomConverter,
+		implementation::CustomConverter>
     {
     };
 }

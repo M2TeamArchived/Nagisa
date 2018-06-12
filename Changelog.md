@@ -13,6 +13,8 @@
 - Sync the version number.
 - Start to add the BackgroundWorker.
 
+### Nagisa 0.4 [Build 63]
+
 ### Nagisa 0.3 [Build 62]
 [Full Changelog](https://github.com/Project-Nagisa/Nagisa/compare/0.2...0.3)
 - Add Multi-language Support: Spanish. (Contributed by Jhovany200.)

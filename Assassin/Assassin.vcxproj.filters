@@ -10,26 +10,8 @@
     <Filter Include="TransferManager">
       <UniqueIdentifier>{edc7ca39-1cc4-406e-b2fc-dbd879f73849}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CustomConverters">
+    <Filter Include="CustomConverter">
       <UniqueIdentifier>{f14fa212-ce08-4e4d-a36c-5cff428339ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="CustomConverters\TaskListEmptyToVisibilityConverter">
-      <UniqueIdentifier>{d94d2652-910c-4d35-93b7-5d0777fce4bc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="CustomConverters\Uint64ByteSizeToStringConverter">
-      <UniqueIdentifier>{beff5d99-b72d-4f27-a805-dbb69568a4ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="CustomConverters\Uint64RemainTimeToStringConverter">
-      <UniqueIdentifier>{b2f3b0c7-476b-47cc-b9c1-a3e4dc75ce79}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="CustomConverters\Uint64ToDoubleConverter">
-      <UniqueIdentifier>{b7ac75ea-ec94-4024-afce-883b03244ea6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="CustomConverters\NullableBooleanToBooleanConverter">
-      <UniqueIdentifier>{77553bc7-8233-4625-b07b-fddc8d5c1bc9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="CustomConverters\TaskStatusToVisibleConverter">
-      <UniqueIdentifier>{798a4452-0e7c-4fc3-bacb-ca978c7e9c4f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -46,23 +28,8 @@
     <ClCompile Include="TransferTask.cpp">
       <Filter>TransferManager</Filter>
     </ClCompile>
-    <ClCompile Include="TaskListEmptyToVisibilityConverter.cpp">
-      <Filter>CustomConverters\TaskListEmptyToVisibilityConverter</Filter>
-    </ClCompile>
-    <ClCompile Include="Uint64ByteSizeToStringConverter.cpp">
-      <Filter>CustomConverters\Uint64ByteSizeToStringConverter</Filter>
-    </ClCompile>
-    <ClCompile Include="Uint64RemainTimeToStringConverter.cpp">
-      <Filter>CustomConverters\Uint64RemainTimeToStringConverter</Filter>
-    </ClCompile>
-    <ClCompile Include="Uint64ToDoubleConverter.cpp">
-      <Filter>CustomConverters\Uint64ToDoubleConverter</Filter>
-    </ClCompile>
-    <ClCompile Include="NullableBooleanToBooleanConverter.cpp">
-      <Filter>CustomConverters\NullableBooleanToBooleanConverter</Filter>
-    </ClCompile>
-    <ClCompile Include="TaskStatusToVisibleConverter.cpp">
-      <Filter>CustomConverters\TaskStatusToVisibleConverter</Filter>
+    <ClCompile Include="CustomConverter.cpp">
+      <Filter>CustomConverter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -77,23 +44,8 @@
     <ClInclude Include="TransferTask.h">
       <Filter>TransferManager</Filter>
     </ClInclude>
-    <ClInclude Include="TaskListEmptyToVisibilityConverter.h">
-      <Filter>CustomConverters\TaskListEmptyToVisibilityConverter</Filter>
-    </ClInclude>
-    <ClInclude Include="Uint64ByteSizeToStringConverter.h">
-      <Filter>CustomConverters\Uint64ByteSizeToStringConverter</Filter>
-    </ClInclude>
-    <ClInclude Include="Uint64RemainTimeToStringConverter.h">
-      <Filter>CustomConverters\Uint64RemainTimeToStringConverter</Filter>
-    </ClInclude>
-    <ClInclude Include="Uint64ToDoubleConverter.h">
-      <Filter>CustomConverters\Uint64ToDoubleConverter</Filter>
-    </ClInclude>
-    <ClInclude Include="NullableBooleanToBooleanConverter.h">
-      <Filter>CustomConverters\NullableBooleanToBooleanConverter</Filter>
-    </ClInclude>
-    <ClInclude Include="TaskStatusToVisibleConverter.h">
-      <Filter>CustomConverters\TaskStatusToVisibleConverter</Filter>
+    <ClInclude Include="CustomConverter.h">
+      <Filter>CustomConverter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -109,23 +61,8 @@
     <Midl Include="TransferManager.idl">
       <Filter>TransferManager</Filter>
     </Midl>
-    <Midl Include="TaskListEmptyToVisibilityConverter.idl">
-      <Filter>CustomConverters\TaskListEmptyToVisibilityConverter</Filter>
-    </Midl>
-    <Midl Include="Uint64ByteSizeToStringConverter.idl">
-      <Filter>CustomConverters\Uint64ByteSizeToStringConverter</Filter>
-    </Midl>
-    <Midl Include="Uint64RemainTimeToStringConverter.idl">
-      <Filter>CustomConverters\Uint64RemainTimeToStringConverter</Filter>
-    </Midl>
-    <Midl Include="Uint64ToDoubleConverter.idl">
-      <Filter>CustomConverters\Uint64ToDoubleConverter</Filter>
-    </Midl>
-    <Midl Include="NullableBooleanToBooleanConverter.idl">
-      <Filter>CustomConverters\NullableBooleanToBooleanConverter</Filter>
-    </Midl>
-    <Midl Include="TaskStatusToVisibleConverter.idl">
-      <Filter>CustomConverters\TaskStatusToVisibleConverter</Filter>
+    <Midl Include="CustomConverter.idl">
+      <Filter>CustomConverter</Filter>
     </Midl>
   </ItemGroup>
 </Project>

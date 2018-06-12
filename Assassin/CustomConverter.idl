@@ -1,7 +1,7 @@
 ﻿/******************************************************************************
 Project: Assassin
-Description: Definition for the TaskListEmptyToVisibilityConverter.
-File Name: TaskListEmptyToVisibilityConverter.idl
+Description: Definition for the CustomConverter.
+File Name: CustomConverter.idl
 License: The MIT License
 ******************************************************************************/
 
@@ -9,9 +9,9 @@ namespace Assassin
 {
     [Windows.UI.Xaml.Data.Bindable]
 	[Windows.Foundation.Metadata.WebHostHidden]
-	runtimeclass TaskListEmptyToVisibilityConverter :
+	runtimeclass CustomConverter :
         [default] Windows.UI.Xaml.Data.IValueConverter
     {
-		TaskListEmptyToVisibilityConverter();
+		CustomConverter();
     }
 }
