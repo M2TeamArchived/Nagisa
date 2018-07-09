@@ -111,7 +111,6 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="TransferManager.h" />
-    <ClInclude Include="TransferTask.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BackgroundWorker.cpp" />
@@ -121,7 +120,6 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TransferManager.cpp" />
-    <ClCompile Include="TransferTask.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Assassin.rc" />

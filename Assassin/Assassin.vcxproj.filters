@@ -25,9 +25,6 @@
     <ClCompile Include="TransferManager.cpp">
       <Filter>TransferManager</Filter>
     </ClCompile>
-    <ClCompile Include="TransferTask.cpp">
-      <Filter>TransferManager</Filter>
-    </ClCompile>
     <ClCompile Include="CustomConverter.cpp">
       <Filter>CustomConverter</Filter>
     </ClCompile>
@@ -39,9 +36,6 @@
       <Filter>BackgroundWorker</Filter>
     </ClInclude>
     <ClInclude Include="TransferManager.h">
-      <Filter>TransferManager</Filter>
-    </ClInclude>
-    <ClInclude Include="TransferTask.h">
       <Filter>TransferManager</Filter>
     </ClInclude>
     <ClInclude Include="CustomConverter.h">

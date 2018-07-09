@@ -7,7 +7,7 @@
 
 ## Changelog
 
-**Nagisa 0.3 [Build *Current*]**
+**Nagisa 0.4 [Build *Current*]**
 [Full Changelog](https://github.com/Project-Nagisa/Nagisa/compare/0.3...master)
 - Modify documents.
 - Sync the version number.
