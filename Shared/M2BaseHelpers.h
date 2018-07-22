@@ -16,6 +16,7 @@ License: The MIT License
 #include <process.h>
 
 #include <string>
+#include <vector>
 
 // If the type T is a reference type, provides the member typedef type which is
 // the type referred to by T. Otherwise type is T.
