@@ -4,7 +4,7 @@
 - Mouri_Naruto (https://github.com/MouriNaruto)
 
 ## Contributors
-- Jhovany200 (https://github.com/Jhovany200)
+- MS-PC2 (https://github.com/MS-PC2)
 
 ## Sponsors
 
