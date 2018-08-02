@@ -15,13 +15,7 @@ License: The MIT License
 
 namespace winrt
 {
-	using Windows::Foundation::IInspectable;
-	using Windows::ApplicationModel::Background::IBackgroundTask;
 	using Windows::ApplicationModel::Background::IBackgroundTaskInstance;
-	using Windows::Networking::Sockets::SocketActivityInformation;
-	using Windows::Networking::Sockets::SocketActivityTriggerDetails;
-	using Windows::Networking::Sockets::SocketActivityTriggerReason;
-	using Windows::Networking::Sockets::StreamSocket;
 }
 
 namespace winrt::Assassin::implementation

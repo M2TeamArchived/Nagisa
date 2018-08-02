@@ -10,6 +10,16 @@ License: The MIT License
 
 using namespace winrt::Assassin::implementation;
 
+namespace winrt
+{
+	using Windows::Foundation::IInspectable;
+	using Windows::ApplicationModel::Background::IBackgroundTask;
+	using Windows::Networking::Sockets::SocketActivityInformation;
+	using Windows::Networking::Sockets::SocketActivityTriggerDetails;
+	using Windows::Networking::Sockets::SocketActivityTriggerReason;
+	using Windows::Networking::Sockets::StreamSocket;
+}
+
 winrt::hstring BackgroundWorkerSocketID = L"Assassin.BackgroundWorker";
 
 BackgroundWorker::BackgroundWorker()

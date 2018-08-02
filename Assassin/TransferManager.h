@@ -9,6 +9,7 @@ License: The MIT License
 
 #include "TransferManager.g.h"
 
+#include <winrt\Windows.ApplicationModel.Background.h>
 #include <winrt\Windows.Foundation.h>
 #include <winrt\Windows.Foundation.Collections.h>
 #include <winrt\Windows.Networking.BackgroundTransfer.h>
@@ -18,32 +19,20 @@ License: The MIT License
 
 namespace winrt
 {
-	using Assassin::ITransferManager;
 	using Assassin::ITransferTask;
 	using Assassin::TransferTaskStatus;
-	using Windows::Foundation::Collections::IKeyValuePair;
-	using Windows::Foundation::Collections::IVector;
 	using Windows::Foundation::Collections::IVectorView;
 	using Windows::Foundation::IAsyncAction;
 	using Windows::Foundation::IAsyncOperation;
-	using Windows::Foundation::IClosable;
 	using Windows::Foundation::IInspectable;
-	using Windows::Foundation::TimeSpan;
 	using Windows::Foundation::Uri;
 	using Windows::Networking::BackgroundTransfer::BackgroundDownloader;
-	using Windows::Networking::BackgroundTransfer::BackgroundDownloadProgress;
-	using Windows::Networking::BackgroundTransfer::BackgroundTransferStatus;
 	using Windows::Networking::BackgroundTransfer::DownloadOperation;
 	using Windows::Storage::AccessCache::IStorageItemAccessList;
-	using Windows::Storage::AccessCache::StorageApplicationPermissions;
-	using Windows::Storage::ApplicationData;
-	using Windows::Storage::ApplicationDataContainer;
 	using Windows::Storage::ApplicationDataCompositeValue;
-	using Windows::Storage::ApplicationDataCreateDisposition;
-	using Windows::Storage::CreationCollisionOption;
+	using Windows::Storage::ApplicationDataContainer;
 	using Windows::Storage::IStorageFile;
 	using Windows::Storage::IStorageFolder;
-	using Windows::Storage::StorageDeleteOption;
 	using Windows::UI::Xaml::DispatcherTimer;
 }
 
@@ -173,6 +162,8 @@ namespace winrt::Assassin::implementation
 		void UINotifyTimerTick(
 			const winrt::IInspectable sender,
 			const winrt::IInspectable args);
+
+		void CreateBackgroundWorker();
 
 	public:
 		// Creates a new TransferManager object.

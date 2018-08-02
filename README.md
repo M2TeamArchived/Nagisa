@@ -1,12 +1,11 @@
 ﻿![Logo](Logo.png)
 # Nagisa - One of Download Utilities for Windows Universal Platform.
 
-[![appveyor.badge]][appveyor.link] 
+[Comment]: [![appveyor.badge]][appveyor.link] 
 [![release.badge]][release.link]
 [![latestdownloads.badge]][latestdownloads.link]
 [![totaldownloads.badge]][totaldownloads.link]
 [![license.badge]][license.link]
-[![donate.badge]][donate.link]
 
 ![Screenshot](Screenshot.png)
 
@@ -68,10 +67,15 @@ issues are welcome.**
 - Support single-threaded multi-tasking download.
   (Temporarily Based on Windows.Networking.BackgroundTransfer)
 
-# How to contribute the code for Nagisa
-- **Send pull request directly.**
-- You should send an e-mail to Mouri_Naruto@Outlook.com first if you have any
-  doubts.
+# How to support Nagisa
+- Contribute
+  - **Send pull request directly.**
+  - You should send an e-mail to Mouri_Naruto@Outlook.com first if you have any
+    doubts.
+- Donate
+  - Please write a note like "Nagisa donation" when donating.
+  - The way to donate 
+    - PayPal: https://www.paypal.me/MouriNaruto
 
 # License
 Nagisa is distributed under the MIT License except the third-party libraries. 
@@ -96,5 +100,3 @@ For more information, please read [Nagisa's License](LICENSE).
 [totaldownloads.link]: https://github.com/Project-Nagisa/Nagisa/releases
 [license.badge]: https://img.shields.io/github/license/Project-Nagisa/Nagisa.svg
 [license.link]: LICENSE
-[donate.badge]: https://img.shields.io/badge/PayPal-Donate-blue.svg
-[donate.link]: https://www.paypal.me/MouriNaruto

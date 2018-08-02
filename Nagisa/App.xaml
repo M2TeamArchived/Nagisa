@@ -6,10 +6,14 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="XamlResources\CustomContentDialogStyle.xaml"/>
-                <ResourceDictionary Source="XamlResources\CustomListViewItemStyle.xaml"/>
-                <ResourceDictionary Source="XamlResources\CustomIconButtonStyle.xaml"/>
-                <ResourceDictionary Source="XamlResources\CustomConverters.xaml"/>
+                <ResourceDictionary 
+                    Source="ms-appx://Nagisa/XamlResources/CustomContentDialogStyle.xaml"/>
+                <ResourceDictionary 
+                    Source="ms-appx://Nagisa/XamlResources/CustomListViewItemStyle.xaml"/>
+                <ResourceDictionary 
+                    Source="ms-appx://Nagisa/XamlResources/CustomIconButtonStyle.xaml"/>
+                <ResourceDictionary 
+                    Source="ms-appx://Nagisa/XamlResources/CustomConverters.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

@@ -10,6 +10,19 @@ License: The MIT License
 
 #include "M2BindableVectorView.h"
 
+namespace winrt
+{
+	using Windows::Foundation::Collections::IKeyValuePair;
+	using Windows::Foundation::TimeSpan;
+	using Windows::Networking::BackgroundTransfer::BackgroundDownloadProgress;
+	using Windows::Networking::BackgroundTransfer::BackgroundTransferStatus;
+	using Windows::Storage::AccessCache::StorageApplicationPermissions;
+	using Windows::Storage::ApplicationData;
+	using Windows::Storage::ApplicationDataCreateDisposition;
+	using Windows::Storage::CreationCollisionOption;
+	using Windows::Storage::StorageDeleteOption;
+}
+
 using namespace winrt::Assassin::implementation;
 
 bool NAIsFinalTransferTaskStatus(
@@ -398,6 +411,39 @@ void TransferManager::UINotifyTimerTick(
 	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
 	this->UpdateTransferTaskStatusWithoutLock(true);
+}
+
+void TransferManager::CreateBackgroundWorker()
+{
+	using Windows::ApplicationModel::Background::BackgroundTaskBuilder;
+	using Windows::ApplicationModel::Background::BackgroundTaskRegistration;
+	using Windows::ApplicationModel::Background::IBackgroundTaskRegistration;
+	using Windows::ApplicationModel::Background::SocketActivityTrigger;
+
+	const wchar_t* BackgroundWorkerTaskName = L"Assassin.BackgroundWorker";
+	
+	IBackgroundTaskRegistration Task = nullptr;
+	for (auto Current : BackgroundTaskRegistration::AllTasks())
+	{
+		if (BackgroundWorkerTaskName == Current.Value().Name())
+		{
+			Task = Current.Value();
+			break;
+		}
+	}
+
+	if (nullptr == Task)
+	{
+		auto TaskBuilder = BackgroundTaskBuilder();
+		TaskBuilder.Name(BackgroundWorkerTaskName);
+		TaskBuilder.TaskEntryPoint(L"Assassin.BackgroundWorker");
+		TaskBuilder.SetTrigger(SocketActivityTrigger());
+		TaskBuilder.IsNetworkRequested(true);
+		Task = TaskBuilder.Register();
+	}
+	
+
+
 }
 
 // Creates a new TransferManager object.
