@@ -15,6 +15,7 @@ License: The MIT License
 #include <assert.h>
 #include <process.h>
 
+#include <map>
 #include <string>
 #include <vector>
 
@@ -78,13 +79,11 @@ namespace M2
 			return this->m_Object;
 		}
 
-		// Check the object is vaild or not.
 		bool IsInvalid()
 		{
 			return (this->m_Object == TObjectDefiner::GetInvalidValue());
 		}
 
-		// Detach the object.
 		TObject Detach()
 		{
 			TObject Object = this->m_Object;
@@ -92,7 +91,6 @@ namespace M2
 			return Object;
 		}
 
-		// Close the object.
 		void Close()
 		{
 			if (!this->IsInvalid())
@@ -198,7 +196,6 @@ namespace M2
 	class CThread
 	{
 	private:
-		// Internal implemention for creating the thread.
 		HANDLE CreateThreadInternal(
 			_In_opt_ LPSECURITY_ATTRIBUTES lpThreadAttributes,
 			_In_ SIZE_T dwStackSize,
@@ -223,16 +220,11 @@ namespace M2
 				reinterpret_cast<unsigned*>(lpThreadId)));
 		}
 
-		// The thread object.
 		CHandle m_Thread;
 
 	public:
-		CThread()
-		{
+		CThread() = default;
 
-		}
-
-		// Create the thread.
 		template<class TFunction>
 		CThread(
 			_In_ TFunction&& workerFunction,
@@ -257,25 +249,21 @@ namespace M2
 				nullptr);
 		}
 
-		// Detach the thread object.
 		HANDLE Detach()
 		{
 			return this->m_Thread.Detach();
 		}
 
-		// Resume the thread.
 		DWORD Resume()
 		{
 			return ResumeThread(this->m_Thread);
 		}
 
-		// Suspend the thread.
 		DWORD Suspend()
 		{
 			return SuspendThread(this->m_Thread);
 		}
 
-		// Wait the thread.
 		DWORD Wait(
 			_In_ DWORD dwMilliseconds = INFINITE,
 			_In_ BOOL bAlertable = FALSE)
@@ -332,6 +320,35 @@ namespace M2
 		_Releases_lock_(m_pCriticalSection) ~AutoCriticalSectionLock()
 		{
 			m_pCriticalSection->Unlock();
+		}
+	};
+
+	// A template for implementing an object which the type is a singleton. I
+	// do not need to free the memory of the object because the OS releases all
+	// the unshared memory associated with the process after the process is 
+	// terminated.
+	template<class ClassType>
+	class CSingleton : CDisableObjectCopying
+	{
+	private:
+		static CCriticalSection m_SingletonCS;
+		static ClassType* volatile m_Instance = nullptr;
+
+	protected:
+		CSingleton() = default;
+		~CSingleton() = default;
+
+	public:	
+		static ClassType& Get()
+		{
+			M2::AutoCriticalSectionLock Lock(this->m_SingletonCS);
+
+			if (nullptr == this->m_Instance)
+			{
+				this->m_Instance = new ClassType();
+			}
+
+			return *this->m_Instance;
 		}
 	};
 
@@ -468,5 +485,26 @@ std::wstring M2GetCurrentProcessModulePath();
 //   count of such arguments.
 std::vector<std::wstring> M2SpiltCommandLine(
 	const std::wstring& CommandLine);
+
+// Parses a command line string and get more friendly result.
+// Parameters:
+//   CommandLine: A string that contains the full command line. If this 
+//   parameter is an empty string the function returns an array with only 
+//   one empty string.
+//   OptionPrefixes: One or more of the prefixes of option we want to use.
+//   OptionParameterSeparators: One or more of the separators of option we want
+//   to use.
+//   ApplicationName: The application name.
+//   OptionsAndParameters: The options and parameters.
+//   UnresolvedCommandLine: The unresolved command line.
+// Return value:
+//   The function does not return a value.
+void M2SpiltCommandLineEx(
+	const std::wstring& CommandLine,
+	const std::vector<std::wstring>& OptionPrefixes,
+	const std::vector<std::wstring>& OptionParameterSeparators,
+	std::wstring& ApplicationName,
+	std::map<std::wstring, std::wstring>& OptionsAndParameters,
+	std::wstring& UnresolvedCommandLine);
 
 #endif // _M2_BASE_HELPERS_
