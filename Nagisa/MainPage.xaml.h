@@ -1,7 +1,9 @@
-﻿//
-// MainPage.xaml.h
-// MainPage 类的声明。
-//
+﻿/******************************************************************************
+Project: Nagisa
+Description: Definition for the Main Window.
+File Name: MainPage.xaml.h
+License: The MIT License
+******************************************************************************/
 
 #pragma once
 

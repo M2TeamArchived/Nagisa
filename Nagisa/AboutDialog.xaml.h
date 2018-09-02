@@ -1,7 +1,9 @@
-﻿//
-// AboutDialog.xaml.h
-// AboutDialog 类的声明
-//
+﻿/******************************************************************************
+Project: Nagisa
+Description: Definition for the About Dialog.
+File Name: AboutDialog.xaml.h
+License: The MIT License
+******************************************************************************/
 
 #pragma once
 

@@ -1,7 +1,9 @@
-﻿//
-// SettingsDialog.xaml.cpp
-// SettingsDialog 类的实现
-//
+﻿/******************************************************************************
+Project: Nagisa
+Description: Implementation for the Settings Dialog.
+File Name: SettingsDialog.xaml.cpp
+License: The MIT License
+******************************************************************************/
 
 #include "pch.h"
 #include "SettingsDialog.xaml.h"

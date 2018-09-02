@@ -1,7 +1,9 @@
-﻿//
-// SettingsDialog.xaml.h
-// SettingsDialog 类的声明
-//
+﻿/******************************************************************************
+Project: Nagisa
+Description: Definition for the Settings Dialog.
+File Name: SettingsDialog.xaml.h
+License: The MIT License
+******************************************************************************/
 
 #pragma once
 

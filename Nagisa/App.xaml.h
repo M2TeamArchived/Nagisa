@@ -1,7 +1,9 @@
-﻿//
-// App.xaml.h
-// App 类的声明。
-//
+﻿/******************************************************************************
+Project: Nagisa
+Description: Definition for the App Entry.
+File Name: App.xaml.h
+License: The MIT License
+******************************************************************************/
 
 #pragma once
 
@@ -9,19 +11,26 @@
 
 namespace Nagisa
 {
-	/// <summary>
-	/// 提供特定于应用程序的行为，以补充默认的应用程序类。
-	/// </summary>
+	using Platform::Object;
+	using Windows::ApplicationModel::Activation::LaunchActivatedEventArgs;
+	using Windows::ApplicationModel::SuspendingEventArgs;
+	using Windows::UI::Xaml::Navigation::NavigationFailedEventArgs;
+
 	ref class App sealed
 	{
 	protected:
-		virtual void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ e) override;
+		virtual void OnLaunched(
+			LaunchActivatedEventArgs^ e) override;
 
 	internal:
 		App();
 
 	private:
-		void OnSuspending(Platform::Object^ sender, Windows::ApplicationModel::SuspendingEventArgs^ e);
-		void OnNavigationFailed(Platform::Object ^sender, Windows::UI::Xaml::Navigation::NavigationFailedEventArgs ^e);
+		void OnSuspending(
+			Object^ sender, 
+			SuspendingEventArgs^ e);
+		void OnNavigationFailed(
+			Object^ sender, 
+			NavigationFailedEventArgs^ e);
 	};
 }

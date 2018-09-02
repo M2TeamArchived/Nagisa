@@ -1,7 +1,9 @@
-﻿//
-// App.xaml.cpp
-// App 类的实现。
-//
+﻿/******************************************************************************
+Project: Nagisa
+Description: Implementation for the App Entry.
+File Name: App.xaml.cpp
+License: The MIT License
+******************************************************************************/
 
 #include "pch.h"
 #include "MainPage.xaml.h"
@@ -22,55 +24,61 @@ using namespace Windows::UI::Xaml::Interop;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 
-/// <summary>
-/// 初始化单一实例应用程序对象。这是执行的创作代码的第一行，
-/// 已执行，逻辑上等同于 main() 或 WinMain()。
-/// </summary>
+// Initializes the singleton application object. This is the first line of 
+// authored code executed, and as such is the logical equivalent of main() 
+// or WinMain().
+// Parameters:
+//   The function does not have parameters.
+// Return value:
+//   The function does not return a value.
 App::App()
 {
     InitializeComponent();
     Suspending += ref new SuspendingEventHandler(this, &App::OnSuspending);
 }
 
-/// <summary>
-/// 在应用程序由最终用户正常启动时进行调用。
-/// 将在启动应用程序以打开特定文件等情况下使用。
-/// </summary>
-/// <param name="e">有关启动请求和过程的详细信息。</param>
-void App::OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ e)
+// Invoked when the application is launched normally by the end user. Other 
+// entry points will be used such as when the application is launched to open
+// a specific file.
+// Parameters:
+//   e: Details about the launch request and process.
+// Return value:
+//   The function does not return a value.
+void App::OnLaunched(
+	LaunchActivatedEventArgs^ e)
 {
     auto rootFrame = dynamic_cast<Frame^>(Window::Current->Content);
 
-    // 不要在窗口已包含内容时重复应用程序初始化，
-    // 只需确保窗口处于活动状态
+	// Do not repeat app initialization when the Window already has content, 
+	// just ensure that the window is active
     if (rootFrame == nullptr)
     {
-        // 创建一个 Frame 以用作导航上下文并将其与
-        // SuspensionManager 键关联
+		// Create a Frame to act as the navigation context and associate it 
+		// with a SuspensionManager key
         rootFrame = ref new Frame();
 
-        rootFrame->NavigationFailed += ref new Windows::UI::Xaml::Navigation::NavigationFailedEventHandler(this, &App::OnNavigationFailed);
+        rootFrame->NavigationFailed += ref new NavigationFailedEventHandler(
+			this, &App::OnNavigationFailed);
 
         if (e->PreviousExecutionState == ApplicationExecutionState::Terminated)
         {
-            // TODO: 仅当适用时还原保存的会话状态，并安排
-            // 还原完成后的最终启动步骤
-
+			// TODO: Restore the saved session state only when appropriate, 
+			// scheduling the final launch steps after the restore is complete.
         }
 
         if (e->PrelaunchActivated == false)
         {
             if (rootFrame->Content == nullptr)
             {
-                // 当导航堆栈尚未还原时，导航到第一页，
-                // 并通过将所需信息作为导航参数传入来配置
-                // 参数
+				// When the navigation stack isn't restored navigate to the 
+				// first page, configuring the new page by passing required 
+				// information as a navigation parameter.
                 rootFrame->Navigate(TypeName(MainPage::typeid), e->Arguments);
             }
-            // 将框架放在当前窗口中
-            Window::Current->Content = rootFrame;
-            // 确保当前窗口处于活动状态
-            Window::Current->Activate();
+			// Place the frame in the current Window.
+			Window::Current->Content = rootFrame;
+			// Ensure the current window is active.
+			Window::Current->Activate();
         }
     }
     else
@@ -79,38 +87,45 @@ void App::OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEvent
         {
             if (rootFrame->Content == nullptr)
             {
-                // 当导航堆栈尚未还原时，导航到第一页，
-                // 并通过将所需信息作为导航参数传入来配置
-                // 参数
+				// When the navigation stack isn't restored navigate to the 
+				// first page, configuring the new page by passing required 
+				// information as a navigation parameter.
                 rootFrame->Navigate(TypeName(MainPage::typeid), e->Arguments);
             }
-            // 确保当前窗口处于活动状态
+			// Ensure the current window is active.
             Window::Current->Activate();
         }
     }
 }
 
-/// <summary>
-/// 在将要挂起应用程序执行时调用。  在不知道应用程序
-/// 无需知道应用程序会被终止还是会恢复，
-/// 并让内存内容保持不变。
-/// </summary>
-/// <param name="sender">挂起的请求的源。</param>
-/// <param name="e">有关挂起请求的详细信息。</param>
-void App::OnSuspending(Object^ sender, SuspendingEventArgs^ e)
+// Invoked when application execution is being suspended. Application state is 
+// saved without knowing whether the application will be terminated or resumed
+// with the contents of memory still intact.
+// Parameters:
+//   sender: The source of the suspend request.
+//   e: Details about the suspend request.
+// Return value:
+//   The function does not return a value.
+void App::OnSuspending(
+	Object^ sender, 
+	SuspendingEventArgs^ e)
 {
-    (void) sender;  // 未使用的参数
-    (void) e;   // 未使用的参数
+	(void)sender;  // Unused parameter.
+	(void)e;   // Unused parameter.
 
-    //TODO: 保存应用程序状态并停止任何后台活动
+	//TODO: Save application state and stop any background activity.
 }
 
-/// <summary>
-/// 导航到特定页失败时调用
-/// </summary>
-///<param name="sender">导航失败的框架</param>
-///<param name="e">有关导航失败的详细信息</param>
-void App::OnNavigationFailed(Platform::Object ^sender, Windows::UI::Xaml::Navigation::NavigationFailedEventArgs ^e)
+// Invoked when Navigation to a certain page fails
+// Parameters:
+//   sender: The Frame which failed navigation.
+//   e: Details about the navigation failure.
+// Return value:
+//   The function does not return a value.
+void App::OnNavigationFailed(
+	Object^ sender, 
+	NavigationFailedEventArgs^ e)
 {
-    throw ref new FailureException("Failed to load Page " + e->SourcePageType.Name);
+	throw ref new FailureException(
+		"Failed to load Page " + e->SourcePageType.Name);
 }

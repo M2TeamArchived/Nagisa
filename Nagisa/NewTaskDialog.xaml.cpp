@@ -1,7 +1,9 @@
-﻿//
-// NewTaskDialog.xaml.cpp
-// NewTaskDialog 类的实现
-//
+﻿/******************************************************************************
+Project: Nagisa
+Description: Implementation for the New Task Dialog.
+File Name: NewTaskDialog.xaml.cpp
+License: The MIT License
+******************************************************************************/
 
 #include "pch.h"
 #include "NewTaskDialog.xaml.h"

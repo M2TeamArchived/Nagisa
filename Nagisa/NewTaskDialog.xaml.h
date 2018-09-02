@@ -1,7 +1,9 @@
-﻿//
-// NewTaskDialog.xaml.h
-// NewTaskDialog 类的声明
-//
+﻿/******************************************************************************
+Project: Nagisa
+Description: Definition for the New Task Dialog.
+File Name: NewTaskDialog.xaml.h
+License: The MIT License
+******************************************************************************/
 
 #pragma once
 

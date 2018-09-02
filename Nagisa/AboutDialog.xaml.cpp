@@ -1,7 +1,9 @@
-﻿//
-// AboutDialog.xaml.cpp
-// AboutDialog 类的实现
-//
+﻿/******************************************************************************
+Project: Nagisa
+Description: Implementation for the About Dialog.
+File Name: AboutDialog.xaml.cpp
+License: The MIT License
+******************************************************************************/
 
 #include "pch.h"
 #include "AboutDialog.xaml.h"

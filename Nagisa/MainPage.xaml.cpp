@@ -1,7 +1,9 @@
-﻿//
-// MainPage.xaml.cpp
-// MainPage 类的实现。
-//
+﻿/******************************************************************************
+Project: Nagisa
+Description: Implementation for the Main Window.
+File Name: MainPage.xaml.cpp
+License: The MIT License
+******************************************************************************/
 
 #include "pch.h"
 #include "MainPage.xaml.h"
