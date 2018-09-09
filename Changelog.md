@@ -13,9 +13,11 @@
 - Sync the version number.
 - Start to add the BackgroundWorker.
 
-### Nagisa 0.4 [Build 78]
+### Nagisa 0.4 [Build 81]
 - Improve several implementations.
 - Update OpenSSL static library binaries to 1.0.2p.
+- Remove AppVeyor CI support because we can't use C++/WinRT in the AppVeyor CI 
+  environment currently.
 
 ### Nagisa 0.3 [Build 62]
 [Full Changelog](https://github.com/Project-Nagisa/Nagisa/compare/0.2...0.3)
