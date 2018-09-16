@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{e0717bd1-8c33-4a3b-b215-6e72d672b729}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\AboutDialog.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\MainPage.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\NewTaskDialog.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en\SettingsDialog.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\es\AboutDialog.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\es\MainPage.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\es\NewTaskDialog.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\es\SettingsDialog.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\zh-Hans\AboutDialog.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\zh-Hans\MainPage.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\zh-Hans\NewTaskDialog.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\zh-Hans\SettingsDialog.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="$(MSBuildThisFileDirectory)Assets\LargeTile.scale-100.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\LargeTile.scale-125.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\LargeTile.scale-150.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\LargeTile.scale-200.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\LargeTile.scale-400.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\SmallTile.scale-100.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\SmallTile.scale-125.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\SmallTile.scale-150.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\SmallTile.scale-200.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\SmallTile.scale-400.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\SplashScreen.scale-100.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\SplashScreen.scale-125.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\SplashScreen.scale-150.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\SplashScreen.scale-200.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\SplashScreen.scale-400.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Square150x150Logo.scale-100.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Square150x150Logo.scale-125.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Square150x150Logo.scale-150.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Square150x150Logo.scale-200.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Square150x150Logo.scale-400.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-unplated_targetsize-16.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-unplated_targetsize-256.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-unplated_targetsize-32.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.altform-unplated_targetsize-48.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.scale-100.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.scale-125.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.scale-150.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.scale-200.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.scale-400.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-16.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-24.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-256.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-32.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Square44x44Logo.targetsize-48.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\StoreLogo.scale-100.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\StoreLogo.scale-125.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\StoreLogo.scale-150.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\StoreLogo.scale-200.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\StoreLogo.scale-400.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Wide310x150Logo.scale-100.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Wide310x150Logo.scale-125.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Wide310x150Logo.scale-150.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Wide310x150Logo.scale-200.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Wide310x150Logo.scale-400.png" />
+    <Image Include="$(MSBuildThisFileDirectory)LogoAssets\Nagisa.png">
+      <DeploymentContent>false</DeploymentContent>
+    </Image>
+    <Image Include="$(MSBuildThisFileDirectory)LogoAssets\Project-Nagisa.png">
+      <DeploymentContent>false</DeploymentContent>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)LogoAssets\Nagisa.xcf" />
+  </ItemGroup>
+</Project>

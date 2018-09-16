@@ -28,6 +28,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenSSL", "ThirdParty\OpenS
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConsoleDemo", "ConsoleDemo\ConsoleDemo.vcxproj", "{287F41F2-CF17-46F5-B43C-58293E73E813}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shared.UI", "Shared.UI\Shared.UI.vcxitems", "{E0717BD1-8C33-4A3B-B215-6E72D672B729}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Shared\Shared.vcxitems*{287f41f2-cf17-46f5-b43c-58293e73e813}*SharedItemsImports = 4
@@ -36,7 +38,9 @@ Global
 		ThirdParty\OpenSSL\OpenSSL.vcxitems*{6b84fb2b-ae13-44ce-b6db-c5b32cbf0a72}*SharedItemsImports = 9
 		Shared\Shared.vcxitems*{7db6fe7f-0281-49b3-92f9-497ee9cbcf6c}*SharedItemsImports = 4
 		ThirdParty\OpenSSL\OpenSSL.vcxitems*{7db6fe7f-0281-49b3-92f9-497ee9cbcf6c}*SharedItemsImports = 4
+		Shared.UI\Shared.UI.vcxitems*{cd858cad-04d9-4a81-8c75-26cb74323398}*SharedItemsImports = 4
 		Shared\Shared.vcxitems*{cd858cad-04d9-4a81-8c75-26cb74323398}*SharedItemsImports = 4
+		Shared.UI\Shared.UI.vcxitems*{e0717bd1-8c33-4a3b-b215-6e72d672b729}*SharedItemsImports = 9
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM

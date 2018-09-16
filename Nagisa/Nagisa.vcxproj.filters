@@ -1,30 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Assets">
-      <UniqueIdentifier>b7750694-1e2b-44fa-872d-d5353e4ebf2d</UniqueIdentifier>
-      <Extensions>bmp;fbx;gif;jpg;jpeg;tga;tiff;tif;png</Extensions>
-    </Filter>
     <Filter Include="XamlResources">
       <UniqueIdentifier>cd858cad-04d9-4a81-8c75-26cb74323398</UniqueIdentifier>
     </Filter>
-    <Filter Include="LogoAssets">
-      <UniqueIdentifier>{3e7da930-5d21-490e-a5b0-96f1a9bde088}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Strings">
-      <UniqueIdentifier>{be59f757-83aa-44ad-8bb3-602bb5a650a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Strings\en">
-      <UniqueIdentifier>{9d4f4c8c-a3b4-49e5-84e4-55d3457efaf4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Strings\zh-Hans">
-      <UniqueIdentifier>{4c722a55-5ee9-43cd-8caf-e081143d0ebd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Xaml">
       <UniqueIdentifier>{6062f432-bcda-4b23-b38d-27fb385c3d7c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Strings\es">
-      <UniqueIdentifier>{b8bd5143-13f7-442d-ba9c-1fcc90f5482a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -45,157 +26,11 @@
     <ClInclude Include="SettingsDialog.xaml.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Assets\SplashScreen.scale-200.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Square150x150Logo.scale-200.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Square44x44Logo.scale-200.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Wide310x150Logo.scale-200.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\SmallTile.scale-100.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\SmallTile.scale-125.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\SmallTile.scale-150.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\SmallTile.scale-200.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\SmallTile.scale-400.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Square150x150Logo.scale-100.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Square150x150Logo.scale-125.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Square150x150Logo.scale-150.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Square150x150Logo.scale-400.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Wide310x150Logo.scale-100.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Wide310x150Logo.scale-125.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Wide310x150Logo.scale-150.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Wide310x150Logo.scale-400.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\LargeTile.scale-100.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\LargeTile.scale-125.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\LargeTile.scale-150.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\LargeTile.scale-200.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\LargeTile.scale-400.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Square44x44Logo.scale-100.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Square44x44Logo.scale-125.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Square44x44Logo.scale-150.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Square44x44Logo.scale-400.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Square44x44Logo.targetsize-16.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Square44x44Logo.targetsize-24.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Square44x44Logo.targetsize-32.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Square44x44Logo.targetsize-48.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Square44x44Logo.targetsize-256.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Square44x44Logo.altform-unplated_targetsize-16.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Square44x44Logo.altform-unplated_targetsize-32.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Square44x44Logo.altform-unplated_targetsize-48.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\Square44x44Logo.altform-unplated_targetsize-256.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\SplashScreen.scale-100.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\SplashScreen.scale-125.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\SplashScreen.scale-150.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\SplashScreen.scale-400.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\StoreLogo.scale-100.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\StoreLogo.scale-125.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\StoreLogo.scale-150.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\StoreLogo.scale-200.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="Assets\StoreLogo.scale-400.png">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="LogoAssets\Nagisa.png">
-      <Filter>LogoAssets</Filter>
-    </Image>
-    <Image Include="LogoAssets\Project-Nagisa.png">
-      <Filter>LogoAssets</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Package.StoreAssociation.xml" />
     <None Include="Nagisa_StoreKey.pfx" />
-    <None Include="LogoAssets\Nagisa.xcf">
-      <Filter>LogoAssets</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Page Include="XamlResources\CustomContentDialogStyle.xaml">
@@ -225,44 +60,6 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Nagisa.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\en\MainPage.resw">
-      <Filter>Strings\en</Filter>
-    </PRIResource>
-    <PRIResource Include="Strings\en\AboutDialog.resw">
-      <Filter>Strings\en</Filter>
-    </PRIResource>
-    <PRIResource Include="Strings\en\NewTaskDialog.resw">
-      <Filter>Strings\en</Filter>
-    </PRIResource>
-    <PRIResource Include="Strings\zh-Hans\AboutDialog.resw">
-      <Filter>Strings\zh-Hans</Filter>
-    </PRIResource>
-    <PRIResource Include="Strings\zh-Hans\MainPage.resw">
-      <Filter>Strings\zh-Hans</Filter>
-    </PRIResource>
-    <PRIResource Include="Strings\zh-Hans\NewTaskDialog.resw">
-      <Filter>Strings\zh-Hans</Filter>
-    </PRIResource>
-    <PRIResource Include="Strings\en\SettingsDialog.resw">
-      <Filter>Strings\en</Filter>
-    </PRIResource>
-    <PRIResource Include="Strings\zh-Hans\SettingsDialog.resw">
-      <Filter>Strings\zh-Hans</Filter>
-    </PRIResource>
-    <PRIResource Include="Strings\es\AboutDialog.resw">
-      <Filter>Strings\es</Filter>
-    </PRIResource>
-    <PRIResource Include="Strings\es\MainPage.resw">
-      <Filter>Strings\es</Filter>
-    </PRIResource>
-    <PRIResource Include="Strings\es\NewTaskDialog.resw">
-      <Filter>Strings\es</Filter>
-    </PRIResource>
-    <PRIResource Include="Strings\es\SettingsDialog.resw">
-      <Filter>Strings\es</Filter>
-    </PRIResource>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
