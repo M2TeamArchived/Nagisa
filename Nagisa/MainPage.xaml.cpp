@@ -108,6 +108,10 @@ void MainPage::Page_Loaded(
 	RoutedEventArgs^ e)
 {
 	this->RefreshTaskListAsync();
+	Windows::ApplicationModel::Core::CoreApplication::GetCurrentView()->TitleBar->ExtendViewIntoTitleBar = true;
+	auto titleBar = Windows::UI::ViewManagement::ApplicationView::GetForCurrentView()->TitleBar;
+	titleBar->ButtonBackgroundColor = Colors::Transparent;
+	titleBar->ButtonInactiveBackgroundColor = Colors::Transparent;
 }
 
 void MainPage::CopyLinkMenuItem_Click(

@@ -6,24 +6,106 @@
     xmlns:Assassin="using:Assassin"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Windows10FallCreatorsUpdate="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 5)"
     mc:Ignorable="d"
     Loaded="Page_Loaded">
     
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid>
+        <Grid.Background>
+            <Windows10FallCreatorsUpdate:AcrylicBrush
+                BackgroundSource="HostBackdrop"
+                TintColor="White"
+                TintOpacity="0.6"
+                FallbackColor="#FFDEDEDE"/>
+        </Grid.Background>
         <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <AutoSuggestBox x:Uid="/MainPage/SearchAutoSuggestBox" 
-                        Grid.Row="0" 
+        <Grid x:Name="titleGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="150"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Nagisa" VerticalAlignment="Center" Margin="15 0 0 0" Grid.Column="0"/>
+
+            <AutoSuggestBox x:Uid="/MainPage/SearchAutoSuggestBox" 
+                        HorizontalAlignment="Right"
+                        VerticalContentAlignment="Center"
+                        Width="320" Height="32"
+                        Grid.Column="1"
                         QueryIcon="Find" 
                         PlaceholderText="[Search Downloads]"
                         QuerySubmitted="SearchAutoSuggestBox_QuerySubmitted"
-                        TextChanged="SearchAutoSuggestBox_TextChanged"/>
+                        TextChanged="SearchAutoSuggestBox_TextChanged"
+                        BorderThickness="0">
+                <AutoSuggestBox.Style>
+                    <Style TargetType="AutoSuggestBox">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="IsTabStop" Value="False" />
+                        <Setter Property="TextBoxStyle" Value="{StaticResource AutoSuggestBoxTextBoxStyle}" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="AutoSuggestBox">
+                                    <Grid>
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroup x:Name="Orientation">
+                                                <VisualState x:Name="Landscape"/>
+                                                <VisualState x:Name="Portrait"/>
+                                            </VisualStateGroup>
+                                        </VisualStateManager.VisualStateGroups>
+                                        <TextBox x:Name="TextBox"
+                                            VerticalContentAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Height="{TemplateBinding Height}"
+                                            Style="{TemplateBinding TextBoxStyle}"
+                                            PlaceholderText="{TemplateBinding PlaceholderText}"
+                                            Header="{TemplateBinding Header}"
+                                            Width="{TemplateBinding Width}"
+                                            BorderThickness="0"
+                                            ScrollViewer.BringIntoViewOnFocusChange="False"
+                                            Canvas.ZIndex="0"
+                                            Margin="0"
+                                            DesiredCandidateWindowAlignment="Default"/>
+                                        <Popup x:Name="SuggestionsPopup">
+                                            <Border x:Name="SuggestionsContainer" BorderThickness="0">
+                                                <Border.RenderTransform>
+                                                    <TranslateTransform x:Name="UpwardTransform"/>
+                                                </Border.RenderTransform>
+                                                <ListView
+                                                    x:Name="SuggestionsList"
+                                                    Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"
+                                                    BorderThickness="0"
+                                                    BorderBrush="{ThemeResource SystemControlForegroundChromeHighBrush}"
+                                                    DisplayMemberPath="{TemplateBinding DisplayMemberPath}"
+                                                    IsItemClickEnabled="True"
+                                                    ItemTemplate="{TemplateBinding ItemTemplate}"
+                                                    ItemTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                                    ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
+                                                    MaxHeight="{ThemeResource AutoSuggestListMaxHeight}"
+                                                    Margin="{ThemeResource AutoSuggestListMargin}"
+                                                    Padding="{ThemeResource AutoSuggestListPadding}">
+                                                    <ListView.ItemContainerTransitions>
+                                                        <TransitionCollection />
+                                                    </ListView.ItemContainerTransitions>
+                                                </ListView>
+                                            </Border>
+                                        </Popup>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </AutoSuggestBox.Style>
+            </AutoSuggestBox>
 
-        <ListView x:Name="TaskList" Grid.Row="1" SelectionMode="Multiple"
+        </Grid>
+
+        <ListView x:Name="TaskList" Grid.Row="2" SelectionMode="Multiple"
                   ItemContainerStyle="{StaticResource CustomListViewItemStyle}">
             <ListView.Header>
                 <TextBlock x:Uid="/MainPage/TaskListNoItemsTextBlock"
@@ -179,7 +261,7 @@
 
         </ListView>
 
-        <CommandBar Grid.Row="2">
+        <CommandBar Grid.Row="3">
             <CommandBar.Content>
                 <StackPanel Orientation="Horizontal" 
                             Padding="0"
