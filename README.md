@@ -14,12 +14,12 @@ Nagisa is an open source download utility that supports multi languages.
 Running in the Windows Universal Platform, its distributed under the MIT 
 License.
 
-Nagisa is written in C++/CX and uses pure WinRT API, Win32 API, WRL and STL 
-which ensures a higher execution speed and smaller program size. By optimizing
-as many routines as possible without losing user friendliness, Nagisa is trying
-to reduce the world carbon dioxide emissions. When using less CPU power, the PC
-can throttle down and reduce power consumption, resulting in a greener 
-environment.
+All source code of Nagisa is written in C++ with the C++ 17 standard and uses 
+pure WinRT API, Win32 API, WRL, STL, C++/CX and C++/WinRT which ensures a 
+higher execution speed and smaller program size. By optimizing as many routines
+as possible without losing user friendliness, Nagisa is trying to reduce the 
+world carbon dioxide emissions. When using less CPU power, the PC can throttle
+down and reduce power consumption, resulting in a greener environment.
 
 You're encouraged to translate Nagisa into your native language if there's not 
 already a translation present in the Nagisa's GitHub Repository.
@@ -58,7 +58,7 @@ issues are welcome.**
 # Features
 - Supported Transfer Protocols: HTTP, HTTPS, FTP, FTPS, WebSocket and WebSocket
   Secure. (Temporarily Based on Windows.Networking.BackgroundTransfer)
-- Multi-language Support: English and Simplified Chinese.
+- Multi-language Support: English, Spanish and Simplified Chinese.
 - Support background download. 
   (Temporarily Based on Windows.Networking.BackgroundTransfer)
 - Support resume broken/dead downloads.
@@ -71,10 +71,7 @@ issues are welcome.**
   - **Send pull request directly.**
   - You should send an e-mail to Mouri_Naruto@Outlook.com first if you have any
     doubts.
-- Donate
-  - Please write a note like "Nagisa donation" when donating.
-  - The way to donate 
-    - PayPal: https://www.paypal.me/MouriNaruto
+- Feedback suggestions and bugs.
 
 # License
 Nagisa is distributed under the MIT License except the third-party libraries. 
