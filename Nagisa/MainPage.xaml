@@ -69,8 +69,8 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="140"/>
+                <ColumnDefinition Width="85"/>
+                <ColumnDefinition Width="130"/>
             </Grid.ColumnDefinitions>
 
             <Grid x:Name="realTitle" Background="#01FFFFFF" Grid.Column="0" Grid.ColumnSpan="6"/>
@@ -116,7 +116,7 @@
                     Style="{StaticResource DimButtonStyle}"
                     Click="ClearListAppBarButton_Click"
                     FontFamily="Segoe MDL2 Assets"
-                    ToolTipService.ToolTip="[Clear All]">
+                    ToolTipService.ToolTip="[Clear List]">
                     
                 </Button>
 
