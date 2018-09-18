@@ -108,12 +108,15 @@ void MainPage::Page_Loaded(
 	RoutedEventArgs^ e)
 {
 	this->RefreshTaskListAsync();
+	//Extend main grid to titlebar
 	Windows::ApplicationModel::Core::CoreApplication::GetCurrentView()->TitleBar->ExtendViewIntoTitleBar = true;
 	auto titleBar = Windows::UI::ViewManagement::ApplicationView::GetForCurrentView()->TitleBar;
+	//Change titlebar button colors to match DimButton style
 	titleBar->ButtonBackgroundColor = Colors::Transparent;
 	titleBar->ButtonInactiveBackgroundColor = Colors::Transparent;
 	titleBar->ButtonPressedBackgroundColor = ((SolidColorBrush^)Application::Current->Resources->Lookup("SystemControlHighlightListMediumBrush"))->Color;
 	titleBar->ButtonHoverBackgroundColor = ((SolidColorBrush^)Application::Current->Resources->Lookup("SystemControlHighlightListLowBrush"))->Color;
+	//Set real titlebar area
 	Window::Current->SetTitleBar(realTitle);
 }
 
