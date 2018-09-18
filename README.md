@@ -1,5 +1,5 @@
 ﻿![Logo](Logo.png)
-# Nagisa - One of Download Utilities for Windows Universal Platform.
+# Nagisa - An open source file transfer utility on Universal Windows Platform.
  
 [![release.badge]][release.link]
 [![latestdownloads.badge]][latestdownloads.link]
@@ -8,76 +8,66 @@
 
 ![Screenshot](Screenshot.png)
 
-**Warning: This project is in the preview stage until the 1.0 is released.**
+**Warning: This project is in early stages of development, the final product may differ from what you see now.**
 
-Nagisa is an open source download utility that supports multi languages. 
-Running in the Windows Universal Platform, its distributed under the MIT 
-License.
+Nagisa is an open source file transfer utility (UWP), distributed under the MIT License. 
 
-All source code of Nagisa is written in C++ with the C++ 17 standard and uses 
-pure WinRT API, Win32 API, WRL, STL, C++/CX and C++/WinRT which ensures a 
-higher execution speed and smaller program size. By optimizing as many routines
-as possible without losing user friendliness, Nagisa is trying to reduce the 
-world carbon dioxide emissions. When using less CPU power, the PC can throttle
-down and reduce power consumption, resulting in a greener environment.
+Nagisa is mainly developed in C++ 17, with WinRT API, Win32 API, WRL, STL, C++/CX and C++/WinRT. Thus it has better efficiency and consumes less storage space. 
 
-You're encouraged to translate Nagisa into your native language if there's not 
-already a translation present in the Nagisa's GitHub Repository.
-
-> P.S. The above introduction is inspired by the Notepad++ project.
+We need help to translate Nagisa into native languages that have not been supported.
 
 # Development Roadmap
 **For more information, please 
 [click here](https://github.com/Project-Nagisa/Nagisa/issues/6)**
 
 Here are the features we will implement for Nagisa in the future. (The **blod**
-text represents the features we **have not** implemented it yet.)
+texts represent the features we **have not** implemented yet.)
 
-- Assassin Transfer Engine for replacing Windows.Networking.BackgroundTransfer
+- Assassin Transfer Engine (An alternative to Windows.Networking.BackgroundTransfer)
   - Support background download. 
-  - Support resume broken/dead downloads.
-  - Support **multi**-threaded multi-tasking download. 
+  - Support resuming broken/dead downloads.
+  - Support **multi-thread** multi-task download. 
   - Support HTTP 1.1 and **HTTP/2** protocol for HTTP and HTTPS support.
   - Support FTP, FTPS and **SFTP**.
   - Support WebSocket and WebSocket Secure.
   - Support **BitTorrent, Magnet and ED2K.**
-  - Support **downloading a file from multiple URIs**.
+  - Support **downloading files from multiple URIs**.
 - Experience
   - Support **providing HASH value for downloaded files**.
-  - Support **get download URI from QR code and texts on the paper**.
-  - Support **building a download server on devices like Raspberry Pi.** 
+  - Support **get download URI from QR code and texts in images**.
+  - Support **establishing download daemons on IoT devices (like Raspberry Pi).** 
   - Support **pushing a download task to the other devices**.
 
-**I hope someone can help this project. All suggestions, pull requests and 
+**All kinds of contributions will be appreciated. All suggestions, pull requests and 
 issues are welcome.**
 
 # System Requirement
-- Supported OS Version: Windows 10 Build 10240 or later
-- Support Platforms: x86, x86-64(AMD64), ARM and ARM64.
+- Supported OS: Windows 10 Build 10240 or later
+- Supported Platforms: x86, x86-64(AMD64), ARM and ARM64.
 
 # Features
 - Supported Transfer Protocols: HTTP, HTTPS, FTP, FTPS, WebSocket and WebSocket
-  Secure. (Temporarily Based on Windows.Networking.BackgroundTransfer)
+  Secure. (Temporarily based on Windows.Networking.BackgroundTransfer)
 - Multi-language Support: English, Spanish and Simplified Chinese.
 - Support background download. 
-  (Temporarily Based on Windows.Networking.BackgroundTransfer)
+  (Temporarily based on Windows.Networking.BackgroundTransfer)
 - Support resume broken/dead downloads.
-  (Temporarily Based on Windows.Networking.BackgroundTransfer)
-- Support single-threaded multi-tasking download.
-  (Temporarily Based on Windows.Networking.BackgroundTransfer)
+  (Temporarily based on Windows.Networking.BackgroundTransfer)
+- Support single-thread multi-task download.
+  (Temporarily based on Windows.Networking.BackgroundTransfer)
 
-# How to support Nagisa
-- Contribute
-  - **Send pull request directly.**
-  - You should send an e-mail to Mouri_Naruto@Outlook.com first if you have any
-    doubts.
+# How to help to develop Nagisa
+- Direct contributions
+  - **Create pull requests directly.**
+  - Please send e-mails to Mouri_Naruto@Outlook.com if you have any
+    questions.
 - Feedback suggestions and bugs.
 
 # License
-Nagisa is distributed under the MIT License except the third-party libraries. 
+Nagisa (not including third-party libraries) is distributed under the MIT License. 
 For more information, please read [Nagisa's License](LICENSE).
 
-# Third-party libraries
+# Third-party librarie(s)
 - [OpenSSL](ThirdParty/OpenSSL/README.md)
 
 # Documents
