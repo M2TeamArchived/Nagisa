@@ -61,36 +61,69 @@
             <RowDefinition Height="32"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
         <Grid x:Name="titleGrid">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="140"/>
             </Grid.ColumnDefinitions>
             
-            <Button Background="Transparent" 
+            <StackPanel Orientation="Horizontal">
+                <Button Background="Transparent" 
                     VerticalAlignment="Stretch" 
-                    HorizontalAlignment="Stretch" 
+                    Width="48"
                     Style="{StaticResource DimButtonStyle}"
                     Click="NewTaskButton_Click"
                     FontFamily="Segoe MDL2 Assets"
                     ToolTipService.ToolTip="[New Task]">
-                
-            </Button>
+                    
+                </Button>
+            </StackPanel>
             
             <Grid x:Name="realTitle" Background="#01FFFFFF" Grid.Column="1">
                 <TextBlock Text="Nagisa" VerticalAlignment="Center" FontSize="12" Margin="15 0 0 0" Grid.Column="0"/>
             </Grid>
 
+            <StackPanel Orientation="Horizontal" Grid.Column="2">
+                <Button Background="Transparent" 
+                    VerticalAlignment="Stretch" 
+                    Width="48"
+                    Style="{StaticResource DimButtonStyle}"
+                    Click="StartAllAppBarButton_Click"
+                    FontFamily="Segoe MDL2 Assets"
+                    ToolTipService.ToolTip="[Start All]">
+                    
+                </Button>
+                <Button Background="Transparent" 
+                    VerticalAlignment="Stretch" 
+                    Width="48"
+                    Style="{StaticResource DimButtonStyle}"
+                    Click="PauseAllAppBarButton_Click"
+                    FontFamily="Segoe MDL2 Assets"
+                    ToolTipService.ToolTip="[Pause All]">
+                    
+                </Button>
+                <Button Background="Transparent" 
+                    VerticalAlignment="Stretch" 
+                    Width="48"
+                    Style="{StaticResource DimButtonStyle}"
+                    Click="ClearListAppBarButton_Click"
+                    FontFamily="Segoe MDL2 Assets"
+                    ToolTipService.ToolTip="[Clear All]">
+                    
+                </Button>
+
+            </StackPanel>
+
             <AutoSuggestBox x:Uid="/MainPage/SearchAutoSuggestBox" 
                         HorizontalAlignment="Right"
-                        Width="320" Height="32"
-                        Grid.Column="2"
+                        Width="160" Height="32"
+                        Grid.Column="3"
                         QueryIcon="Find" 
                         PlaceholderText="[Search Downloads]"
                         QuerySubmitted="SearchAutoSuggestBox_QuerySubmitted"
@@ -314,7 +347,7 @@
 
         </ListView>
 
-        <CommandBar Grid.Row="3">
+        <!--<CommandBar Grid.Row="3">
             <CommandBar.Content>
                 <StackPanel Orientation="Horizontal" 
                             Padding="0"
@@ -351,13 +384,13 @@
                     </StackPanel>
                 </StackPanel>
             </CommandBar.Content>
-            <!--<CommandBar.PrimaryCommands>
+            --><!--<CommandBar.PrimaryCommands>
                 --><!--<AppBarButton x:Uid="/MainPage/NewTaskAppBarButton"
                               Icon="Add"
                               Label="[New Task]" 
                               ToolTipService.ToolTip="[New Task]" 
                               Click="NewTaskButton_Click"/>--><!--
-            </CommandBar.PrimaryCommands>-->
+            </CommandBar.PrimaryCommands>--><!--
             <CommandBar.SecondaryCommands>
                 <AppBarButton x:Uid="/MainPage/StartAllAppBarButton" 
                               Icon="Play" 
@@ -388,6 +421,6 @@
                               Label="[About]"
                               Click="AboutButton_Click"/>
             </CommandBar.SecondaryCommands>
-        </CommandBar>
+        </CommandBar>-->
     </Grid>
 </Page>
