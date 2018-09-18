@@ -112,6 +112,8 @@ void MainPage::Page_Loaded(
 	auto titleBar = Windows::UI::ViewManagement::ApplicationView::GetForCurrentView()->TitleBar;
 	titleBar->ButtonBackgroundColor = Colors::Transparent;
 	titleBar->ButtonInactiveBackgroundColor = Colors::Transparent;
+	titleBar->ButtonPressedBackgroundColor = ((SolidColorBrush^)Application::Current->Resources->Lookup("SystemControlHighlightListMediumBrush"))->Color;
+	titleBar->ButtonHoverBackgroundColor = ((SolidColorBrush^)Application::Current->Resources->Lookup("SystemControlHighlightListLowBrush"))->Color;
 	Window::Current->SetTitleBar(realTitle);
 }
 
