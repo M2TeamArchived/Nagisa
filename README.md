@@ -8,13 +8,18 @@
 
 ![Screenshot](Screenshot.png)
 
-**Warning: This project is in early stages of development, the final product may differ from what you see now.**
+**Warning: This project is in early stages of development, the final product 
+may differ from what you see now.**
 
-Nagisa is an open source file transfer utility (UWP), distributed under the MIT License. 
+Nagisa is an open source file transfer utility (UWP), distributed under the MIT
+License. 
 
-Nagisa is mainly developed in C++ 17, with WinRT API, Win32 API, WRL, STL, C++/CX and C++/WinRT. Thus it has better efficiency and consumes less storage space. 
+Nagisa is mainly developed in C++ 17, with WinRT API, Win32 API, WRL, STL, 
+C++/CX and C++/WinRT. Thus it has better efficiency and consumes less storage
+space. 
 
-We need help to translate Nagisa into native languages that have not been supported.
+We need help to translate Nagisa into native languages that have not been 
+supported.
 
 # Development Roadmap
 **For more information, please 
@@ -23,7 +28,8 @@ We need help to translate Nagisa into native languages that have not been suppor
 Here are the features we will implement for Nagisa in the future. (The **blod**
 texts represent the features we **have not** implemented yet.)
 
-- Assassin Transfer Engine (An alternative to Windows.Networking.BackgroundTransfer)
+- Assassin Transfer Engine (An alternative to 
+  Windows.Networking.BackgroundTransfer)
   - Support background download. 
   - Support resuming broken/dead downloads.
   - Support **multi-thread** multi-task download. 
@@ -35,11 +41,12 @@ texts represent the features we **have not** implemented yet.)
 - Experience
   - Support **providing HASH value for downloaded files**.
   - Support **get download URI from QR code and texts in images**.
-  - Support **establishing download daemons on IoT devices (like Raspberry Pi).** 
+  - Support **establishing download daemons on IoT devices (like Raspberry 
+    Pi).** 
   - Support **pushing a download task to the other devices**.
 
-**All kinds of contributions will be appreciated. All suggestions, pull requests and 
-issues are welcome.**
+**All kinds of contributions will be appreciated. All suggestions, pull 
+requests and issues are welcome.**
 
 # System Requirement
 - Supported OS: Windows 10 Build 10240 or later
@@ -64,8 +71,8 @@ issues are welcome.**
 - Feedback suggestions and bugs.
 
 # License
-Nagisa (not including third-party libraries) is distributed under the MIT License. 
-For more information, please read [Nagisa's License](LICENSE).
+Nagisa (not including third-party libraries) is distributed under the MIT 
+License. For more information, please read [Nagisa's License](LICENSE).
 
 # Third-party librarie(s)
 - [OpenSSL](ThirdParty/OpenSSL/README.md)
