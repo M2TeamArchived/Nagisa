@@ -7,13 +7,13 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary 
-                    Source="ms-appx://Nagisa/XamlResources/CustomContentDialogStyle.xaml"/>
+                    Source="ms-appx:///XamlResources/CustomContentDialogStyle.xaml"/>
                 <ResourceDictionary 
-                    Source="ms-appx://Nagisa/XamlResources/CustomListViewItemStyle.xaml"/>
+                    Source="ms-appx:///XamlResources/CustomListViewItemStyle.xaml"/>
                 <ResourceDictionary 
-                    Source="ms-appx://Nagisa/XamlResources/CustomIconButtonStyle.xaml"/>
+                    Source="ms-appx:///XamlResources/CustomIconButtonStyle.xaml"/>
                 <ResourceDictionary 
-                    Source="ms-appx://Nagisa/XamlResources/CustomConverters.xaml"/>
+                    Source="ms-appx:///XamlResources/CustomConverters.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
