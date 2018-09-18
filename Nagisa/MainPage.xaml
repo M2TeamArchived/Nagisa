@@ -72,7 +72,9 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="140"/>
             </Grid.ColumnDefinitions>
-            
+
+            <Grid x:Name="realTitle" Background="#01FFFFFF" Grid.Column="0" Grid.ColumnSpan="6"/>
+
             <StackPanel Orientation="Horizontal">
                 <Button Background="Transparent" 
                     VerticalAlignment="Stretch" 
@@ -85,7 +87,7 @@
                 </Button>
             </StackPanel>
             
-            <Grid x:Name="realTitle" Background="#01FFFFFF" Grid.Column="1">
+            <Grid Grid.Column="1">
                 <TextBlock Text="Nagisa" VerticalAlignment="Center" FontSize="12" Margin="15 0 0 0" Grid.Column="0"/>
             </Grid>
 
@@ -189,6 +191,41 @@
                 </AutoSuggestBox.Style>
             </AutoSuggestBox>
 
+            <StackPanel Orientation="Vertical" 
+                        VerticalAlignment="Center"
+                        Margin="8 0"
+                        Grid.Column="4">
+                <StackPanel x:Uid="/MainPage/TotalDownloadBandwidthStackPanel"
+                                Margin="0" 
+                                Orientation="Horizontal" 
+                                ToolTipService.ToolTip="[Total Download Bandwidth]">
+                    <FontIcon Margin="0,0,8,0" 
+                                  VerticalAlignment="Center" 
+                                  FontSize="9"
+                                  Glyph="&#xE74B;"/>
+                    <TextBlock VerticalAlignment="Center" 
+                                   FontSize="9" 
+                                   Text="{x:Bind Path=TransferManager.TotalDownloadBandwidth, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ByteSizeToString, Mode=OneWay}"/>
+                    <TextBlock VerticalAlignment="Center" 
+                                   FontSize="9" 
+                                   Text="/s"/>
+                </StackPanel>
+                <StackPanel x:Uid="/MainPage/TotalUploadBandwidthStackPanel" 
+                                Margin="0" 
+                                Orientation="Horizontal"
+                                ToolTipService.ToolTip="[Total Upload Bandwidth]">
+                    <FontIcon Margin="0,0,8,0"
+                                  VerticalAlignment="Center" 
+                                  FontSize="9" 
+                                  Glyph="&#xE74A;"/>
+                    <TextBlock VerticalAlignment="Center" 
+                                   FontSize="9"
+                                   Text="{x:Bind Path=TransferManager.TotalUploadBandwidth, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ByteSizeToString, Mode=OneWay}"/>
+                    <TextBlock VerticalAlignment="Center"
+                                   FontSize="9"
+                                   Text="/s"/>
+                </StackPanel>
+            </StackPanel>
         </Grid>
 
         <ListView x:Name="TaskList" Grid.Row="2" SelectionMode="Multiple"
