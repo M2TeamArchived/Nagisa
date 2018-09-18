@@ -9,7 +9,46 @@
     xmlns:Windows10FallCreatorsUpdate="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 5)"
     mc:Ignorable="d"
     Loaded="Page_Loaded">
-    
+
+    <Page.Resources>
+        <Style x:Key="DimButtonStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="{TemplateBinding Background}" x:Name="LayoutRoot">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="(Grid.Background)">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="(Grid.Background)">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListMediumBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter x:Name="ContentPresenter" Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" AutomationProperties.AccessibilityView="Raw"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
     <Grid>
         <Grid.Background>
             <Windows10FallCreatorsUpdate:AcrylicBrush
@@ -27,22 +66,36 @@
 
         <Grid x:Name="titleGrid">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="140"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Nagisa" VerticalAlignment="Center" Margin="15 0 0 0" Grid.Column="0"/>
+            
+            <Button Background="Transparent" 
+                    VerticalAlignment="Stretch" 
+                    HorizontalAlignment="Stretch" 
+                    Style="{StaticResource DimButtonStyle}"
+                    Click="NewTaskButton_Click"
+                    FontFamily="Segoe MDL2 Assets"
+                    ToolTipService.ToolTip="[New Task]">
+                
+            </Button>
+            
+            <Grid x:Name="realTitle" Background="#01FFFFFF" Grid.Column="1">
+                <TextBlock Text="Nagisa" VerticalAlignment="Center" FontSize="12" Margin="15 0 0 0" Grid.Column="0"/>
+            </Grid>
 
             <AutoSuggestBox x:Uid="/MainPage/SearchAutoSuggestBox" 
                         HorizontalAlignment="Right"
-                        VerticalContentAlignment="Center"
                         Width="320" Height="32"
-                        Grid.Column="1"
+                        Grid.Column="2"
                         QueryIcon="Find" 
                         PlaceholderText="[Search Downloads]"
                         QuerySubmitted="SearchAutoSuggestBox_QuerySubmitted"
                         TextChanged="SearchAutoSuggestBox_TextChanged"
-                        BorderThickness="0">
+                        BorderThickness="2">
                 <AutoSuggestBox.Style>
                     <Style TargetType="AutoSuggestBox">
                         <Setter Property="VerticalAlignment" Value="Center" />
@@ -70,7 +123,7 @@
                                             ScrollViewer.BringIntoViewOnFocusChange="False"
                                             Canvas.ZIndex="0"
                                             Margin="0"
-                                            DesiredCandidateWindowAlignment="Default"/>
+                                            DesiredCandidateWindowAlignment="Default" Padding="10,5,6,5"/>
                                         <Popup x:Name="SuggestionsPopup">
                                             <Border x:Name="SuggestionsContainer" BorderThickness="0">
                                                 <Border.RenderTransform>
@@ -79,7 +132,7 @@
                                                 <ListView
                                                     x:Name="SuggestionsList"
                                                     Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"
-                                                    BorderThickness="0"
+                                                    BorderThickness="1"
                                                     BorderBrush="{ThemeResource SystemControlForegroundChromeHighBrush}"
                                                     DisplayMemberPath="{TemplateBinding DisplayMemberPath}"
                                                     IsItemClickEnabled="True"
@@ -298,13 +351,13 @@
                     </StackPanel>
                 </StackPanel>
             </CommandBar.Content>
-            <CommandBar.PrimaryCommands>
-                <AppBarButton x:Uid="/MainPage/NewTaskAppBarButton"
+            <!--<CommandBar.PrimaryCommands>
+                --><!--<AppBarButton x:Uid="/MainPage/NewTaskAppBarButton"
                               Icon="Add"
                               Label="[New Task]" 
                               ToolTipService.ToolTip="[New Task]" 
-                              Click="NewTaskButton_Click"/>
-            </CommandBar.PrimaryCommands>
+                              Click="NewTaskButton_Click"/>--><!--
+            </CommandBar.PrimaryCommands>-->
             <CommandBar.SecondaryCommands>
                 <AppBarButton x:Uid="/MainPage/StartAllAppBarButton" 
                               Icon="Play" 

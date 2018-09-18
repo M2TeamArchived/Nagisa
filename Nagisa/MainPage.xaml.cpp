@@ -112,6 +112,7 @@ void MainPage::Page_Loaded(
 	auto titleBar = Windows::UI::ViewManagement::ApplicationView::GetForCurrentView()->TitleBar;
 	titleBar->ButtonBackgroundColor = Colors::Transparent;
 	titleBar->ButtonInactiveBackgroundColor = Colors::Transparent;
+	Window::Current->SetTitleBar(realTitle);
 }
 
 void MainPage::CopyLinkMenuItem_Click(
