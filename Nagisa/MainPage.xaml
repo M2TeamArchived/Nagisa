@@ -43,6 +43,14 @@
                     Style="{StaticResource CustomDimButtonStyle}"
                     FontFamily="Segoe MDL2 Assets"
                     ToolTipService.ToolTip="[Menu]">
+                    <Button.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="[Open Downloads Folder]" x:Uid="/MainPage/OpenDownloadsFolderAppBarButton" Icon="Folder" Click="OpenDownloadsFolderAppBarButton_Click"/>
+                            <MenuFlyoutItem Text="[Settings]" x:Uid="/MainPage/SettingsAppBarButton" Icon="Setting" Click="SettingsAppBarButton_Click"/>
+                            <MenuFlyoutSeparator/>
+                            <MenuFlyoutItem Text="[About]" x:Uid="/MainPage/AboutAppBarButton" Icon="Help" Click="AboutButton_Click"/>
+                        </MenuFlyout>
+                    </Button.Flyout>
                     
                 </Button>
             </StackPanel>
@@ -52,7 +60,7 @@
             </Grid>
 
             <StackPanel Orientation="Horizontal" Grid.Column="2">
-                <Button Background="Transparent" 
+                <Button Background="Transparent" x:Uid="/MainPage/NewTaskAppBarButton"
                     VerticalAlignment="Stretch" 
                     Width="48"
                     Style="{StaticResource CustomDimButtonStyle}"
@@ -61,7 +69,7 @@
                     ToolTipService.ToolTip="[New Task]">
                     
                 </Button>
-                <Button Background="Transparent" 
+                <Button Background="Transparent" x:Uid="/MainPage/StartAllAppBarButton" 
                     VerticalAlignment="Stretch" 
                     Width="48"
                     Style="{StaticResource CustomDimButtonStyle}"
@@ -70,7 +78,7 @@
                     ToolTipService.ToolTip="[Start All]">
                     
                 </Button>
-                <Button Background="Transparent" 
+                <Button Background="Transparent" x:Uid="/MainPage/PauseAllAppBarButton" 
                     VerticalAlignment="Stretch" 
                     Width="48"
                     Style="{StaticResource CustomDimButtonStyle}"
@@ -79,7 +87,7 @@
                     ToolTipService.ToolTip="[Pause All]">
                     
                 </Button>
-                <Button Background="Transparent" 
+                <Button Background="Transparent" x:Uid="/MainPage/ClearListAppBarButton"
                     VerticalAlignment="Stretch" 
                     Width="48"
                     Style="{StaticResource CustomDimButtonStyle}"

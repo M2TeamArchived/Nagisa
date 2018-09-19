@@ -117,27 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutAppBarButton.Label" xml:space="preserve">
+  <data name="AboutAppBarButton.Text" xml:space="preserve">
     <value>Acerca de</value>
     <comment>About</comment>
   </data>
-  <data name="ClearListAppBarButton.Label" xml:space="preserve">
+  <data name="ClearListAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Limpiar lista</value>
     <comment>Clear List</comment>
-  </data>
-  <data name="NewTaskAppBarButton.Label" xml:space="preserve">
-    <value>Nueva tarea</value>
-    <comment>New Task</comment>
   </data>
   <data name="NewTaskAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Nueva tarea</value>
     <comment>New Task</comment>
   </data>
-  <data name="OpenDownloadsFolderAppBarButton.Label" xml:space="preserve">
+  <data name="OpenDownloadsFolderAppBarButton.Text" xml:space="preserve">
     <value>Abrir directorio de descargas</value>
     <comment>Open Downloads Folder</comment>
   </data>
-  <data name="PauseAllAppBarButton.Label" xml:space="preserve">
+  <data name="PauseAllAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Pausar todo</value>
     <comment>Pause All</comment>
   </data>
@@ -157,11 +153,11 @@
     <value>Buscar descargas</value>
     <comment>Search Downloads</comment>
   </data>
-  <data name="SettingsAppBarButton.Label" xml:space="preserve">
+  <data name="SettingsAppBarButton.Text" xml:space="preserve">
     <value>Ajustes</value>
     <comment>Settings</comment>
   </data>
-  <data name="StartAllAppBarButton.Label" xml:space="preserve">
+  <data name="StartAllAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Iniciar todo</value>
     <comment>Start All</comment>
   </data>
