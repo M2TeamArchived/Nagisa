@@ -38,7 +38,7 @@
 
             <StackPanel Orientation="Horizontal">
                 <Button Background="Transparent" 
-                    VerticalAlignment="Stretch" 
+                    VerticalAlignment="Stretch" Padding="-5 0 0 0"
                     Width="48"
                     Style="{StaticResource CustomDimButtonStyle}"
                     FontFamily="Segoe MDL2 Assets"
@@ -51,7 +51,7 @@
                             <MenuFlyoutItem Text="[About]" x:Uid="/MainPage/AboutAppBarButton" Icon="Help" Click="AboutButton_Click"/>
                         </MenuFlyout>
                     </Button.Flyout>
-                    
+                    
                 </Button>
             </StackPanel>
             
