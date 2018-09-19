@@ -138,6 +138,7 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="XamlResources\CustomContentDialogStyle.xaml" />
+    <Page Include="XamlResources\CustomDimButtonStyle.xaml" />
     <Page Include="XamlResources\CustomIconButtonStyle.xaml" />
     <Page Include="XamlResources\CustomListViewItemStyle.xaml" />
   </ItemGroup>

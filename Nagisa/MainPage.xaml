@@ -10,45 +10,6 @@
     mc:Ignorable="d"
     Loaded="Page_Loaded">
 
-    <Page.Resources>
-        <Style x:Key="DimButtonStyle" TargetType="Button">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Grid Background="{TemplateBinding Background}" x:Name="LayoutRoot">
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="CommonStates">
-                                    <VisualState x:Name="Normal" />
-                                    <VisualState x:Name="PointerOver">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="(Grid.Background)">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListLowBrush}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Pressed">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="(Grid.Background)">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListMediumBrush}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                            <ContentPresenter x:Name="ContentPresenter" Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" AutomationProperties.AccessibilityView="Raw"/>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Page.Resources>
-
     <Grid>
         <Grid.Background>
             <Windows10FallCreatorsUpdate:AcrylicBrush
@@ -79,11 +40,10 @@
                 <Button Background="Transparent" 
                     VerticalAlignment="Stretch" 
                     Width="48"
-                    Style="{StaticResource DimButtonStyle}"
-                    Click="NewTaskButton_Click"
+                    Style="{StaticResource CustomDimButtonStyle}"
                     FontFamily="Segoe MDL2 Assets"
-                    ToolTipService.ToolTip="[New Task]">
-                    
+                    ToolTipService.ToolTip="[Menu]">
+                    
                 </Button>
             </StackPanel>
             
@@ -95,7 +55,16 @@
                 <Button Background="Transparent" 
                     VerticalAlignment="Stretch" 
                     Width="48"
-                    Style="{StaticResource DimButtonStyle}"
+                    Style="{StaticResource CustomDimButtonStyle}"
+                    Click="NewTaskButton_Click"
+                    FontFamily="Segoe MDL2 Assets"
+                    ToolTipService.ToolTip="[New Task]">
+                    
+                </Button>
+                <Button Background="Transparent" 
+                    VerticalAlignment="Stretch" 
+                    Width="48"
+                    Style="{StaticResource CustomDimButtonStyle}"
                     Click="StartAllAppBarButton_Click"
                     FontFamily="Segoe MDL2 Assets"
                     ToolTipService.ToolTip="[Start All]">
@@ -104,7 +73,7 @@
                 <Button Background="Transparent" 
                     VerticalAlignment="Stretch" 
                     Width="48"
-                    Style="{StaticResource DimButtonStyle}"
+                    Style="{StaticResource CustomDimButtonStyle}"
                     Click="PauseAllAppBarButton_Click"
                     FontFamily="Segoe MDL2 Assets"
                     ToolTipService.ToolTip="[Pause All]">
@@ -113,7 +82,7 @@
                 <Button Background="Transparent" 
                     VerticalAlignment="Stretch" 
                     Width="48"
-                    Style="{StaticResource DimButtonStyle}"
+                    Style="{StaticResource CustomDimButtonStyle}"
                     Click="ClearListAppBarButton_Click"
                     FontFamily="Segoe MDL2 Assets"
                     ToolTipService.ToolTip="[Clear List]">

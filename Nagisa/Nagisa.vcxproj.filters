@@ -57,6 +57,9 @@
     <Page Include="SettingsDialog.xaml">
       <Filter>Xaml</Filter>
     </Page>
+    <Page Include="XamlResources\CustomDimButtonStyle.xaml">
+      <Filter>XamlResources</Filter>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Nagisa.rc" />
