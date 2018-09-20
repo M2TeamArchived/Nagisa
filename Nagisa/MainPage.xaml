@@ -37,7 +37,7 @@
             <Grid x:Name="realTitle" Background="#01FFFFFF" Grid.Column="0" Grid.ColumnSpan="6"/>
 
             <StackPanel Orientation="Horizontal">
-                <Button Background="Transparent" 
+                <Button Background="Transparent"
                     VerticalAlignment="Stretch" Padding="-5 0 0 0"
                     Width="48"
                     Style="{StaticResource CustomDimButtonStyle}"
@@ -217,32 +217,29 @@
 
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="Assassin:ITransferTask">
-                    <Grid>
+                    <Grid Margin="0 8 8 8">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="160"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="48"/>
-                            <ColumnDefinition Width="48"/>
-                            <ColumnDefinition Width="14"/>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="32"/>
                         </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="48"/>
-                            <RowDefinition Height="6"/>
-                        </Grid.RowDefinitions>
 
+                        <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets">
+                            
+                        </TextBlock>
+                        
                         <Grid Grid.Row="0" 
-                              Grid.Column="0" 
+                              Grid.Column="1" 
                               HorizontalAlignment="Stretch" 
-                              Margin="0,4,8,4" 
                               VerticalAlignment="Stretch">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                            </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" 
-                                       Text="{x:Bind FileName, TargetNullValue=N/A, Mode=OneWay}"/>
-                            <StackPanel Grid.Row="1" 
-                                        Padding="0,2,0,0"
-                                        Orientation="Horizontal">
+                            <TextBlock Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" TextTrimming="CharacterEllipsis"
+                                       Text="{x:Bind FileName, TargetNullValue=N/A, Mode=OneWay}" FontWeight="Bold"/>
+                        </Grid>
+
+                        <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="8 0 8 0">
+                            <StackPanel Orientation="Horizontal">
                                 <TextBlock FontSize="12" 
                                            Text="{x:Bind BytesReceivedSpeed, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ByteSizeToString, Mode=OneWay}"/>
                                 <TextBlock FontSize="12">
@@ -255,36 +252,72 @@
                                     <Run Text="{x:Bind RemainTime, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64RemainTimeToString, Mode=OneWay}"/>
                                 </TextBlock>
                             </StackPanel>
+                            <Grid Margin="0 8 0 0" Height="4">
+                                <Grid.Resources>
+                                    <SolidColorBrush x:Key="ProgressBarBackgroundColor" 
+                                                 Color="Black" 
+                                                 Opacity="0.1"/>
+                                    <SolidColorBrush x:Key="ProgressBarErrorForegroundColor" 
+                                                 Color="Red" 
+                                                 Opacity="0.8"/>
+                                    <SolidColorBrush x:Key="ProgressBarPausedForegroundColor" 
+                                                 Color="Orange" 
+                                                 Opacity="0.8"/>
+                                    <SolidColorBrush x:Key="ProgressBarRunningForegroundColor" 
+                                                 Color="Green" 
+                                                 Opacity="0.8"/>
+                                </Grid.Resources>
 
-                        </Grid>
+                                <ProgressBar VerticalAlignment="Stretch" 
+                                         Background="{StaticResource ProgressBarBackgroundColor}"
+                                         Foreground="{StaticResource ProgressBarErrorForegroundColor}" 
+                                         Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}"
+                                         Value="{x:Bind BytesReceived, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}"
+                                         Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskErrorStatusToVisible, Mode=OneWay}"/>
+                                <ProgressBar VerticalAlignment="Stretch" 
+                                         Background="{StaticResource ProgressBarBackgroundColor}"
+                                         Foreground="{StaticResource ProgressBarPausedForegroundColor}"
+                                         Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}"
+                                         Value="{x:Bind BytesReceived, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}"
+                                         Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskPausedStatusToVisible, Mode=OneWay}"/>
+                                <ProgressBar VerticalAlignment="Stretch" 
+                                         Background="{StaticResource ProgressBarBackgroundColor}"
+                                         Foreground="{StaticResource ProgressBarRunningForegroundColor}"
+                                         Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}"
+                                         Value="{x:Bind BytesReceived, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}"
+                                         Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskRunningStatusToVisible, Mode=OneWay}"/>
+                            </Grid>
 
-                        <Grid Grid.Row="0" Grid.Column="1">
+
+                        </StackPanel>
+                        
+                        <Grid Grid.Row="0" Grid.Column="3">
                             <Grid.Resources>
                                 <x:String x:Key="RetryIcon">&#xE72C;</x:String>
                                 <x:String x:Key="ResumeIcon">&#xE768;</x:String>
                                 <x:String x:Key="PauseIcon">&#xE769;</x:String>
                             </Grid.Resources>
 
-                            <Button x:Uid="/MainPage/RetryButton" 
-                                    Style="{StaticResource CustomIconButtonStyle}"
+                            <Button x:Uid="/MainPage/RetryButton" Height="32" Width="32" FontSize="14" Background="Transparent"
+                                    Style="{StaticResource CustomDimButtonStyle}" FontFamily="Segoe MDL2 Assets"
                                     Content="{StaticResource RetryIcon}"
                                     ToolTipService.ToolTip="[Retry]"
                                     Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskErrorStatusToVisible, Mode=OneWay}"
                                     Click="RetryButton_Click"/>
-                            <Button x:Uid="/MainPage/RetryButton" 
-                                    Style="{StaticResource CustomIconButtonStyle}"
+                            <Button x:Uid="/MainPage/RetryButton" Height="32" Width="32" FontSize="14" Background="Transparent"
+                                    Style="{StaticResource CustomDimButtonStyle}" FontFamily="Segoe MDL2 Assets"
                                     Content="{StaticResource RetryIcon}"
                                     ToolTipService.ToolTip="[Retry]"
                                     Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskCanceledStatusToVisible, Mode=OneWay}"
                                     Click="RetryButton_Click"/>
-                            <Button x:Uid="/MainPage/ResumeButton" 
-                                    Style="{StaticResource CustomIconButtonStyle}"
+                            <Button x:Uid="/MainPage/ResumeButton" Height="32" Width="32" FontSize="14" Background="Transparent"
+                                    Style="{StaticResource CustomDimButtonStyle}" FontFamily="Segoe MDL2 Assets"
                                     Content="{StaticResource ResumeIcon}"
                                     ToolTipService.ToolTip="[Resume]"
                                     Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskPausedStatusToVisible, Mode=OneWay}"
                                     Click="ResumeButton_Click"/>
-                            <Button x:Uid="/MainPage/PauseButton" 
-                                    Style="{StaticResource CustomIconButtonStyle}"
+                            <Button x:Uid="/MainPage/PauseButton" Height="32" Width="32" FontSize="14" Background="Transparent"
+                                    Style="{StaticResource CustomDimButtonStyle}" FontFamily="Segoe MDL2 Assets"
                                     Content="{StaticResource PauseIcon}"
                                     ToolTipService.ToolTip="[Pause]"
                                     Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskRunningStatusToVisible, Mode=OneWay}"
@@ -292,9 +325,9 @@
                         </Grid>
 
                         <Button x:Uid="/MainPage/TaskItemMoreButton" 
-                                Grid.Row="0"
-                                Grid.Column="2"
-                                Style="{StaticResource CustomIconButtonStyle}"
+                                Grid.Row="0" Height="32" Width="32" FontSize="14" Background="Transparent"
+                                Grid.Column="4" FontFamily="Segoe MDL2 Assets"
+                                Style="{StaticResource CustomDimButtonStyle}"
                                 Content="&#xE10C;"
                                 ToolTipService.ToolTip="[More]">
                             <Button.Flyout>
@@ -315,45 +348,6 @@
                                 </MenuFlyout>
                             </Button.Flyout>
                         </Button>
-
-                        <Grid Grid.Row="1" 
-                              Grid.Column="0" 
-                              Grid.ColumnSpan="4"
-                              Margin="-62,0,0,0">
-                            <Grid.Resources>
-                                <SolidColorBrush x:Key="ProgressBarBackgroundColor" 
-                                                 Color="Black" 
-                                                 Opacity="0.1"/>
-                                <SolidColorBrush x:Key="ProgressBarErrorForegroundColor" 
-                                                 Color="Red" 
-                                                 Opacity="0.8"/>
-                                <SolidColorBrush x:Key="ProgressBarPausedForegroundColor" 
-                                                 Color="Orange" 
-                                                 Opacity="0.8"/>
-                                <SolidColorBrush x:Key="ProgressBarRunningForegroundColor" 
-                                                 Color="Green" 
-                                                 Opacity="0.8"/>
-                            </Grid.Resources>
-
-                            <ProgressBar VerticalAlignment="Stretch" 
-                                         Background="{StaticResource ProgressBarBackgroundColor}"
-                                         Foreground="{StaticResource ProgressBarErrorForegroundColor}" 
-                                         Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}"
-                                         Value="{x:Bind BytesReceived, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}"
-                                         Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskErrorStatusToVisible, Mode=OneWay}"/>
-                            <ProgressBar VerticalAlignment="Stretch" 
-                                         Background="{StaticResource ProgressBarBackgroundColor}"
-                                         Foreground="{StaticResource ProgressBarPausedForegroundColor}"
-                                         Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}"
-                                         Value="{x:Bind BytesReceived, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}"
-                                         Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskPausedStatusToVisible, Mode=OneWay}"/>
-                            <ProgressBar VerticalAlignment="Stretch" 
-                                         Background="{StaticResource ProgressBarBackgroundColor}"
-                                         Foreground="{StaticResource ProgressBarRunningForegroundColor}"
-                                         Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}"
-                                         Value="{x:Bind BytesReceived, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}"
-                                         Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskRunningStatusToVisible, Mode=OneWay}"/>
-                        </Grid>
 
                     </Grid>
                 </DataTemplate>
