@@ -36,9 +36,6 @@
     <Page Include="XamlResources\CustomContentDialogStyle.xaml">
       <Filter>XamlResources</Filter>
     </Page>
-    <Page Include="XamlResources\CustomIconButtonStyle.xaml">
-      <Filter>XamlResources</Filter>
-    </Page>
     <Page Include="XamlResources\CustomListViewItemStyle.xaml">
       <Filter>XamlResources</Filter>
     </Page>

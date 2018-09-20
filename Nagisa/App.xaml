@@ -11,8 +11,6 @@
                 <ResourceDictionary 
                     Source="ms-appx:///XamlResources/CustomListViewItemStyle.xaml"/>
                 <ResourceDictionary 
-                    Source="ms-appx:///XamlResources/CustomIconButtonStyle.xaml"/>
-                <ResourceDictionary 
                     Source="ms-appx:///XamlResources/CustomConverters.xaml"/>
                 <ResourceDictionary
                     Source="ms-appx:///XamlResources/CustomDimButtonStyle.xaml"/>
