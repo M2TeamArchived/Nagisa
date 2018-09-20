@@ -235,7 +235,7 @@
                               HorizontalAlignment="Stretch" 
                               VerticalAlignment="Stretch">
                             <TextBlock Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" TextTrimming="CharacterEllipsis"
-                                       Text="{x:Bind FileName, TargetNullValue=N/A, Mode=OneWay}" FontWeight="Bold"/>
+                                       Text="{x:Bind FileName, TargetNullValue=N/A, Mode=OneWay}" FontWeight="Bold" ToolTipService.ToolTip="{x:Bind FileName, TargetNullValue=N/A, Mode=OneWay}"/>
                         </Grid>
 
                         <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="8 0 8 0">
