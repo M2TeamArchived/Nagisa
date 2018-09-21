@@ -16,32 +16,38 @@
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Vertical">
             <TextBlock x:Uid="/NewTaskDialog/DownloadSourceTitle" 
-                       Style="{StaticResource SubtitleTextBlockStyle}" 
+                       FontSize="16"
                        Text="[Download Source]"/>
             <TextBox x:Uid="/NewTaskDialog/DownloadSourceTextBox"
-                     x:Name="DownloadSourceTextBox" 
+                     x:Name="DownloadSourceTextBox" BorderThickness="1"
                      PlaceholderText="[Please input the download source here.]" 
                      LostFocus="DownloadSourceTextBox_LostFocus"/>
         </StackPanel>
-        <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Vertical" Margin="0 8 0 0">
             <TextBlock x:Uid="/NewTaskDialog/FileNameTitle" 
-                       Style="{StaticResource SubtitleTextBlockStyle}" 
+                       FontSize="16"
                        Text="[File Name]"/>
             <TextBox x:Uid="/NewTaskDialog/FileNameTextBox" 
-                     x:Name="FileNameTextBox" 
+                     x:Name="FileNameTextBox" BorderThickness="1"
                      PlaceholderText="[Please input the file name here.]"
                      LostFocus="FileNameTextBox_LostFocus"/>
         </StackPanel>
-        <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Vertical" Margin="0 8 0 0">
             <TextBlock x:Uid="/NewTaskDialog/SaveFolderTitle"
-                       Style="{StaticResource SubtitleTextBlockStyle}"
+                       FontSize="16"
                        Text="[Save Folder]"/>
-            <TextBox x:Name="SaveFolderTextBox" 
-                     IsReadOnly="True" 
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="32"/>
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="SaveFolderTextBox" BorderThickness="1"
+                     IsReadOnly="True"  HorizontalAlignment="Stretch"
                      PlaceholderText="N/A"/>
-            <Button x:Uid="/NewTaskDialog/SaveFolderBrowseButton"
-                    Content="[Browse to modify]"
+                <Button Content="" Width="32" Height="32" Grid.Column="1"
+                        FontFamily="Segoe MDL2 Assets" FontSize="12"
                     Click="BrowseButtonClick"/>
+            </Grid>
         </StackPanel>
     </StackPanel>
 </ContentDialog>

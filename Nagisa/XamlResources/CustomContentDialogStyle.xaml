@@ -51,12 +51,12 @@
                                                 <RowDefinition Height="*" />
                                             </Grid.RowDefinitions>
                                             <ContentControl x:Name="Title"
-                                                            Margin="0,0,0,6"
+                                                            Margin="0,0,0,18"
                                                             Content="{TemplateBinding Title}"
                                                             ContentTemplate="{TemplateBinding TitleTemplate}"
-                                                            FontSize="28"
+                                                            FontSize="20"
                                                             FontFamily="XamlAutoFontFamily"
-                                                            FontWeight="Normal"
+                                                            FontWeight="Bold"
                                                             Foreground="{TemplateBinding Foreground}"
                                                             HorizontalAlignment="Left"
                                                             VerticalAlignment="Top"
@@ -76,7 +76,7 @@
                                             </ContentControl>
                                             <ScrollViewer Grid.Row="1"
                                                           VerticalScrollBarVisibility="Auto"
-                                                          Padding="0,0,16,0">
+                                                          >
                                                 <ContentPresenter x:Name="Content"
                                                                   ContentTemplate="{TemplateBinding ContentTemplate}"
                                                                   Content="{TemplateBinding Content}"
@@ -88,7 +88,7 @@
                                         </Grid>
                                     </ScrollViewer>
                                     <Grid x:Name="CommandSpace"
-                                          Grid.Row="1"
+                                          Grid.Row="1" Padding="0 16 0 0"
                                           HorizontalAlignment="Stretch"
                                           VerticalAlignment="Bottom">
                                         <Grid.ColumnDefinitions>
