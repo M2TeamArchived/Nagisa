@@ -49,7 +49,7 @@ texts represent the features we **have not** implemented yet.)
 requests and issues are welcome.**
 
 # System Requirement
-- Supported OS: Windows 10 Build 10240 or later
+- Supported OS: Windows 10, version 1703 or later
 - Supported Platforms: x86, x86-64(AMD64), ARM and ARM64.
 
 # Features
