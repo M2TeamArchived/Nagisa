@@ -21,12 +21,6 @@
                 <ControlTemplate TargetType="ListViewItem">
                     <Grid x:Name="ContentBorder"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <Grid.BorderBrush>
-                            <Windows10FallCreatorsUpdate:RevealBorderBrush Color="{TemplateBinding BorderBrush}" FallbackColor="{TemplateBinding BorderBrush}"/>
-                        </Grid.BorderBrush>
-                        <Grid.Background>
-                            <Windows10FallCreatorsUpdate:RevealBackgroundBrush Color="{TemplateBinding Background}" FallbackColor="{TemplateBinding Background}" />
-                        </Grid.Background>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal"/>
@@ -34,7 +28,6 @@
                                     <VisualState.Setters>
                                         <Setter Target="ContentBorder.(RevealBrush.State)" Value="PointerOver" />
                                         <Setter Target="ContentBorder.Background" Value="{ThemeResource ButtonRevealBackgroundPointerOver}" />
-                                        <Setter Target="ContentPresenter.BorderBrush" Value="Transparent"/>
                                         <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ButtonForegroundPointerOver}" />
                                     </VisualState.Setters>
                                 </VisualState>
@@ -63,7 +56,6 @@
                                     <VisualState.Setters>
                                         <Setter Target="ContentBorder.(RevealBrush.State)" Value="PointerOver" />
                                         <Setter Target="ContentBorder.Background" Value="{ThemeResource ButtonRevealBackgroundPointerOver}" />
-                                        <Setter Target="ContentPresenter.BorderBrush" Value="Transparent"/>
                                         <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ButtonForegroundPointerOver}" />
                                     </VisualState.Setters>
                                 </VisualState>
@@ -103,90 +95,16 @@
                                     </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
-                            <VisualStateGroup x:Name="ReorderHintStates">
-                                <VisualState x:Name="NoReorderHint"/>
-                                <VisualState x:Name="BottomReorderHint">
-                                    <Storyboard>
-                                        <DragOverThemeAnimation TargetName="ContentBorder" ToOffset="{ThemeResource ListViewItemReorderHintThemeOffset}" Direction="Bottom" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="TopReorderHint">
-                                    <Storyboard>
-                                        <DragOverThemeAnimation TargetName="ContentBorder" ToOffset="{ThemeResource ListViewItemReorderHintThemeOffset}" Direction="Top" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="RightReorderHint">
-                                    <Storyboard>
-                                        <DragOverThemeAnimation TargetName="ContentBorder" ToOffset="{ThemeResource ListViewItemReorderHintThemeOffset}" Direction="Right" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="LeftReorderHint">
-                                    <Storyboard>
-                                        <DragOverThemeAnimation TargetName="ContentBorder" ToOffset="{ThemeResource ListViewItemReorderHintThemeOffset}" Direction="Left" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualStateGroup.Transitions>
-                                    <VisualTransition To="NoReorderHint" GeneratedDuration="0:0:0.2"/>
-                                </VisualStateGroup.Transitions>
-                            </VisualStateGroup>
-                            <VisualStateGroup x:Name="DragStates">
-                                <VisualState x:Name="NotDragging" />
-                                <VisualState x:Name="Dragging">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="ContentBorder"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         Duration="0"
-                                                         To="{ThemeResource ListViewItemDragThemeOpacity}" />
-                                        <DragItemThemeAnimation TargetName="ContentBorder" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="DraggingTarget">
-                                    <Storyboard>
-                                        <DropTargetItemThemeAnimation TargetName="ContentBorder" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="MultipleDraggingPrimary">
-                                    <Storyboard>
-                                        <!-- These two Opacity animations are required - the FadeInThemeAnimations
-                                             on the same elements animate an internal Opacity. -->
-                                        <DoubleAnimation Storyboard.TargetName="MultiArrangeOverlayBackground"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         Duration="0"
-                                                         To="1" />
-                                        <DoubleAnimation Storyboard.TargetName="MultiArrangeOverlayText"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         Duration="0"
-                                                         To="1" />
-                                        <DoubleAnimation Storyboard.TargetName="ContentBorder"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         Duration="0"
-                                                         To="{ThemeResource ListViewItemDragThemeOpacity}" />
-                                        <FadeInThemeAnimation TargetName="MultiArrangeOverlayBackground" />
-                                        <FadeInThemeAnimation TargetName="MultiArrangeOverlayText" />
-                                        <DragItemThemeAnimation TargetName="ContentBorder" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="MultipleDraggingSecondary">
-                                    <Storyboard>
-                                        <FadeOutThemeAnimation TargetName="ContentBorder" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="DraggedPlaceholder">
-                                    <Storyboard>
-                                        <FadeOutThemeAnimation TargetName="ContentBorder" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualStateGroup.Transitions>
-                                    <VisualTransition To="NotDragging" GeneratedDuration="0:0:0.2"/>
-                                </VisualStateGroup.Transitions>
-                            </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <Rectangle x:Name="BorderBackground"
                                     IsHitTestVisible="False"
                                     Opacity="0"
                                     Control.IsTemplateFocusTarget="True"/>
                         <Grid x:Name="ContentPresenterGrid"
-                              Background="Transparent">
+                              Background="Transparent" BorderThickness="1">
+                            <Grid.BorderBrush>
+                                <Windows10FallCreatorsUpdate:RevealBorderBrush Color="{TemplateBinding BorderBrush}" FallbackColor="{TemplateBinding BorderBrush}"/>
+                            </Grid.BorderBrush>
                             <Grid.RenderTransform>
                                 <TranslateTransform x:Name="ContentPresenterTranslateTransform"/>
                             </Grid.RenderTransform>
