@@ -22,7 +22,7 @@
                     <Grid x:Name="ContentBorder"
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid.BorderBrush>
-                            <Windows10FallCreatorsUpdate:RevealBorderBrush Color="{TemplateBinding Background}" FallbackColor="{TemplateBinding Background}"/>
+                            <Windows10FallCreatorsUpdate:RevealBorderBrush Color="{TemplateBinding BorderBrush}" FallbackColor="{TemplateBinding BorderBrush}"/>
                         </Grid.BorderBrush>
                         <Grid.Background>
                             <Windows10FallCreatorsUpdate:RevealBackgroundBrush Color="{TemplateBinding Background}" FallbackColor="{TemplateBinding Background}" />
