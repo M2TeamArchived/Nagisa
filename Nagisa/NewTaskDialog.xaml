@@ -18,7 +18,7 @@
             <TextBlock x:Uid="/NewTaskDialog/DownloadSourceTitle" 
                        FontSize="16"
                        Text="[Download Source]"/>
-            <TextBox x:Uid="/NewTaskDialog/DownloadSourceTextBox"
+            <TextBox x:Uid="/NewTaskDialog/DownloadSourceTextBox" Margin="0 4 0 0"
                      x:Name="DownloadSourceTextBox" BorderThickness="1"
                      PlaceholderText="[Please input the download source here.]" 
                      LostFocus="DownloadSourceTextBox_LostFocus"/>
@@ -27,7 +27,7 @@
             <TextBlock x:Uid="/NewTaskDialog/FileNameTitle" 
                        FontSize="16"
                        Text="[File Name]"/>
-            <TextBox x:Uid="/NewTaskDialog/FileNameTextBox" 
+            <TextBox x:Uid="/NewTaskDialog/FileNameTextBox" Margin="0 4 0 0"
                      x:Name="FileNameTextBox" BorderThickness="1"
                      PlaceholderText="[Please input the file name here.]"
                      LostFocus="FileNameTextBox_LostFocus"/>
@@ -36,7 +36,7 @@
             <TextBlock x:Uid="/NewTaskDialog/SaveFolderTitle"
                        FontSize="16"
                        Text="[Save Folder]"/>
-            <Grid HorizontalAlignment="Stretch">
+            <Grid HorizontalAlignment="Stretch" Margin="0 4 0 0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="32"/>

@@ -14,21 +14,21 @@
 
     <StackPanel Orientation="Vertical">
         <TextBlock x:Uid="/SettingsDialog/DefaultDownloadFolderTitle"
-                   Style="{StaticResource SubtitleTextBlockStyle}" 
+                   FontSize="16"
                    Text="[Default Download Folder]"/>
         <CheckBox x:Uid="/SettingsDialog/UseCustomFolder"
                   x:Name="UseCustomFolder" 
                   Content="[Use custom instead of last used folder]"
                   Click="UseCustomFolder_Click"/>
         <TextBox x:Name="DownloadFolderPathTextBox"
-                 IsReadOnly="True" 
+                 IsReadOnly="True" Margin="0 8 0 0"
                  PlaceholderText="N/A"/>
         <Button x:Uid="/SettingsDialog/CustomDownloadFolderBrowseButton"
                 Content="[Browse to modify]"
                 Click="CustomDownloadFolderBrowseButton_Click"
                 IsEnabled="{x:Bind UseCustomFolder.IsChecked, Converter={StaticResource CustomConverter}, ConverterParameter=NullableBooleanToBoolean, Mode=OneWay}"/>
-        <TextBlock x:Uid="/SettingsDialog/AdvancedTitle" 
-                   Style="{StaticResource SubtitleTextBlockStyle}" 
+        <TextBlock x:Uid="/SettingsDialog/AdvancedTitle" Margin="0 8 0 0"
+                   FontSize="16"
                    Text="[Advanced]"/>
         <CheckBox x:Uid="/SettingsDialog/DisableWindowsBackgroundTransferCheckBox" 
                   IsEnabled="False"
