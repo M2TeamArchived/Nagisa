@@ -10,20 +10,6 @@ License: The MIT License
 
 using namespace Nagisa;
 
-using namespace Platform;
-using namespace Windows::ApplicationModel;
-using namespace Windows::ApplicationModel::Activation;
-using namespace Windows::Foundation;
-using namespace Windows::Foundation::Collections;
-using namespace Windows::UI::Xaml;
-using namespace Windows::UI::Xaml::Controls;
-using namespace Windows::UI::Xaml::Controls::Primitives;
-using namespace Windows::UI::Xaml::Data;
-using namespace Windows::UI::Xaml::Input;
-using namespace Windows::UI::Xaml::Interop;
-using namespace Windows::UI::Xaml::Media;
-using namespace Windows::UI::Xaml::Navigation;
-
 // Initializes the singleton application object. This is the first line of 
 // authored code executed, and as such is the logical equivalent of main() 
 // or WinMain().
@@ -33,6 +19,8 @@ using namespace Windows::UI::Xaml::Navigation;
 //   The function does not return a value.
 App::App()
 {
+	using Windows::UI::Xaml::SuspendingEventHandler;
+
     InitializeComponent();
     Suspending += ref new SuspendingEventHandler(this, &App::OnSuspending);
 }
@@ -47,7 +35,13 @@ App::App()
 void App::OnLaunched(
 	LaunchActivatedEventArgs^ e)
 {
-    auto rootFrame = dynamic_cast<Frame^>(Window::Current->Content);
+	using Windows::ApplicationModel::Activation::ApplicationExecutionState;
+	using Windows::UI::Xaml::Controls::Frame;
+	using Windows::UI::Xaml::Interop::TypeName;
+	using Windows::UI::Xaml::Navigation::NavigationFailedEventHandler;
+	using Windows::UI::Xaml::Window;
+	
+	auto rootFrame = dynamic_cast<Frame^>(Window::Current->Content);
 
 	// Do not repeat app initialization when the Window already has content, 
 	// just ensure that the window is active
@@ -110,8 +104,8 @@ void App::OnSuspending(
 	Object^ sender, 
 	SuspendingEventArgs^ e)
 {
-	(void)sender;  // Unused parameter.
-	(void)e;   // Unused parameter.
+	UNREFERENCED_PARAMETER(sender);  // Unused parameter.
+	UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
 	//TODO: Save application state and stop any background activity.
 }
@@ -126,6 +120,8 @@ void App::OnNavigationFailed(
 	Object^ sender, 
 	NavigationFailedEventArgs^ e)
 {
+	using Platform::FailureException;
+
 	throw ref new FailureException(
 		"Failed to load Page " + e->SourcePageType.Name);
 }

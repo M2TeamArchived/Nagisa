@@ -12,18 +12,6 @@ License: The MIT License
 #include "SettingsDialog.xaml.h"
 
 using namespace Nagisa;
-using namespace Assassin;
-
-using namespace Platform;
-using namespace Windows::Foundation;
-using namespace Windows::Foundation::Collections;
-using namespace Windows::UI::Xaml;
-using namespace Windows::UI::Xaml::Controls;
-using namespace Windows::UI::Xaml::Controls::Primitives;
-using namespace Windows::UI::Xaml::Data;
-using namespace Windows::UI::Xaml::Input;
-using namespace Windows::UI::Xaml::Media;
-using namespace Windows::UI::Xaml::Navigation;
 
 MainPage::MainPage() :
 	m_TransferManager(ref new Assassin::TransferManager(true))
@@ -90,6 +78,8 @@ void MainPage::NewTaskButton_Click(
 	Object^ sender,
 	RoutedEventArgs^ e)
 {
+	using Windows::UI::Xaml::Controls::ContentDialogResult;
+
 	IAsyncOperation<ContentDialogResult>^ Operation =
 		this->ShowContentDialogAsync(
 			ref new NewTaskDialog(this->m_TransferManager));
@@ -107,10 +97,17 @@ void MainPage::Page_Loaded(
 	Object^ sender,
 	RoutedEventArgs^ e)
 {
+	using Windows::ApplicationModel::Core::CoreApplication;
+	using Windows::UI::Colors;
+	using Windows::UI::ViewManagement::ApplicationView;
+	using Windows::UI::Xaml::Application;
+	using Windows::UI::Xaml::Media::SolidColorBrush;
+	using Windows::UI::Xaml::Window;
+	
 	this->RefreshTaskListAsync();
 	//Extend main grid to titlebar
-	Windows::ApplicationModel::Core::CoreApplication::GetCurrentView()->TitleBar->ExtendViewIntoTitleBar = true;
-	auto titleBar = Windows::UI::ViewManagement::ApplicationView::GetForCurrentView()->TitleBar;
+	CoreApplication::GetCurrentView()->TitleBar->ExtendViewIntoTitleBar = true;
+	auto titleBar = ApplicationView::GetForCurrentView()->TitleBar;
 	//Change titlebar button colors to match DimButton style
 	titleBar->ButtonBackgroundColor = Colors::Transparent;
 	titleBar->ButtonInactiveBackgroundColor = Colors::Transparent;
@@ -126,6 +123,9 @@ void MainPage::CopyLinkMenuItem_Click(
 {
 	try
 	{
+		using Assassin::ITransferTask;
+		using namespace Windows::UI::Xaml;
+
 		ITransferTask^ Task = dynamic_cast<ITransferTask^>(
 			dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
@@ -190,6 +190,9 @@ void MainPage::RetryButton_Click(
 	Object^ sender,
 	RoutedEventArgs^ e)
 {
+	using Assassin::ITransferTask;
+	using namespace Windows::UI::Xaml;
+
 	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
 		dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
@@ -214,6 +217,9 @@ void MainPage::ResumeButton_Click(
 	Object^ sender,
 	RoutedEventArgs^ e)
 {
+	using Assassin::ITransferTask;
+	using namespace Windows::UI::Xaml;
+
 	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
 		dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
@@ -226,6 +232,9 @@ void MainPage::PauseButton_Click(
 	Object^ sender,
 	RoutedEventArgs^ e)
 {
+	using Assassin::ITransferTask;
+	using namespace Windows::UI::Xaml;
+	
 	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
 		dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
@@ -240,6 +249,9 @@ void MainPage::CancelMenuItem_Click(
 {
 	try
 	{
+		using Assassin::ITransferTask;
+		using namespace Windows::UI::Xaml;
+
 		ITransferTask^ Task = dynamic_cast<ITransferTask^>(
 			dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
@@ -257,6 +269,9 @@ void MainPage::RemoveMenuItem_Click(
 	Object^ sender,
 	RoutedEventArgs^ e)
 {
+	using Assassin::ITransferTask;
+	using namespace Windows::UI::Xaml;
+
 	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
 		dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
@@ -272,6 +287,9 @@ void MainPage::OpenFolderMenuItem_Click(
 	Object^ sender,
 	RoutedEventArgs^ e)
 {
+	using Assassin::ITransferTask;
+	using namespace Windows::UI::Xaml;
+	
 	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
 		dynamic_cast<FrameworkElement^>(sender)->DataContext);
 

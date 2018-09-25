@@ -9,18 +9,6 @@ License: The MIT License
 #include "NewTaskDialog.xaml.h"
 
 using namespace Nagisa;
-using namespace Assassin;
-
-using namespace Platform;
-using namespace Windows::Foundation;
-using namespace Windows::Foundation::Collections;
-using namespace Windows::UI::Xaml;
-using namespace Windows::UI::Xaml::Controls;
-using namespace Windows::UI::Xaml::Controls::Primitives;
-using namespace Windows::UI::Xaml::Data;
-using namespace Windows::UI::Xaml::Input;
-using namespace Windows::UI::Xaml::Media;
-using namespace Windows::UI::Xaml::Navigation;
 
 NewTaskDialog::NewTaskDialog(
 	ITransferManager^ TransferManager) :
@@ -63,6 +51,7 @@ void NewTaskDialog::BrowseButtonClick(
 	Object^ sender, 
 	RoutedEventArgs^ e)
 {
+	using Windows::Foundation::IAsyncOperation;
 	using Windows::Storage::StorageFolder;
 	using Windows::Storage::Pickers::FolderPicker;
 	using Windows::Storage::Pickers::PickerLocationId;

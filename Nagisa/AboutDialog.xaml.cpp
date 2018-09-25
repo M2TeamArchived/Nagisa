@@ -9,7 +9,6 @@ License: The MIT License
 #include "AboutDialog.xaml.h"
 
 using namespace Nagisa;
-using namespace Assassin;
 
 AboutDialog::AboutDialog(
 	ITransferManager^ TransferManager) :
