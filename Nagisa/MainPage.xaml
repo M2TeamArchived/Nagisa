@@ -8,16 +8,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Windows10FallCreatorsUpdate="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 5)"
     mc:Ignorable="d"
-    Loaded="Page_Loaded">
+    Loaded="Page_Loaded"
+    Background="{Windows10FallCreatorsUpdate:ThemeResource SystemControlChromeMediumAcrylicWindowMediumBrush}">
 
     <Grid>
-        <Grid.Background>
-            <Windows10FallCreatorsUpdate:AcrylicBrush
-                BackgroundSource="HostBackdrop"
-                TintColor="White"
-                TintOpacity="0.6"
-                FallbackColor="#FFDEDEDE"/>
-        </Grid.Background>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
             <RowDefinition Height="auto"/>
@@ -34,7 +29,7 @@
                 <ColumnDefinition Width="130"/>
             </Grid.ColumnDefinitions>
 
-            <Grid x:Name="realTitle" Background="#01FFFFFF" Grid.Column="0" Grid.ColumnSpan="6"/>
+            <Grid x:Name="realTitle" Background="Transparent" Grid.Column="0" Grid.ColumnSpan="6"/>
 
             <StackPanel Orientation="Horizontal">
                 <Button Background="Transparent"
@@ -54,7 +49,7 @@
                     
                 </Button>
             </StackPanel>
-            
+
             <Grid Grid.Column="1">
                 <TextBlock Text="Nagisa" VerticalAlignment="Center" FontSize="12" Margin="15 0 0 0" Grid.Column="0"/>
             </Grid>
@@ -66,37 +61,32 @@
                     Style="{StaticResource CustomDimButtonStyle}"
                     Click="NewTaskButton_Click"
                     FontFamily="Segoe MDL2 Assets"
-                    ToolTipService.ToolTip="[New Task]">
-                    
-                </Button>
+                    ToolTipService.ToolTip="[New Task]"
+                    Content=""/>
                 <Button Background="Transparent" x:Uid="/MainPage/StartAllAppBarButton" 
                     VerticalAlignment="Stretch" 
                     Width="48"
                     Style="{StaticResource CustomDimButtonStyle}"
                     Click="StartAllAppBarButton_Click"
                     FontFamily="Segoe MDL2 Assets"
-                    ToolTipService.ToolTip="[Start All]">
-                    
-                </Button>
+                    ToolTipService.ToolTip="[Start All]"
+                    Content=""/>
                 <Button Background="Transparent" x:Uid="/MainPage/PauseAllAppBarButton" 
                     VerticalAlignment="Stretch" 
                     Width="48"
                     Style="{StaticResource CustomDimButtonStyle}"
                     Click="PauseAllAppBarButton_Click"
                     FontFamily="Segoe MDL2 Assets"
-                    ToolTipService.ToolTip="[Pause All]">
-                    
-                </Button>
+                    ToolTipService.ToolTip="[Pause All]"
+                    Content=""/>
                 <Button Background="Transparent" x:Uid="/MainPage/ClearListAppBarButton"
                     VerticalAlignment="Stretch" 
                     Width="48"
                     Style="{StaticResource CustomDimButtonStyle}"
                     Click="ClearListAppBarButton_Click"
                     FontFamily="Segoe MDL2 Assets"
-                    ToolTipService.ToolTip="[Clear List]">
-                    
-                </Button>
-
+                    ToolTipService.ToolTip="[Clear List]"
+                    Content=""/>
             </StackPanel>
 
             <AutoSuggestBox x:Uid="/MainPage/SearchAutoSuggestBox" 
@@ -229,7 +219,7 @@
                         <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets">
                             
                         </TextBlock>
-                        
+
                         <Grid Grid.Row="0" 
                               Grid.Column="1" 
                               HorizontalAlignment="Stretch" 
@@ -269,18 +259,21 @@
                                 </Grid.Resources>
 
                                 <ProgressBar VerticalAlignment="Stretch" 
+                                             BorderThickness="0"
                                          Background="{StaticResource ProgressBarBackgroundColor}"
                                          Foreground="{StaticResource ProgressBarErrorForegroundColor}" 
                                          Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}"
                                          Value="{x:Bind BytesReceived, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}"
                                          Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskErrorStatusToVisible, Mode=OneWay}"/>
                                 <ProgressBar VerticalAlignment="Stretch" 
+                                             BorderThickness="0"
                                          Background="{StaticResource ProgressBarBackgroundColor}"
                                          Foreground="{StaticResource ProgressBarPausedForegroundColor}"
                                          Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}"
                                          Value="{x:Bind BytesReceived, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}"
                                          Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskPausedStatusToVisible, Mode=OneWay}"/>
                                 <ProgressBar VerticalAlignment="Stretch" 
+                                             BorderThickness="0"
                                          Background="{StaticResource ProgressBarBackgroundColor}"
                                          Foreground="{StaticResource ProgressBarRunningForegroundColor}"
                                          Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}"
@@ -290,7 +283,7 @@
 
 
                         </StackPanel>
-                        
+
                         <Grid Grid.Row="0" Grid.Column="3">
                             <Grid.Resources>
                                 <x:String x:Key="RetryIcon">&#xE72C;</x:String>
