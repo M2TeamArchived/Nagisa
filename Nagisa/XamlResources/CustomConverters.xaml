@@ -1,9 +1,9 @@
 ﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Nagisa"
-    xmlns:Assassin="using:Assassin">
+    xmlns:Assassin="using:Assassin"
+    xmlns:local="using:Nagisa">
 
-    <Assassin:CustomConverter x:Name="CustomConverter"/>
+    <Assassin:CustomConverter x:Name="CustomConverter" />
 
 </ResourceDictionary>
