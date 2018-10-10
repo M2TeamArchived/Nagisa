@@ -19,7 +19,7 @@
 - Remove AppVeyor CI support because we can't use C++/WinRT in the AppVeyor CI 
   environment currently.
 - Decided to upgrade the system requirement to Windows 10, version 1703. 
-- Introduce the new user interface.
+- Introduce the new user interface. (Partially contributed by 鳶一雨音.)
 
 ### Nagisa 0.3 [Build 62]
 [Full Changelog](https://github.com/Project-Nagisa/Nagisa/compare/0.2...0.3)
