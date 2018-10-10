@@ -237,11 +237,15 @@
             </StackPanel>
         </Grid>
 
-        <ListView
-            x:Name="TaskList"
-            Grid.Row="2"
-            ItemContainerStyle="{StaticResource CustomListViewItemStyle}"
-            SelectionMode="Multiple">
+        <ListView x:Name="TaskList" Grid.Row="2">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                    <Setter Property="Padding" Value="0" />
+                </Style>
+            </ListView.ItemContainerStyle>
+
             <ListView.Header>
                 <TextBlock
                     x:Uid="/MainPage/TaskListNoItemsTextBlock"
@@ -433,19 +437,23 @@
                                     <MenuFlyoutItem
                                         x:Uid="/MainPage/TaskItemCopyLinkMenuItem"
                                         Click="CopyLinkMenuItem_Click"
+                                        Icon="Link"
                                         Text="[Copy Link]" />
                                     <MenuFlyoutItem
                                         x:Uid="/MainPage/TaskItemOpenFolderMenuItem"
                                         Click="OpenFolderMenuItem_Click"
+                                        Icon="OpenLocal"
                                         Text="[Open Folder]" />
                                     <MenuFlyoutSeparator />
                                     <MenuFlyoutItem
                                         x:Uid="/MainPage/TaskItemCancelMenuItem"
                                         Click="CancelMenuItem_Click"
+                                        Icon="Cancel"
                                         Text="[Cancel]" />
                                     <MenuFlyoutItem
                                         x:Uid="/MainPage/TaskItemRemoveMenuItem"
                                         Click="RemoveMenuItem_Click"
+                                        Icon="Delete"
                                         Text="[Remove]" />
                                 </MenuFlyout>
                             </Button.Flyout>

@@ -139,7 +139,6 @@
     </Page>
     <Page Include="XamlResources\CustomContentDialogStyle.xaml" />
     <Page Include="XamlResources\CustomDimButtonStyle.xaml" />
-    <Page Include="XamlResources\CustomListViewItemStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

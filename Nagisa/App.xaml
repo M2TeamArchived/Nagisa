@@ -7,7 +7,6 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///XamlResources/CustomContentDialogStyle.xaml" />
-                <ResourceDictionary Source="ms-appx:///XamlResources/CustomListViewItemStyle.xaml" />
                 <ResourceDictionary Source="ms-appx:///XamlResources/CustomConverters.xaml" />
                 <ResourceDictionary Source="ms-appx:///XamlResources/CustomDimButtonStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
