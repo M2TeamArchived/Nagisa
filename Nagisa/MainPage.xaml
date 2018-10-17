@@ -7,42 +7,121 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Nagisa"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Background="{Windows10FallCreatorsUpdate:ThemeResource SystemControlChromeMediumAcrylicWindowMediumBrush}"
+    Background="{ThemeResource SystemChromeMediumColor}"
     Loaded="Page_Loaded"
     mc:Ignorable="d">
 
     <Grid>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="32" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
-        <Grid x:Name="titleGrid">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="88" />
-                <ColumnDefinition Width="130" />
-            </Grid.ColumnDefinitions>
-
+        <Grid
+            x:Name="TitleGrid"
+            Height="32"
+            Background="{Windows10FallCreatorsUpdate:ThemeResource SystemControlChromeMediumAcrylicWindowMediumBrush}">
             <Grid
                 x:Name="realTitle"
                 Grid.Column="0"
                 Grid.ColumnSpan="6"
                 Background="Transparent" />
 
+            <TextBlock
+                Grid.Column="1"
+                Margin="12,0,0,0"
+                VerticalAlignment="Center"
+                FontSize="12"
+                Text="Nagisa" />
+        </Grid>
+
+        <Grid
+            x:Name="ToolBarGrid"
+            Grid.Row="1"
+            Height="52"
+            Padding="8"
+            Background="{Windows10FallCreatorsUpdate:ThemeResource SystemControlChromeMediumAcrylicWindowMediumBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="44" />
+                <ColumnDefinition Width="44" />
+                <ColumnDefinition Width="44" />
+                <ColumnDefinition Width="44" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="44" />
+            </Grid.ColumnDefinitions>
+
             <Button
-                x:Uid="/MainPage/TaskItemMoreButton"
+                x:Uid="/MainPage/NewTaskAppBarButton"
                 Grid.Column="0"
-                Width="48"
-                Padding="-5,0,0,0"
+                HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 Background="Transparent"
+                Click="NewTaskButton_Click"
+                Content="&#xE710;"
                 FontFamily="Segoe MDL2 Assets"
+                FontSize="20"
+                Style="{StaticResource CustomDimButtonStyle}"
+                ToolTipService.ToolTip="[New Task]" />
+            <Button
+                x:Uid="/MainPage/StartAllAppBarButton"
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="Transparent"
+                Click="StartAllAppBarButton_Click"
+                Content="&#xE768;"
+                FontFamily="Segoe MDL2 Assets"
+                FontSize="20"
+                Style="{StaticResource CustomDimButtonStyle}"
+                ToolTipService.ToolTip="[Start All]" />
+            <Button
+                x:Uid="/MainPage/PauseAllAppBarButton"
+                Grid.Column="2"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="Transparent"
+                Click="PauseAllAppBarButton_Click"
+                Content="&#xE769;"
+                FontFamily="Segoe MDL2 Assets"
+                FontSize="20"
+                Style="{StaticResource CustomDimButtonStyle}"
+                ToolTipService.ToolTip="[Pause All]" />
+            <Button
+                x:Uid="/MainPage/ClearListAppBarButton"
+                Grid.Column="3"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="Transparent"
+                Click="ClearListAppBarButton_Click"
+                Content="&#xE74D;"
+                FontFamily="Segoe MDL2 Assets"
+                FontSize="20"
+                Style="{StaticResource CustomDimButtonStyle}"
+                ToolTipService.ToolTip="[Clear List]" />
+            <AutoSuggestBox
+                x:Uid="/MainPage/SearchAutoSuggestBox"
+                Grid.Column="4"
+                Margin="8,0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                BorderThickness="0"
+                PlaceholderText="[Search Downloads]"
+                QueryIcon="Find"
+                QuerySubmitted="SearchAutoSuggestBox_QuerySubmitted"
+                TextBoxStyle="{StaticResource CustomAutoSuggestBoxTextBoxStyle}"
+                TextChanged="SearchAutoSuggestBox_TextChanged" />
+            <Button
+                x:Uid="/MainPage/TaskItemMoreButton"
+                Grid.Column="5"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="Transparent"
+                Content="&#xE712;"
+                FontFamily="Segoe MDL2 Assets"
+                FontSize="20"
                 Style="{StaticResource CustomDimButtonStyle}"
                 ToolTipService.ToolTip="[Menu]">
                 <Button.Flyout>
@@ -65,176 +144,9 @@
                             Text="[About]" />
                     </MenuFlyout>
                 </Button.Flyout>
-                
             </Button>
 
-            <TextBlock
-                Grid.Column="1"
-                Margin="15,0,0,0"
-                VerticalAlignment="Center"
-                FontSize="12"
-                Text="Nagisa" />
 
-            <StackPanel Grid.Column="2" Orientation="Horizontal">
-                <Button
-                    x:Uid="/MainPage/NewTaskAppBarButton"
-                    Width="48"
-                    VerticalAlignment="Stretch"
-                    Background="Transparent"
-                    Click="NewTaskButton_Click"
-                    Content=""
-                    FontFamily="Segoe MDL2 Assets"
-                    Style="{StaticResource CustomDimButtonStyle}"
-                    ToolTipService.ToolTip="[New Task]" />
-                <Button
-                    x:Uid="/MainPage/StartAllAppBarButton"
-                    Width="48"
-                    VerticalAlignment="Stretch"
-                    Background="Transparent"
-                    Click="StartAllAppBarButton_Click"
-                    Content=""
-                    FontFamily="Segoe MDL2 Assets"
-                    Style="{StaticResource CustomDimButtonStyle}"
-                    ToolTipService.ToolTip="[Start All]" />
-                <Button
-                    x:Uid="/MainPage/PauseAllAppBarButton"
-                    Width="48"
-                    VerticalAlignment="Stretch"
-                    Background="Transparent"
-                    Click="PauseAllAppBarButton_Click"
-                    Content=""
-                    FontFamily="Segoe MDL2 Assets"
-                    Style="{StaticResource CustomDimButtonStyle}"
-                    ToolTipService.ToolTip="[Pause All]" />
-                <Button
-                    x:Uid="/MainPage/ClearListAppBarButton"
-                    Width="48"
-                    VerticalAlignment="Stretch"
-                    Background="Transparent"
-                    Click="ClearListAppBarButton_Click"
-                    Content=""
-                    FontFamily="Segoe MDL2 Assets"
-                    Style="{StaticResource CustomDimButtonStyle}"
-                    ToolTipService.ToolTip="[Clear List]" />
-            </StackPanel>
-
-            <AutoSuggestBox
-                x:Uid="/MainPage/SearchAutoSuggestBox"
-                Grid.Column="3"
-                Width="160"
-                Height="32"
-                HorizontalAlignment="Right"
-                BorderThickness="2"
-                PlaceholderText="[Search Downloads]"
-                QueryIcon="Find"
-                QuerySubmitted="SearchAutoSuggestBox_QuerySubmitted"
-                TextChanged="SearchAutoSuggestBox_TextChanged">
-                <AutoSuggestBox.Style>
-                    <Style TargetType="AutoSuggestBox">
-                        <Setter Property="VerticalAlignment" Value="Center" />
-                        <Setter Property="IsTabStop" Value="False" />
-                        <Setter Property="TextBoxStyle" Value="{StaticResource AutoSuggestBoxTextBoxStyle}" />
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="AutoSuggestBox">
-                                    <Grid>
-                                        <TextBox
-                                            x:Name="TextBox"
-                                            Width="{TemplateBinding Width}"
-                                            Height="{TemplateBinding Height}"
-                                            Margin="0"
-                                            Padding="10,5,6,5"
-                                            VerticalAlignment="Center"
-                                            VerticalContentAlignment="Center"
-                                            BorderThickness="0"
-                                            Canvas.ZIndex="0"
-                                            DesiredCandidateWindowAlignment="Default"
-                                            Header="{TemplateBinding Header}"
-                                            PlaceholderText="{TemplateBinding PlaceholderText}"
-                                            ScrollViewer.BringIntoViewOnFocusChange="False"
-                                            Style="{TemplateBinding TextBoxStyle}" />
-                                        <Popup x:Name="SuggestionsPopup">
-                                            <Border x:Name="SuggestionsContainer" BorderThickness="0">
-                                                <Border.RenderTransform>
-                                                    <TranslateTransform x:Name="UpwardTransform" />
-                                                </Border.RenderTransform>
-                                                <ListView
-                                                    x:Name="SuggestionsList"
-                                                    MaxHeight="{ThemeResource AutoSuggestListMaxHeight}"
-                                                    Margin="{ThemeResource AutoSuggestListMargin}"
-                                                    Padding="{ThemeResource AutoSuggestListPadding}"
-                                                    Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"
-                                                    BorderBrush="{ThemeResource SystemControlForegroundChromeHighBrush}"
-                                                    BorderThickness="1"
-                                                    DisplayMemberPath="{TemplateBinding DisplayMemberPath}"
-                                                    IsItemClickEnabled="True"
-                                                    ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
-                                                    ItemTemplate="{TemplateBinding ItemTemplate}"
-                                                    ItemTemplateSelector="{TemplateBinding ItemTemplateSelector}">
-                                                    <ListView.ItemContainerTransitions>
-                                                        <TransitionCollection />
-                                                    </ListView.ItemContainerTransitions>
-                                                </ListView>
-                                            </Border>
-                                        </Popup>
-                                        <VisualStateManager.VisualStateGroups>
-                                            <VisualStateGroup x:Name="Orientation">
-                                                <VisualState x:Name="Landscape" />
-                                                <VisualState x:Name="Portrait" />
-                                            </VisualStateGroup>
-                                        </VisualStateManager.VisualStateGroups>
-                                    </Grid>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </AutoSuggestBox.Style>
-            </AutoSuggestBox>
-
-            <StackPanel
-                Grid.Column="4"
-                Margin="8,0"
-                VerticalAlignment="Center"
-                Orientation="Vertical">
-                <StackPanel
-                    x:Uid="/MainPage/TotalDownloadBandwidthStackPanel"
-                    Margin="0"
-                    Orientation="Horizontal"
-                    ToolTipService.ToolTip="[Total Download Bandwidth]">
-                    <FontIcon
-                        Margin="0,0,8,0"
-                        VerticalAlignment="Center"
-                        FontSize="9"
-                        Glyph="&#xE74B;" />
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontSize="9"
-                        Text="{x:Bind Path=TransferManager.TotalDownloadBandwidth, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ByteSizeToString, Mode=OneWay}" />
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontSize="9"
-                        Text="/s" />
-                </StackPanel>
-                <StackPanel
-                    x:Uid="/MainPage/TotalUploadBandwidthStackPanel"
-                    Margin="0"
-                    Orientation="Horizontal"
-                    ToolTipService.ToolTip="[Total Upload Bandwidth]">
-                    <FontIcon
-                        Margin="0,0,8,0"
-                        VerticalAlignment="Center"
-                        FontSize="9"
-                        Glyph="&#xE74A;" />
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontSize="9"
-                        Text="{x:Bind Path=TransferManager.TotalUploadBandwidth, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ByteSizeToString, Mode=OneWay}" />
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontSize="9"
-                        Text="/s" />
-                </StackPanel>
-            </StackPanel>
         </Grid>
 
         <ListView x:Name="TaskList" Grid.Row="2">
@@ -257,37 +169,32 @@
 
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="Assassin:ITransferTask">
-                    <Grid Margin="0,8,8,8">
+                    <Grid Margin="8">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="40" />
+                            <ColumnDefinition Width="44" />
                             <ColumnDefinition Width="160" />
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="32" />
-                            <ColumnDefinition Width="32" />
+                            <ColumnDefinition Width="44" />
+                            <ColumnDefinition Width="44" />
                         </Grid.ColumnDefinitions>
 
                         <TextBlock
                             Grid.Column="0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            FontFamily="Segoe MDL2 Assets">
-                            
-                        </TextBlock>
+                            FontFamily="Segoe MDL2 Assets"
+                            FontSize="20"
+                            Text="" />
 
-                        <Grid
+                        <TextBlock
                             Grid.Row="0"
                             Grid.Column="1"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch">
-                            <TextBlock
-                                Grid.Row="0"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                FontWeight="Bold"
-                                Text="{x:Bind FileName, TargetNullValue=N/A, Mode=OneWay}"
-                                TextTrimming="CharacterEllipsis"
-                                ToolTipService.ToolTip="{x:Bind FileName, TargetNullValue=N/A, Mode=OneWay}" />
-                        </Grid>
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontWeight="Bold"
+                            Text="{x:Bind FileName, TargetNullValue=N/A, Mode=OneWay}"
+                            TextTrimming="CharacterEllipsis"
+                            ToolTipService.ToolTip="{x:Bind FileName, TargetNullValue=N/A, Mode=OneWay}" />
 
                         <StackPanel
                             Grid.Row="0"
@@ -372,49 +279,49 @@
 
                             <Button
                                 x:Uid="/MainPage/RetryButton"
-                                Width="32"
-                                Height="32"
+                                Width="44"
+                                Height="44"
                                 Background="Transparent"
                                 Click="RetryButton_Click"
                                 Content="{StaticResource RetryIcon}"
                                 FontFamily="Segoe MDL2 Assets"
-                                FontSize="14"
+                                FontSize="20"
                                 Style="{StaticResource CustomDimButtonStyle}"
                                 ToolTipService.ToolTip="[Retry]"
                                 Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskErrorStatusToVisible, Mode=OneWay}" />
                             <Button
                                 x:Uid="/MainPage/RetryButton"
-                                Width="32"
-                                Height="32"
+                                Width="44"
+                                Height="44"
                                 Background="Transparent"
                                 Click="RetryButton_Click"
                                 Content="{StaticResource RetryIcon}"
                                 FontFamily="Segoe MDL2 Assets"
-                                FontSize="14"
+                                FontSize="20"
                                 Style="{StaticResource CustomDimButtonStyle}"
                                 ToolTipService.ToolTip="[Retry]"
                                 Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskCanceledStatusToVisible, Mode=OneWay}" />
                             <Button
                                 x:Uid="/MainPage/ResumeButton"
-                                Width="32"
-                                Height="32"
+                                Width="44"
+                                Height="44"
                                 Background="Transparent"
                                 Click="ResumeButton_Click"
                                 Content="{StaticResource ResumeIcon}"
                                 FontFamily="Segoe MDL2 Assets"
-                                FontSize="14"
+                                FontSize="20"
                                 Style="{StaticResource CustomDimButtonStyle}"
                                 ToolTipService.ToolTip="[Resume]"
                                 Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskPausedStatusToVisible, Mode=OneWay}" />
                             <Button
                                 x:Uid="/MainPage/PauseButton"
-                                Width="32"
-                                Height="32"
+                                Width="44"
+                                Height="44"
                                 Background="Transparent"
                                 Click="PauseButton_Click"
                                 Content="{StaticResource PauseIcon}"
                                 FontFamily="Segoe MDL2 Assets"
-                                FontSize="14"
+                                FontSize="20"
                                 Style="{StaticResource CustomDimButtonStyle}"
                                 ToolTipService.ToolTip="[Pause]"
                                 Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskRunningStatusToVisible, Mode=OneWay}" />
@@ -424,12 +331,12 @@
                             x:Uid="/MainPage/TaskItemMoreButton"
                             Grid.Row="0"
                             Grid.Column="4"
-                            Width="32"
-                            Height="32"
+                            Width="44"
+                            Height="44"
                             Background="Transparent"
                             Content="&#xE10C;"
                             FontFamily="Segoe MDL2 Assets"
-                            FontSize="14"
+                            FontSize="20"
                             Style="{StaticResource CustomDimButtonStyle}"
                             ToolTipService.ToolTip="[More]">
                             <Button.Flyout>
@@ -464,5 +371,51 @@
             </ListView.ItemTemplate>
 
         </ListView>
+
+        <StackPanel
+            x:Name="StatusBarStackPanel"
+            Grid.Row="3"
+            Padding="8"
+            Background="{Windows10FallCreatorsUpdate:ThemeResource SystemControlChromeMediumAcrylicWindowMediumBrush}"
+            Orientation="Horizontal">
+            <StackPanel
+                x:Uid="/MainPage/TotalDownloadBandwidthStackPanel"
+                Margin="8"
+                Orientation="Horizontal"
+                ToolTipService.ToolTip="[Total Download Bandwidth]">
+                <FontIcon
+                    Margin="0,0,8,0"
+                    VerticalAlignment="Center"
+                    FontSize="15"
+                    Glyph="&#xE74B;" />
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="15"
+                    Text="{x:Bind Path=TransferManager.TotalDownloadBandwidth, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ByteSizeToString, Mode=OneWay}" />
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="15"
+                    Text="/s" />
+            </StackPanel>
+            <StackPanel
+                x:Uid="/MainPage/TotalUploadBandwidthStackPanel"
+                Margin="8"
+                Orientation="Horizontal"
+                ToolTipService.ToolTip="[Total Upload Bandwidth]">
+                <FontIcon
+                    Margin="0,0,8,0"
+                    VerticalAlignment="Center"
+                    FontSize="15"
+                    Glyph="&#xE74A;" />
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="15"
+                    Text="{x:Bind Path=TransferManager.TotalUploadBandwidth, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ByteSizeToString, Mode=OneWay}" />
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="15"
+                    Text="/s" />
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Page>
