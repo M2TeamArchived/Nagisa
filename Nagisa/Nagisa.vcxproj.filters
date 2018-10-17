@@ -54,6 +54,9 @@
     <Page Include="XamlResources\CustomDimButtonStyle.xaml">
       <Filter>XamlResources</Filter>
     </Page>
+    <Page Include="XamlResources\CustomAutoSuggestBoxTextBoxStyle.xaml">
+      <Filter>XamlResources</Filter>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Nagisa.rc" />
