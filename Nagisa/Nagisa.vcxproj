@@ -68,6 +68,10 @@
   <ImportGroup Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="..\MSBuild\AllTargets.props" />
+	<Import Condition="'$(Configuration)'=='Release'" Project="..\MSBuild\AllReleaseTargets.props" />
+  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <PackageCertificateKeyFile>Nagisa_StoreKey.pfx</PackageCertificateKeyFile>
@@ -76,8 +80,6 @@
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <AppxPackageDir>$(SolutionDir)Output\AppPackage</AppxPackageDir>
-    <OutDir>$(SolutionDir)Output\$(Configuration)\$(Platform)\$(MSBuildProjectName)\</OutDir>
-    <IntDir>$(SolutionDir)Output\$(Configuration)\$(Platform)\$(MSBuildProjectName)\Temp\</IntDir>
     <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
   </PropertyGroup>
   <ItemDefinitionGroup>
@@ -85,18 +87,9 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <WarningLevel>Level4</WarningLevel>
-      <TreatWarningAsError>true</TreatWarningAsError>
-      <LanguageStandard>stdcpp17</LanguageStandard>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalOptions>%(AdditionalOptions) /bigobj /Zc:twoPhase-</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
-    <ClCompile>
-      <Optimization>MinSpace</Optimization>
-      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
