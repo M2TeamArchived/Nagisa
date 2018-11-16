@@ -70,7 +70,7 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets">
     <Import Project="..\MSBuild\AllTargets.props" />
-	<Import Condition="'$(Configuration)'=='Release'" Project="..\MSBuild\AllReleaseTargets.props" />
+    <Import Condition="'$(Configuration)'=='Release'" Project="..\MSBuild\AllReleaseTargets.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -78,9 +78,12 @@
     <PackageCertificateThumbprint>7C5D69F95019989DAA29EDF18A0CD33F23ACA2D4</PackageCertificateThumbprint>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
-    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
+    <AppxBundlePlatforms>x86|x64|arm|arm64</AppxBundlePlatforms>
     <AppxPackageDir>$(SolutionDir)Output\AppPackage</AppxPackageDir>
     <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
+    <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
