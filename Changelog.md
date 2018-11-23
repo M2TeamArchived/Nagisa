@@ -8,7 +8,6 @@
 ## Changelog
 
 **Nagisa 0.4 [Build *Current*]**
-[Full Changelog](https://github.com/Project-Nagisa/Nagisa/compare/0.3...master)
 - Update documents.
 - Update the version number.
 - Start to add the BackgroundWorker.
@@ -22,7 +21,6 @@
 - Introduce the new user interface. (Partially contributed by 鳶一雨音.)
 
 ### Nagisa 0.3 [Build 62]
-[Full Changelog](https://github.com/Project-Nagisa/Nagisa/compare/0.2...0.3)
 - Add Multi-language Support: Spanish. (Contributed by Jhovany200.)
 - Fix a bug that could cause the app to crash.
 - Adjust the MainPage UI. (Thanks to suwakowww.)
@@ -38,7 +36,6 @@
 - Refactor the Assassin with C++/WinRT.
 
 ### Nagisa 0.2 [Build 22]
-[Full Changelog](https://github.com/Project-Nagisa/Nagisa/compare/0.1...0.2)
 - Change the icon.
 - Fix several bugs and improve several implementations.
 - Add configuration infrastructure.
