@@ -176,74 +176,92 @@ winrt::ApplicationDataCompositeValue TransferTask::GetTaskConfig()
 	return this->m_TaskConfig;
 }
 
-// Gets the Guid string of the task.
+/// <summary>
+/// Gets the Guid string of the task.
+/// </summary>
 winrt::hstring TransferTask::Guid() const
 {
 	return this->m_Guid;
 }
 
-// Gets the URI which to download the file.
+/// <summary>
+/// Gets the URI which to download the file.
+/// </summary>
 winrt::Uri TransferTask::SourceUri() const
 {
 	return this->m_SourceUri;
 }
 
-// Gets the file name which to download the file.
+/// <summary>
+/// Gets the file name which to download the file.
+/// </summary>
 winrt::hstring TransferTask::FileName() const
 {
 	return this->m_FileName;
 }
 
-// Gets the save file object which to download the file.
+/// <summary>
+/// Gets the save file object which to download the file.
+/// </summary>
 winrt::IStorageFile TransferTask::SaveFile() const
 {
 	return this->m_SaveFile;
 }
 
-// Gets the save folder object which to download the file.
+/// <summary>
+/// Gets the save folder object which to download the file.
+/// </summary>
 winrt::IStorageFolder TransferTask::SaveFolder() const
 {
 	return this->m_SaveFolder;
 }
 
-// The current status of the task.
+/// <summary>
+/// Gets the current status of the task.
+/// </summary>
 winrt::TransferTaskStatus TransferTask::Status() const
 {
 	return this->m_Status;
 }
 
-// The total number of bytes received. This value does not include bytes 
-// received as response headers. If the task has restarted, this value may
-// be smaller than in the previous progress report.
+/// <summary>
+/// Gets the total number of bytes received. This value does not include bytes
+/// received as response headers. If the task has restarted, this value may be
+/// smaller than in the previous progress report.
+/// </summary>
 uint64_t TransferTask::BytesReceived() const
 {
 	return this->m_BytesReceived;
 }
 
-// The speed of bytes received in one second.
+/// <summary>
+/// Gets the speed of bytes received in one second.
+/// </summary>
 uint64_t TransferTask::BytesReceivedSpeed() const
 {
 	return this->m_BytesReceivedSpeed;
 }
 
-// The remain time, in seconds.
+/// <summary>
+/// Gets the remain time, in seconds.
+/// </summary>
 uint64_t TransferTask::RemainTime() const
 {
 	return this->m_RemainTime;
 }
 
-// The total number of bytes of data to download. If this number is
-// unknown, this value is set to 0.
+/// <summary>
+/// Gets the total number of bytes of data to download. If this number is
+/// unknown, this value is set to 0.
+/// </summary>
 uint64_t TransferTask::TotalBytesToReceive() const
 {
 	return this->m_TotalBytesToReceive;
 }
 
-// Pauses a download operation.
-// Parameters:
-//   The function does not have parameters.
-// Return value:
-//   The function does not return a value.
+/// <summary>
+/// Pauses a download operation.
+/// </summary>
 void TransferTask::Pause()
 {
 	if (winrt::TransferTaskStatus::Running == this->m_Status)
@@ -259,11 +277,9 @@ void TransferTask::Pause()
 	}
 }
 
-// Resumes a paused download operation.
-// Parameters:
-//   The function does not have parameters.
-// Return value:
-//   The function does not return a value.
+/// <summary>
+/// Resumes a paused download operation.
+/// </summary>
 void TransferTask::Resume()
 {
 	if (winrt::TransferTaskStatus::Paused == this->m_Status)
@@ -280,11 +296,9 @@ void TransferTask::Resume()
 	}
 }
 
-// Cancels a download operation.
-// Parameters:
-//   The function does not have parameters.
-// Return value:
-//   The function does not return a value.
+/// <summary>
+/// Cancels a download operation.
+/// </summary>
 void TransferTask::Cancel()
 {
 	if (!NAIsFinalTransferTaskStatus(this->m_Status))
@@ -446,22 +460,21 @@ void TransferManager::CreateBackgroundWorker()
 
 }
 
-// Creates a new TransferManager object.
-// Parameters:
-//   EnableUINotify: Enable the UI notify timer if true. 
-// Return value:
-//   The function does not return a value.
+/// <summary>
+/// Creates a new TransferManager object.
+/// </summary>
+/// <param name="EnableUINotify">
+/// Enable the UI notify timer if true.
+/// </param>
 TransferManager::TransferManager(
 	bool EnableUINotify)
 {
 	this->Initialize(EnableUINotify);
 }
 
-// Destroys a TransferManager object.
-// Parameters:
-//   The function does not have parameters.
-// Return value:
-//   The function does not return a value.
+/// <summary>
+/// Destroys a TransferManager object.
+/// </summary>
 TransferManager::~TransferManager()
 {
 	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
@@ -472,48 +485,58 @@ TransferManager::~TransferManager()
 	}
 }
 
-// Destroys a TransferManager object.
-// Parameters:
-//   The function does not have parameters.
-// Return value:
-//   The function does not return a value.
+/// <summary>
+/// Destroys a TransferManager object.
+/// </summary>
 void TransferManager::Close()
 {
 	delete this;
 }
 
-// Gets the version of Nagisa.
+/// <summary>
+/// Gets the version of Nagisa.
+/// </summary>
 winrt::hstring TransferManager::Version() const
 {
 	return NAGISA_VERSION_STRING;
 }
 
-// Gets the filter to use for searching the task list.
+/// <summary>
+/// Gets the filter to use for searching the task list.
+/// </summary>
 winrt::hstring TransferManager::SearchFilter() const
 {
 	return this->m_SearchFilter;
 }
 
-// Sets the filter to use for searching the task list.
+/// <summary>
+/// Sets the filter to use for searching the task list.
+/// </summary>
 void TransferManager::SearchFilter(
 	winrt::hstring const& value)
 {
 	this->m_SearchFilter = value;
 }
 
-// Gets the last used folder.
+/// <summary>
+/// Gets the last used folder.
+/// </summary>
 winrt::IStorageFolder TransferManager::LastusedFolder()
 {	
 	return this->m_LastusedFolder;
 }
 
-// Gets the default download folder.
+/// <summary>
+/// Gets the default download folder.
+/// </summary>
 winrt::IStorageFolder TransferManager::DefaultFolder()
 {
 	return this->m_DefaultFolder;
 }
 
-// Sets the default download folder.
+/// <summary>
+/// Sets the default download folder.
+/// </summary>
 void TransferManager::DefaultFolder(
 	winrt::IStorageFolder const& value)
 {
@@ -535,23 +558,28 @@ void TransferManager::DefaultFolder(
 	}
 }
 
-// Gets the total download bandwidth.
+/// <summary>
+/// Gets the total download bandwidth.
+/// </summary>
 uint64_t TransferManager::TotalDownloadBandwidth() const
 {
 	return this->m_TotalDownloadBandwidth;
 }
 
-// Gets the total upload bandwidth.
+/// <summary>
+/// Gets the total upload bandwidth.
+/// </summary>
 uint64_t TransferManager::TotalUploadBandwidth() const
 {
 	return this->m_TotalUploadBandwidth;
 }
 
-// Gets the task list.
-// Parameters:
-//   The function does not have parameters.
-// Return value:
-//   Returns an object which represents the task list.
+/// <summary>
+/// Gets the task list.
+/// </summary>
+/// <returns>
+/// Returns an object which represents the task list.
+/// </returns>
 winrt::IAsyncOperation<winrt::IVectorView<winrt::ITransferTask>>
 	TransferManager::GetTasksAsync()
 {
@@ -604,13 +632,21 @@ winrt::IAsyncOperation<winrt::IVectorView<winrt::ITransferTask>>
 		this->m_TaskList);
 }
 
-// Add a task to the task list.
-// Parameters:
-//   SourceUri: The source uri object of task.
-//   DesiredFileName: The file name you desire.
-//   SaveFolder: The object of the folder which you want to save.
-// Return value:
-//   Returns an asynchronous object used to wait.
+/// <summary>
+/// Add a task to the task list.
+/// </summary>
+/// <param name="SourceUri">
+/// The source uri object of task.
+/// </param>
+/// <param name="DesiredFileName">
+/// The file name you desire.
+/// </param>
+/// <param name="SaveFolder">
+/// The object of the folder which you want to save.
+/// </param>
+/// <returns>
+/// Returns an asynchronous object used to wait.
+/// </returns>
 winrt::IAsyncAction TransferManager::AddTaskAsync(
 	winrt::Uri const SourceUri,
 	winrt::hstring const DesiredFileName,
@@ -663,11 +699,15 @@ winrt::IAsyncAction TransferManager::AddTaskAsync(
 	co_return;
 }
 
-// Removes a task to the task list.
-// Parameters:
-//   Task: The task object. 
-// Return value:
-//   Returns an asynchronous object used to wait.
+/// <summary>
+/// Removes a task to the task list.
+/// </summary>
+/// <param name="Task">
+/// The task object.
+/// </param>
+/// <returns>
+/// Returns an asynchronous object used to wait.
+/// </returns>
 winrt::IAsyncAction TransferManager::RemoveTaskAsync(
 	winrt::ITransferTask const Task)
 {
@@ -712,11 +752,9 @@ winrt::IAsyncAction TransferManager::RemoveTaskAsync(
 	co_return;
 }
 
-// Start all tasks.
-// Parameters:
-//   The function does not have parameters.
-// Return value:
-//   The function does not return a value.
+/// <summary>
+/// Start all tasks.
+/// </summary>
 void TransferManager::StartAllTasks()
 {
 	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
@@ -729,11 +767,9 @@ void TransferManager::StartAllTasks()
 	}
 }
 
-// Pause all tasks.
-// Parameters:
-//   The function does not have parameters.
-// Return value:
-//   The function does not return a value.
+/// <summary>
+/// Pause all tasks.
+/// </summary>
 void TransferManager::PauseAllTasks()
 {
 	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
@@ -746,11 +782,9 @@ void TransferManager::PauseAllTasks()
 	}
 }
 
-// Clears the task list.
-// Parameters:
-//   The function does not have parameters.
-// Return value:
-//   The function does not return a value.
+/// <summary>
+/// Clears the task list.
+/// </summary>
 void TransferManager::ClearTaskList()
 {
 	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);

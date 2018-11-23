@@ -13,12 +13,13 @@ License: The MIT License
 
 #include "M2WinRTHelpers.h"
 
-// Creates a GUID, a unique 128-bit integer used for CLSIDs and interface 
-// identifiers. 
-// Parameters:
-//   The function does not have parameters.
-// Return value:
-//   The function will return GUID struct.
+/// <summary>
+/// Creates a GUID, a unique 128-bit integer used for CLSIDs and interface
+/// identifiers.
+/// </summary>
+/// <returns>
+/// The function will return GUID struct.
+/// </returns>
 GUID M2CreateGuid()
 {
 	GUID guid = { 0 };
@@ -26,13 +27,21 @@ GUID M2CreateGuid()
 	return guid;
 }
 
-// Finds a sub string from a source string. 
-// Parameters:
-//   SourceString: The source string.
-//   SubString: The sub string.
-//   IgnoreCase: Determines whether to ignore case.
-// Return value:
-//   Returns true if successful, or false otherwise.
+/// <summary>
+/// Finds a sub string from a source string.
+/// </summary>
+/// <param name="SourceString">
+/// The source string.
+/// </param>
+/// <param name="SubString">
+/// The sub string.
+/// </param>
+/// <param name="IgnoreCase">
+/// Determines whether to ignore case.
+/// </param>
+/// <returns>
+/// Returns true if successful, or false otherwise.
+/// </returns>
 bool M2FindSubString(
 	winrt::hstring SourceString,
 	winrt::hstring SubString,
@@ -51,14 +60,19 @@ bool M2FindSubString(
 		0) >= 0);
 }
 
-// Converts a numeric value into a string that represents the number expressed 
-// as a size value in byte, bytes, kibibytes, mebibytes, gibibytes, tebibytes,
-// pebibytes or exbibytes, depending on the size.
-// Parameters:
-//   ByteSize: The numeric byte size value to be converted.
-// Return value:
-//   Returns a winrt::hstring object which represents the converted string.
-winrt::hstring M2ConvertByteSizeToString(uint64_t ByteSize)
+/// <summary>
+/// Converts a numeric value into a string that represents the number expressed
+/// as a size value in byte, bytes, kibibytes, mebibytes, gibibytes, tebibytes,
+/// pebibytes or exbibytes, depending on the size.
+/// </summary>
+/// <param name="ByteSize">
+/// The numeric byte size value to be converted.
+/// </param>
+/// <returns>
+/// Returns a winrt::hstring object which represents the converted string.
+/// </returns>
+winrt::hstring M2ConvertByteSizeToString(
+	uint64_t ByteSize)
 {
 	const wchar_t* Systems[] =
 	{

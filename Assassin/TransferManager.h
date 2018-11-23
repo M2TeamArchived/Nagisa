@@ -75,58 +75,72 @@ namespace winrt::Assassin::implementation
 		winrt::ApplicationDataCompositeValue GetTaskConfig();
 
 	public:
-		// Gets the Guid string of the task.
+		/// <summary>
+		/// Gets the Guid string of the task.
+		/// </summary>
 		winrt::hstring Guid() const;
 
-		// Gets the URI which to download the file.
+		/// <summary>
+		/// Gets the URI which to download the file.
+		/// </summary>
 		winrt::Uri SourceUri() const;
 
-		// Gets the file name which to download the file.
+		/// <summary>
+		/// Gets the file name which to download the file.
+		/// </summary>
 		winrt::hstring FileName() const;
 
-		// Gets the save file object which to download the file.
+		/// <summary>
+		/// Gets the save file object which to download the file.
+		/// </summary>
 		winrt::IStorageFile SaveFile() const;
 
-		// Gets the save folder object which to download the file.
+		/// <summary>
+		/// Gets the save folder object which to download the file.
+		/// </summary>
 		winrt::IStorageFolder SaveFolder() const;
 
-		// The current status of the task.
+		/// <summary>
+		/// Gets the current status of the task.
+		/// </summary>
 		winrt::TransferTaskStatus Status() const;
 
-		// The total number of bytes received. This value does not include bytes 
-		// received as response headers. If the task has restarted, this value may
-		// be smaller than in the previous progress report.
+		/// <summary>
+		/// Gets the total number of bytes received. This value does not include
+		/// bytes received as response headers. If the task has restarted, this
+		/// value may be smaller than in the previous progress report.
+		/// </summary>
 		uint64_t BytesReceived() const;
 
-		// The speed of bytes received in one second.
+		/// <summary>
+		/// Gets the speed of bytes received in one second.
+		/// </summary>
 		uint64_t BytesReceivedSpeed() const;
 
-		// The remain time, in seconds.
+		/// <summary>
+		/// Gets the remain time, in seconds.
+		/// </summary>
 		uint64_t RemainTime() const;
 
-		// The total number of bytes of data to download. If this number is 
-		// unknown, this value is set to 0.
+		/// <summary>
+		/// Gets the total number of bytes of data to download. If this number
+		/// is unknown, this value is set to 0.
+		/// </summary>
 		uint64_t TotalBytesToReceive() const;
 
-		// Pauses a download operation.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   The function does not return a value.
+		/// <summary>
+		/// Pauses a download operation.
+		/// </summary>
 		void Pause();
 
-		// Resumes a paused download operation.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   The function does not return a value.
+		/// <summary>
+		/// Resumes a paused download operation.
+		/// </summary>
 		void Resume();
 
-		// Cancels a download operation.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   The function does not return a value.
+		/// <summary>
+		/// Cancels a download operation.
+		/// </summary>
 		void Cancel();
 	};
 
@@ -166,101 +180,121 @@ namespace winrt::Assassin::implementation
 		void CreateBackgroundWorker();
 
 	public:
-		// Creates a new TransferManager object.
-		// Parameters:
-		//   EnableUINotify: Enable the UI notify timer if true. 
-		// Return value:
-		//   The function does not return a value.
+		/// <summary>
+		/// Creates a new TransferManager object.
+		/// </summary>
+		/// <param name="EnableUINotify">
+		/// Enable the UI notify timer if true.
+		/// </param>
 		TransferManager(
 			bool EnableUINotify);
 
-		// Destroys a TransferManager object.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   The function does not return a value.
+		/// <summary>
+		/// Destroys a TransferManager object.
+		/// </summary>
 		~TransferManager();
 
-		// Destroys a TransferManager object.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   The function does not return a value.
+		/// <summary>
+		/// Destroys a TransferManager object.
+		/// </summary>
 		void Close();
 
-		// Gets the version of Nagisa.
+		/// <summary>
+		/// Gets the version of Nagisa.
+		/// </summary>
 		winrt::hstring Version() const;
 
-		// Gets the filter to use for searching the task list.
+		/// <summary>
+		/// Gets the filter to use for searching the task list.
+		/// </summary>
 		winrt::hstring SearchFilter() const;
 
-		// Sets the filter to use for searching the task list.
+		/// <summary>
+		/// Sets the filter to use for searching the task list.
+		/// </summary>
 		void SearchFilter(
 			winrt::hstring const& value);
 
-		// Gets the last used folder.
+		/// <summary>
+		/// Gets the last used folder.
+		/// </summary>
 		winrt::IStorageFolder LastusedFolder();
 
-		// Gets the default download folder.
+		/// <summary>
+		/// Gets the default download folder.
+		/// </summary>
 		winrt::IStorageFolder DefaultFolder();
 
-		// Sets the default download folder.
+		/// <summary>
+		/// Sets the default download folder.
+		/// </summary>
 		void DefaultFolder(
 			winrt::IStorageFolder const& value);
 
-		// Gets the total download bandwidth.
+		/// <summary>
+		/// Gets the total download bandwidth.
+		/// </summary>
 		uint64_t TotalDownloadBandwidth() const;
 
-		// Gets the total upload bandwidth.
+		/// <summary>
+		/// Gets the total upload bandwidth.
+		/// </summary>
 		uint64_t TotalUploadBandwidth() const;
-
-		// Gets the task list.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   Returns an object which represents the task list.
+  
+		/// <summary>
+		/// Gets the task list.
+		/// </summary>
+		/// <returns>
+		/// Returns an object which represents the task list.
+		/// </returns>
 		winrt::IAsyncOperation<winrt::IVectorView<winrt::ITransferTask>>
 			GetTasksAsync();
 
-		// Add a task to the task list.
-		// Parameters:
-		//   SourceUri: The source uri object of task.
-		//   DesiredFileName: The file name you desire.
-		//   SaveFolder: The object of the folder which you want to save.
-		// Return value:
-		//   Returns an asynchronous object used to wait.
+		/// <summary>
+		/// Add a task to the task list.
+		/// </summary>
+		/// <param name="SourceUri">
+		/// The source uri object of task.
+		/// </param>
+		/// <param name="DesiredFileName">
+		/// The file name you desire.
+		/// </param>
+		/// <param name="SaveFolder">
+		/// The object of the folder which you want to save.
+		/// </param>
+		/// <returns>
+		/// Returns an asynchronous object used to wait.
+		/// </returns>
 		winrt::IAsyncAction AddTaskAsync(
 			winrt::Uri const SourceUri,
 			winrt::hstring const DesiredFileName,
 			winrt::IStorageFolder const SaveFolder);
-
-		// Removes a task to the task list.
-		// Parameters:
-		//   Task: The task object. 
-		// Return value:
-		//   Returns an asynchronous object used to wait.
+ 
+		/// <summary>
+		/// Removes a task to the task list.
+		/// </summary>
+		/// <param name="Task">
+		/// The task object.
+		/// </param>
+		/// <returns>
+		/// Returns an asynchronous object used to wait.
+		/// </returns>
 		winrt::IAsyncAction RemoveTaskAsync(
 			winrt::ITransferTask const Task);
 
-		// Start all tasks.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   The function does not return a value.
+		/// <summary>
+		/// Start all tasks.
+		/// </summary>
 		void StartAllTasks();
 
-		// Pause all tasks.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   The function does not return a value.
+		/// <summary>
+		/// Pause all tasks.
+		/// </summary>
 		void PauseAllTasks();
 
-		// Clears the task list.
-		// Parameters:
-		//   The function does not have parameters.
-		// Return value:
-		//   The function does not return a value.
+		/// <summary>
+		/// Clears the task list.
+		/// </summary>
 		void ClearTaskList();
 	};
 }
