@@ -22,10 +22,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shared", "Shared\Shared.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Assassin", "Assassin\Assassin.vcxproj", "{7DB6FE7F-0281-49B3-92F9-497EE9CBCF6C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThirdParty", "ThirdParty", "{88D375F8-D6D4-495C-852D-CD9DF1F169C1}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenSSL", "ThirdParty\OpenSSL\OpenSSL.vcxitems", "{6B84FB2B-AE13-44CE-B6DB-C5B32CBF0A72}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConsoleDemo", "ConsoleDemo\ConsoleDemo.vcxproj", "{287F41F2-CF17-46F5-B43C-58293E73E813}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shared.UI", "Shared.UI\Shared.UI.vcxitems", "{E0717BD1-8C33-4A3B-B215-6E72D672B729}"
@@ -40,11 +36,8 @@ EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Shared\Shared.vcxitems*{287f41f2-cf17-46f5-b43c-58293e73e813}*SharedItemsImports = 4
-		ThirdParty\OpenSSL\OpenSSL.vcxitems*{287f41f2-cf17-46f5-b43c-58293e73e813}*SharedItemsImports = 4
 		Shared\Shared.vcxitems*{318e66ea-4e29-40a5-966c-f18b7c0bac45}*SharedItemsImports = 9
-		ThirdParty\OpenSSL\OpenSSL.vcxitems*{6b84fb2b-ae13-44ce-b6db-c5b32cbf0a72}*SharedItemsImports = 9
 		Shared\Shared.vcxitems*{7db6fe7f-0281-49b3-92f9-497ee9cbcf6c}*SharedItemsImports = 4
-		ThirdParty\OpenSSL\OpenSSL.vcxitems*{7db6fe7f-0281-49b3-92f9-497ee9cbcf6c}*SharedItemsImports = 4
 		Shared.UI\Shared.UI.vcxitems*{cd858cad-04d9-4a81-8c75-26cb74323398}*SharedItemsImports = 4
 		Shared\Shared.vcxitems*{cd858cad-04d9-4a81-8c75-26cb74323398}*SharedItemsImports = 4
 		Shared.UI\Shared.UI.vcxitems*{e0717bd1-8c33-4a3b-b215-6e72d672b729}*SharedItemsImports = 9
@@ -119,9 +112,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{6B84FB2B-AE13-44CE-B6DB-C5B32CBF0A72} = {88D375F8-D6D4-495C-852D-CD9DF1F169C1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A5EB60EE-8A7A-452F-87C0-F2B0C0BCCC9C}

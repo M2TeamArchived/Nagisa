@@ -68,7 +68,6 @@
   </ImportGroup>
   <ImportGroup Label="Shared">
     <Import Project="..\Shared\Shared.vcxitems" Label="Shared" />
-    <Import Project="..\ThirdParty\OpenSSL\OpenSSL.vcxitems" Label="Shared" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />

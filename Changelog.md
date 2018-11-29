@@ -12,9 +12,9 @@
 - Update the version number.
 - Start to add the BackgroundWorker.
 
-### Nagisa 0.4 [Build 114]
+### Nagisa 0.4 [Build 124]
 - Improve several implementations.
-- Update OpenSSL static library binaries to 1.0.2p.
+- Remove OpenSSL static library binaries.
 - Remove AppVeyor CI support because we can't use C++/WinRT in the AppVeyor CI 
   environment currently.
 - Decided to upgrade the system requirement to Windows 10, version 1703. 
