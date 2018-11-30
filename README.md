@@ -74,9 +74,6 @@ requests and issues are welcome.**
 Nagisa (not including third-party libraries) is distributed under the MIT 
 License. For more information, please read [Nagisa's License](LICENSE).
 
-# Third-party librarie(s)
-- [OpenSSL](ThirdParty/OpenSSL/README.md)
-
 # Documents
 - [Nagisa's Changelog](Changelog.md)
 - [Nagisa's Relevant People](People.md)
