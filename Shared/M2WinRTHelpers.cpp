@@ -22,9 +22,9 @@ License: The MIT License
 /// </returns>
 GUID M2CreateGuid()
 {
-	GUID guid = { 0 };
-	winrt::check_hresult(CoCreateGuid(&guid));
-	return guid;
+    GUID guid = { 0 };
+    winrt::check_hresult(CoCreateGuid(&guid));
+    return guid;
 }
 
 /// <summary>
@@ -43,21 +43,21 @@ GUID M2CreateGuid()
 /// Returns true if successful, or false otherwise.
 /// </returns>
 bool M2FindSubString(
-	winrt::hstring SourceString,
-	winrt::hstring SubString,
-	bool IgnoreCase)
+    winrt::hstring SourceString,
+    winrt::hstring SubString,
+    bool IgnoreCase)
 {
-	return (::FindNLSStringEx(
-		nullptr,
-		(IgnoreCase ? NORM_IGNORECASE : 0) | FIND_FROMSTART,
-		SourceString.c_str(),
-		SourceString.size(),
-		SubString.c_str(),
-		SubString.size(),
-		nullptr,
-		nullptr,
-		nullptr,
-		0) >= 0);
+    return (::FindNLSStringEx(
+        nullptr,
+        (IgnoreCase ? NORM_IGNORECASE : 0) | FIND_FROMSTART,
+        SourceString.c_str(),
+        SourceString.size(),
+        SubString.c_str(),
+        SubString.size(),
+        nullptr,
+        nullptr,
+        nullptr,
+        0) >= 0);
 }
 
 /// <summary>
@@ -72,62 +72,62 @@ bool M2FindSubString(
 /// Returns a winrt::hstring object which represents the converted string.
 /// </returns>
 winrt::hstring M2ConvertByteSizeToString(
-	uint64_t ByteSize)
+    uint64_t ByteSize)
 {
-	const wchar_t* Systems[] =
-	{
-		L"Byte",
-		L"Bytes",
-		L"KiB",
-		L"MiB",
-		L"GiB",
-		L"TiB",
-		L"PiB",
-		L"EiB"
-	};
+    const wchar_t* Systems[] =
+    {
+        L"Byte",
+        L"Bytes",
+        L"KiB",
+        L"MiB",
+        L"GiB",
+        L"TiB",
+        L"PiB",
+        L"EiB"
+    };
 
-	size_t nSystem = 0;
-	double result = static_cast<double>(ByteSize);
+    size_t nSystem = 0;
+    double result = static_cast<double>(ByteSize);
 
-	if (ByteSize > 1)
-	{
-		for (
-			nSystem = 1; 
-			nSystem < sizeof(Systems) / sizeof(*Systems); 
-			++nSystem)
-		{
-			if (1024.0 > result)
-				break;
+    if (ByteSize > 1)
+    {
+        for (
+            nSystem = 1;
+            nSystem < sizeof(Systems) / sizeof(*Systems);
+            ++nSystem)
+        {
+            if (1024.0 > result)
+                break;
 
-			result /= 1024.0;
-		}
+            result /= 1024.0;
+        }
 
-		result = static_cast<uint64_t>(result * 100) / 100.0;
-	}
+        result = static_cast<uint64_t>(result * 100) / 100.0;
+    }
 
-	return winrt::to_hstring(result) + L" " + Systems[nSystem];
+    return winrt::to_hstring(result) + L" " + Systems[nSystem];
 }
 
 namespace M2
 {
-	void NotifyPropertyChangedBase::RaisePropertyChanged(
-		winrt::hstring PropertyName)
-	{
-		this->m_PropertyChanged(
-			*this, winrt::PropertyChangedEventArgs(PropertyName));
-	}
+    void NotifyPropertyChangedBase::RaisePropertyChanged(
+        winrt::hstring PropertyName)
+    {
+        this->m_PropertyChanged(
+            *this, winrt::PropertyChangedEventArgs(PropertyName));
+    }
 
-	winrt::event_token NotifyPropertyChangedBase::PropertyChanged(
-		winrt::PropertyChangedEventHandler const& value)
-	{
-		return this->m_PropertyChanged.add(value);
-	}
+    winrt::event_token NotifyPropertyChangedBase::PropertyChanged(
+        winrt::PropertyChangedEventHandler const& value)
+    {
+        return this->m_PropertyChanged.add(value);
+    }
 
-	void NotifyPropertyChangedBase::PropertyChanged(
-		winrt::event_token const & token)
-	{
-		this->m_PropertyChanged.remove(token);
-	}
+    void NotifyPropertyChangedBase::PropertyChanged(
+        winrt::event_token const & token)
+    {
+        this->m_PropertyChanged.remove(token);
+    }
 }
 
 #endif // _M2_WINRT_HELPERS_

@@ -15,36 +15,36 @@ License: The MIT License
 
 namespace winrt
 {
-	using Windows::Foundation::IInspectable;
-	using Windows::UI::Xaml::Interop::TypeName;
+    using Windows::Foundation::IInspectable;
+    using Windows::UI::Xaml::Interop::TypeName;
 }
 
 namespace winrt::Assassin::implementation
 {
-    struct CustomConverter : 
-		CustomConverterT<CustomConverter>
+    struct CustomConverter :
+        CustomConverterT<CustomConverter>
     {
-		CustomConverter() = default;
+        CustomConverter() = default;
 
-		winrt::IInspectable Convert(
-			winrt::IInspectable const& value,
-			winrt::TypeName const& targetType,
-			winrt::IInspectable const& parameter, 
-			winrt::hstring const& language) const;
+        winrt::IInspectable Convert(
+            winrt::IInspectable const& value,
+            winrt::TypeName const& targetType,
+            winrt::IInspectable const& parameter,
+            winrt::hstring const& language) const;
 
-		winrt::IInspectable ConvertBack(
-			winrt::IInspectable const& value, 
-			winrt::TypeName const& targetType,
-			winrt::IInspectable const& parameter,
-			winrt::hstring const& language) const;
+        winrt::IInspectable ConvertBack(
+            winrt::IInspectable const& value,
+            winrt::TypeName const& targetType,
+            winrt::IInspectable const& parameter,
+            winrt::hstring const& language) const;
     };
 }
 
 namespace winrt::Assassin::factory_implementation
 {
     struct CustomConverter : CustomConverterT<
-		CustomConverter,
-		implementation::CustomConverter>
+        CustomConverter,
+        implementation::CustomConverter>
     {
     };
 }

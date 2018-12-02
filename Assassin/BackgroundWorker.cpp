@@ -12,19 +12,19 @@ using namespace winrt::Assassin::implementation;
 
 namespace winrt
 {
-	using Windows::Foundation::IInspectable;
-	using Windows::ApplicationModel::Background::IBackgroundTask;
-	using Windows::Networking::Sockets::SocketActivityInformation;
-	using Windows::Networking::Sockets::SocketActivityTriggerDetails;
-	using Windows::Networking::Sockets::SocketActivityTriggerReason;
-	using Windows::Networking::Sockets::StreamSocket;
+    using Windows::Foundation::IInspectable;
+    using Windows::ApplicationModel::Background::IBackgroundTask;
+    using Windows::Networking::Sockets::SocketActivityInformation;
+    using Windows::Networking::Sockets::SocketActivityTriggerDetails;
+    using Windows::Networking::Sockets::SocketActivityTriggerReason;
+    using Windows::Networking::Sockets::StreamSocket;
 }
 
 winrt::hstring BackgroundWorkerSocketID = L"Assassin.BackgroundWorker";
 
 BackgroundWorker::BackgroundWorker()
 {
-	throw winrt::hresult_not_implemented();
+    throw winrt::hresult_not_implemented();
 }
 
 BackgroundWorker::~BackgroundWorker()
@@ -33,82 +33,82 @@ BackgroundWorker::~BackgroundWorker()
 }
 
 void BackgroundWorker::Run(
-	winrt::IBackgroundTaskInstance const& taskInstance) const
+    winrt::IBackgroundTaskInstance const& taskInstance) const
 {
-	auto deferral = taskInstance.GetDeferral();
+    auto deferral = taskInstance.GetDeferral();
 
-	try
-	{
-		winrt::IInspectable triggerDetails = taskInstance.TriggerDetails();
+    try
+    {
+        winrt::IInspectable triggerDetails = taskInstance.TriggerDetails();
 
-		winrt::SocketActivityTriggerDetails details =
-			triggerDetails.try_as<winrt::SocketActivityTriggerDetails>();
+        winrt::SocketActivityTriggerDetails details =
+            triggerDetails.try_as<winrt::SocketActivityTriggerDetails>();
 
-		winrt::SocketActivityInformation socketInformation =
-			details.SocketInformation();
+        winrt::SocketActivityInformation socketInformation =
+            details.SocketInformation();
 
-		switch (details.Reason())
-		{
-		case winrt::SocketActivityTriggerReason::SocketActivity:
-		{
-			winrt::StreamSocket Socket = socketInformation.StreamSocket();
+        switch (details.Reason())
+        {
+        case winrt::SocketActivityTriggerReason::SocketActivity:
+        {
+            winrt::StreamSocket Socket = socketInformation.StreamSocket();
 
-			//CRYPTO_malloc_debug_init();
+            //CRYPTO_malloc_debug_init();
 
-			/*
-			DataReader reader = new DataReader(socket.InputStream);
-			reader.InputStreamOptions = InputStreamOptions.Partial;
-			await reader.LoadAsync(250);
-			var dataString = reader.ReadString(reader.UnconsumedBufferLength);
-			ShowToast(dataString);*/
+            /*
+            DataReader reader = new DataReader(socket.InputStream);
+            reader.InputStreamOptions = InputStreamOptions.Partial;
+            await reader.LoadAsync(250);
+            var dataString = reader.ReadString(reader.UnconsumedBufferLength);
+            ShowToast(dataString);*/
 
-			Socket.TransferOwnership(socketInformation.Id());
+            Socket.TransferOwnership(socketInformation.Id());
 
-			break;
-		}
-		case winrt::SocketActivityTriggerReason::KeepAliveTimerExpired:
-		{
-			winrt::StreamSocket Socket = socketInformation.StreamSocket();
+            break;
+        }
+        case winrt::SocketActivityTriggerReason::KeepAliveTimerExpired:
+        {
+            winrt::StreamSocket Socket = socketInformation.StreamSocket();
 
-			/*
-			DataWriter writer = new DataWriter(socket.OutputStream);
-			writer.WriteBytes(Encoding.UTF8.GetBytes("Keep alive"));
-			await writer.StoreAsync();
-			writer.DetachStream();
-			writer.Dispose();*/
+            /*
+            DataWriter writer = new DataWriter(socket.OutputStream);
+            writer.WriteBytes(Encoding.UTF8.GetBytes("Keep alive"));
+            await writer.StoreAsync();
+            writer.DetachStream();
+            writer.Dispose();*/
 
-			Socket.TransferOwnership(socketInformation.Id());
+            Socket.TransferOwnership(socketInformation.Id());
 
-			break;
-		}
-		case winrt::SocketActivityTriggerReason::SocketClosed:
-		{
-			winrt::StreamSocket Socket = winrt::StreamSocket();
+            break;
+        }
+        case winrt::SocketActivityTriggerReason::SocketClosed:
+        {
+            winrt::StreamSocket Socket = winrt::StreamSocket();
 
-			/*socket = new StreamSocket();
-			socket.EnableTransferOwnership(taskInstance.Task.TaskId, SocketActivityConnectedStandbyAction.Wake);
-			if (ApplicationData.Current.LocalSettings.Values["hostname"] == null)
-			{
-			break;
-			}
-			var hostname = (String)ApplicationData.Current.LocalSettings.Values["hostname"];
-			var port = (String)ApplicationData.Current.LocalSettings.Values["port"];
-			await socket.ConnectAsync(new HostName(hostname), port);*/
+            /*socket = new StreamSocket();
+            socket.EnableTransferOwnership(taskInstance.Task.TaskId, SocketActivityConnectedStandbyAction.Wake);
+            if (ApplicationData.Current.LocalSettings.Values["hostname"] == null)
+            {
+            break;
+            }
+            var hostname = (String)ApplicationData.Current.LocalSettings.Values["hostname"];
+            var port = (String)ApplicationData.Current.LocalSettings.Values["port"];
+            await socket.ConnectAsync(new HostName(hostname), port);*/
 
-			Socket.TransferOwnership(BackgroundWorkerSocketID);
+            Socket.TransferOwnership(BackgroundWorkerSocketID);
 
-			break;
-		}
-		default:
-			break;
-		}
-	}
-	catch (winrt::hresult_error const& ex)
-	{
-		UNREFERENCED_PARAMETER(ex);
+            break;
+        }
+        default:
+            break;
+        }
+    }
+    catch (winrt::hresult_error const& ex)
+    {
+        UNREFERENCED_PARAMETER(ex);
 
-		//ShowToast(exception.Message);	
-	}
+        //ShowToast(exception.Message);	
+    }
 
-	deferral.Complete();
+    deferral.Complete();
 }

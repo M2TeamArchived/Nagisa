@@ -11,26 +11,26 @@ License: The MIT License
 
 namespace Nagisa
 {
-	using Platform::Object;
-	using Windows::ApplicationModel::Activation::LaunchActivatedEventArgs;
-	using Windows::ApplicationModel::SuspendingEventArgs;
-	using Windows::UI::Xaml::Navigation::NavigationFailedEventArgs;
+    using Platform::Object;
+    using Windows::ApplicationModel::Activation::LaunchActivatedEventArgs;
+    using Windows::ApplicationModel::SuspendingEventArgs;
+    using Windows::UI::Xaml::Navigation::NavigationFailedEventArgs;
 
-	ref class App sealed
-	{
-	protected:
-		virtual void OnLaunched(
-			LaunchActivatedEventArgs^ e) override;
+    ref class App sealed
+    {
+    protected:
+        virtual void OnLaunched(
+            LaunchActivatedEventArgs^ e) override;
 
-	internal:
-		App();
+    internal:
+        App();
 
-	private:
-		void OnSuspending(
-			Object^ sender, 
-			SuspendingEventArgs^ e);
-		void OnNavigationFailed(
-			Object^ sender, 
-			NavigationFailedEventArgs^ e);
-	};
+    private:
+        void OnSuspending(
+            Object^ sender,
+            SuspendingEventArgs^ e);
+        void OnNavigationFailed(
+            Object^ sender,
+            NavigationFailedEventArgs^ e);
+    };
 }

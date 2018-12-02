@@ -12,168 +12,168 @@ License: The MIT License
 
 namespace winrt
 {
-	using Windows::Foundation::Collections::IKeyValuePair;
-	using Windows::Foundation::TimeSpan;
-	using Windows::Networking::BackgroundTransfer::BackgroundDownloadProgress;
-	using Windows::Networking::BackgroundTransfer::BackgroundTransferStatus;
-	using Windows::Storage::AccessCache::StorageApplicationPermissions;
-	using Windows::Storage::ApplicationData;
-	using Windows::Storage::ApplicationDataCreateDisposition;
-	using Windows::Storage::CreationCollisionOption;
-	using Windows::Storage::StorageDeleteOption;
+    using Windows::Foundation::Collections::IKeyValuePair;
+    using Windows::Foundation::TimeSpan;
+    using Windows::Networking::BackgroundTransfer::BackgroundDownloadProgress;
+    using Windows::Networking::BackgroundTransfer::BackgroundTransferStatus;
+    using Windows::Storage::AccessCache::StorageApplicationPermissions;
+    using Windows::Storage::ApplicationData;
+    using Windows::Storage::ApplicationDataCreateDisposition;
+    using Windows::Storage::CreationCollisionOption;
+    using Windows::Storage::StorageDeleteOption;
 }
 
 using namespace winrt::Assassin::implementation;
 
 bool NAIsFinalTransferTaskStatus(
-	winrt::TransferTaskStatus Status) noexcept
+    winrt::TransferTaskStatus Status) noexcept
 {
-	return (
-		winrt::TransferTaskStatus::Canceled == Status ||
-		winrt::TransferTaskStatus::Completed == Status ||
-		winrt::TransferTaskStatus::Error == Status);
+    return (
+        winrt::TransferTaskStatus::Canceled == Status ||
+        winrt::TransferTaskStatus::Completed == Status ||
+        winrt::TransferTaskStatus::Error == Status);
 }
 
 winrt::IAsyncAction TransferTask::Initialize(
-	winrt::hstring Guid,
-	winrt::ApplicationDataCompositeValue TaskConfig,
-	winrt::IStorageItemAccessList FutureAccessList,
-	std::map<winrt::hstring, winrt::DownloadOperation>& DownloadOperationMap)
+    winrt::hstring Guid,
+    winrt::ApplicationDataCompositeValue TaskConfig,
+    winrt::IStorageItemAccessList FutureAccessList,
+    std::map<winrt::hstring, winrt::DownloadOperation>& DownloadOperationMap)
 {
-	this->m_Guid = Guid;
-	this->m_TaskConfig = TaskConfig;
+    this->m_Guid = Guid;
+    this->m_TaskConfig = TaskConfig;
 
-	this->m_SourceUri = winrt::Uri(winrt::unbox_value<winrt::hstring>(
-		TaskConfig.Lookup(L"SourceUri")));
-	this->m_FileName = winrt::unbox_value<winrt::hstring>(
-		TaskConfig.Lookup(L"FileName"));
-	this->m_Status = static_cast<winrt::TransferTaskStatus>(
-		winrt::unbox_value<uint32_t>(TaskConfig.Lookup(L"Status")));
-	try
-	{
-		this->m_SaveFolder = co_await FutureAccessList.GetFolderAsync(
-			winrt::unbox_value<winrt::hstring>(
-				TaskConfig.Lookup(L"SaveFolder")));
-		if (nullptr != this->m_SaveFolder)
-		{
-			this->m_SaveFile = co_await this->m_SaveFolder.GetFileAsync(
-				this->m_FileName);
-		}
+    this->m_SourceUri = winrt::Uri(winrt::unbox_value<winrt::hstring>(
+        TaskConfig.Lookup(L"SourceUri")));
+    this->m_FileName = winrt::unbox_value<winrt::hstring>(
+        TaskConfig.Lookup(L"FileName"));
+    this->m_Status = static_cast<winrt::TransferTaskStatus>(
+        winrt::unbox_value<uint32_t>(TaskConfig.Lookup(L"Status")));
+    try
+    {
+        this->m_SaveFolder = co_await FutureAccessList.GetFolderAsync(
+            winrt::unbox_value<winrt::hstring>(
+                TaskConfig.Lookup(L"SaveFolder")));
+        if (nullptr != this->m_SaveFolder)
+        {
+            this->m_SaveFile = co_await this->m_SaveFolder.GetFileAsync(
+                this->m_FileName);
+        }
 
-		std::map<winrt::hstring, winrt::DownloadOperation>::iterator iterator =
-			DownloadOperationMap.find(winrt::unbox_value<winrt::hstring>(
-				TaskConfig.Lookup(L"BackgroundTransferGuid")));
-		if (DownloadOperationMap.end() != iterator)
-		{
-			this->m_Operation = iterator->second;
-		}
-		else
-		{
-			winrt::throw_hresult(E_FAIL);
-		}
+        std::map<winrt::hstring, winrt::DownloadOperation>::iterator iterator =
+            DownloadOperationMap.find(winrt::unbox_value<winrt::hstring>(
+                TaskConfig.Lookup(L"BackgroundTransferGuid")));
+        if (DownloadOperationMap.end() != iterator)
+        {
+            this->m_Operation = iterator->second;
+        }
+        else
+        {
+            winrt::throw_hresult(E_FAIL);
+        }
 
-		winrt::BackgroundDownloadProgress Progress = this->m_Operation.Progress();
-		this->m_BytesReceived = Progress.BytesReceived;
-		this->m_TotalBytesToReceive = Progress.TotalBytesToReceive;
+        winrt::BackgroundDownloadProgress Progress = this->m_Operation.Progress();
+        this->m_BytesReceived = Progress.BytesReceived;
+        this->m_TotalBytesToReceive = Progress.TotalBytesToReceive;
 
-		if (winrt::TransferTaskStatus::Running == this->m_Status)
-		{
-			this->m_Operation.AttachAsync();
-		}
-	}
-	catch (...)
-	{
-		if (!NAIsFinalTransferTaskStatus(this->m_Status))
-		{
-			this->m_Status = winrt::TransferTaskStatus::Error;
-		}
-	}
+        if (winrt::TransferTaskStatus::Running == this->m_Status)
+        {
+            this->m_Operation.AttachAsync();
+        }
+    }
+    catch (...)
+    {
+        if (!NAIsFinalTransferTaskStatus(this->m_Status))
+        {
+            this->m_Status = winrt::TransferTaskStatus::Error;
+        }
+    }
 }
 
 void TransferTask::UpdateChangedProperties()
 {
-	if (nullptr != this->m_Operation)
-	{
-		winrt::BackgroundDownloadProgress Progress = this->m_Operation.Progress();
+    if (nullptr != this->m_Operation)
+    {
+        winrt::BackgroundDownloadProgress Progress = this->m_Operation.Progress();
 
-		switch (Progress.Status)
-		{
-		case winrt::BackgroundTransferStatus::Idle:
-			this->m_Status = winrt::TransferTaskStatus::Queued;
-			break;
-		case winrt::BackgroundTransferStatus::Running:
-		case winrt::BackgroundTransferStatus::PausedCostedNetwork:
-		case winrt::BackgroundTransferStatus::PausedNoNetwork:
-		case winrt::BackgroundTransferStatus::PausedSystemPolicy:
-			this->m_Status = winrt::TransferTaskStatus::Running;
-			break;
-		case winrt::BackgroundTransferStatus::PausedByApplication:
-			this->m_Status = winrt::TransferTaskStatus::Paused;
-			break;
-		case winrt::BackgroundTransferStatus::Completed:
-			this->m_Status = winrt::TransferTaskStatus::Completed;
-			break;
-		case winrt::BackgroundTransferStatus::Canceled:
-			this->m_Status = winrt::TransferTaskStatus::Canceled;
-			break;
-		case winrt::BackgroundTransferStatus::Error:
-		default:
-			this->m_Status = winrt::TransferTaskStatus::Error;
-			break;
-		}
-		if (winrt::TransferTaskStatus::Running != this->m_Status)
-			return;
+        switch (Progress.Status)
+        {
+        case winrt::BackgroundTransferStatus::Idle:
+            this->m_Status = winrt::TransferTaskStatus::Queued;
+            break;
+        case winrt::BackgroundTransferStatus::Running:
+        case winrt::BackgroundTransferStatus::PausedCostedNetwork:
+        case winrt::BackgroundTransferStatus::PausedNoNetwork:
+        case winrt::BackgroundTransferStatus::PausedSystemPolicy:
+            this->m_Status = winrt::TransferTaskStatus::Running;
+            break;
+        case winrt::BackgroundTransferStatus::PausedByApplication:
+            this->m_Status = winrt::TransferTaskStatus::Paused;
+            break;
+        case winrt::BackgroundTransferStatus::Completed:
+            this->m_Status = winrt::TransferTaskStatus::Completed;
+            break;
+        case winrt::BackgroundTransferStatus::Canceled:
+            this->m_Status = winrt::TransferTaskStatus::Canceled;
+            break;
+        case winrt::BackgroundTransferStatus::Error:
+        default:
+            this->m_Status = winrt::TransferTaskStatus::Error;
+            break;
+        }
+        if (winrt::TransferTaskStatus::Running != this->m_Status)
+            return;
 
-		ULONGLONG LastTickCount = this->m_TickCount;
-		this->m_TickCount = M2GetTickCount();
+        ULONGLONG LastTickCount = this->m_TickCount;
+        this->m_TickCount = M2GetTickCount();
 
-		uint64_t LastBytesReceived = this->m_BytesReceived;
-		this->m_BytesReceived = Progress.BytesReceived;
+        uint64_t LastBytesReceived = this->m_BytesReceived;
+        this->m_BytesReceived = Progress.BytesReceived;
 
-		this->m_TotalBytesToReceive = Progress.TotalBytesToReceive;
+        this->m_TotalBytesToReceive = Progress.TotalBytesToReceive;
 
-		uint64_t DeltaBytesReceived = this->m_BytesReceived - LastBytesReceived;
-		ULONGLONG DeltaPassedTime = this->m_TickCount - LastTickCount;
-		this->m_BytesReceivedSpeed =
-			DeltaBytesReceived * 1000 / DeltaPassedTime;
+        uint64_t DeltaBytesReceived = this->m_BytesReceived - LastBytesReceived;
+        ULONGLONG DeltaPassedTime = this->m_TickCount - LastTickCount;
+        this->m_BytesReceivedSpeed =
+            DeltaBytesReceived * 1000 / DeltaPassedTime;
 
-		if (0 == this->m_BytesReceivedSpeed ||
-			0 == this->m_TotalBytesToReceive)
-		{
-			this->m_RemainTime = static_cast<uint64_t>(-1);
-		}
-		else
-		{
-			uint64_t RemainBytesToReceive =
-				this->m_TotalBytesToReceive - this->m_BytesReceived;
-			this->m_RemainTime =
-				RemainBytesToReceive / this->m_BytesReceivedSpeed;
-		}
-	}
+        if (0 == this->m_BytesReceivedSpeed ||
+            0 == this->m_TotalBytesToReceive)
+        {
+            this->m_RemainTime = static_cast<uint64_t>(-1);
+        }
+        else
+        {
+            uint64_t RemainBytesToReceive =
+                this->m_TotalBytesToReceive - this->m_BytesReceived;
+            this->m_RemainTime =
+                RemainBytesToReceive / this->m_BytesReceivedSpeed;
+        }
+    }
 }
 
 void TransferTask::NotifyPropertyChanged()
 {
-	if (nullptr != this->m_Operation)
-	{
-		this->RaisePropertyChanged(L"Status");
-		if (winrt::TransferTaskStatus::Running == this->m_Status)
-		{
-			this->RaisePropertyChanged(L"BytesReceived");
-			this->RaisePropertyChanged(L"TotalBytesToReceive");
-			this->RaisePropertyChanged(L"BytesReceivedSpeed");
-			this->RaisePropertyChanged(L"RemainTime");
-		}
-	}
+    if (nullptr != this->m_Operation)
+    {
+        this->RaisePropertyChanged(L"Status");
+        if (winrt::TransferTaskStatus::Running == this->m_Status)
+        {
+            this->RaisePropertyChanged(L"BytesReceived");
+            this->RaisePropertyChanged(L"TotalBytesToReceive");
+            this->RaisePropertyChanged(L"BytesReceivedSpeed");
+            this->RaisePropertyChanged(L"RemainTime");
+        }
+    }
 }
 
 winrt::ApplicationDataCompositeValue TransferTask::GetTaskConfig()
 {
-	this->m_TaskConfig.Insert(
-		L"Status",
-		winrt::box_value(static_cast<uint32_t>(this->m_Status)));
+    this->m_TaskConfig.Insert(
+        L"Status",
+        winrt::box_value(static_cast<uint32_t>(this->m_Status)));
 
-	return this->m_TaskConfig;
+    return this->m_TaskConfig;
 }
 
 /// <summary>
@@ -181,7 +181,7 @@ winrt::ApplicationDataCompositeValue TransferTask::GetTaskConfig()
 /// </summary>
 winrt::hstring TransferTask::Guid() const
 {
-	return this->m_Guid;
+    return this->m_Guid;
 }
 
 /// <summary>
@@ -189,7 +189,7 @@ winrt::hstring TransferTask::Guid() const
 /// </summary>
 winrt::Uri TransferTask::SourceUri() const
 {
-	return this->m_SourceUri;
+    return this->m_SourceUri;
 }
 
 /// <summary>
@@ -197,7 +197,7 @@ winrt::Uri TransferTask::SourceUri() const
 /// </summary>
 winrt::hstring TransferTask::FileName() const
 {
-	return this->m_FileName;
+    return this->m_FileName;
 }
 
 /// <summary>
@@ -205,7 +205,7 @@ winrt::hstring TransferTask::FileName() const
 /// </summary>
 winrt::IStorageFile TransferTask::SaveFile() const
 {
-	return this->m_SaveFile;
+    return this->m_SaveFile;
 }
 
 /// <summary>
@@ -213,7 +213,7 @@ winrt::IStorageFile TransferTask::SaveFile() const
 /// </summary>
 winrt::IStorageFolder TransferTask::SaveFolder() const
 {
-	return this->m_SaveFolder;
+    return this->m_SaveFolder;
 }
 
 /// <summary>
@@ -221,7 +221,7 @@ winrt::IStorageFolder TransferTask::SaveFolder() const
 /// </summary>
 winrt::TransferTaskStatus TransferTask::Status() const
 {
-	return this->m_Status;
+    return this->m_Status;
 }
 
 /// <summary>
@@ -231,7 +231,7 @@ winrt::TransferTaskStatus TransferTask::Status() const
 /// </summary>
 uint64_t TransferTask::BytesReceived() const
 {
-	return this->m_BytesReceived;
+    return this->m_BytesReceived;
 }
 
 /// <summary>
@@ -239,7 +239,7 @@ uint64_t TransferTask::BytesReceived() const
 /// </summary>
 uint64_t TransferTask::BytesReceivedSpeed() const
 {
-	return this->m_BytesReceivedSpeed;
+    return this->m_BytesReceivedSpeed;
 }
 
 /// <summary>
@@ -247,7 +247,7 @@ uint64_t TransferTask::BytesReceivedSpeed() const
 /// </summary>
 uint64_t TransferTask::RemainTime() const
 {
-	return this->m_RemainTime;
+    return this->m_RemainTime;
 }
 
 /// <summary>
@@ -256,7 +256,7 @@ uint64_t TransferTask::RemainTime() const
 /// </summary>
 uint64_t TransferTask::TotalBytesToReceive() const
 {
-	return this->m_TotalBytesToReceive;
+    return this->m_TotalBytesToReceive;
 }
 
 /// <summary>
@@ -264,17 +264,17 @@ uint64_t TransferTask::TotalBytesToReceive() const
 /// </summary>
 void TransferTask::Pause()
 {
-	if (winrt::TransferTaskStatus::Running == this->m_Status)
-	{
-		if (nullptr != this->m_Operation)
-		{
-			this->m_Operation.Pause();
-		}
-		else
-		{
-			this->m_Status = winrt::TransferTaskStatus::Error;
-		}
-	}
+    if (winrt::TransferTaskStatus::Running == this->m_Status)
+    {
+        if (nullptr != this->m_Operation)
+        {
+            this->m_Operation.Pause();
+        }
+        else
+        {
+            this->m_Status = winrt::TransferTaskStatus::Error;
+        }
+    }
 }
 
 /// <summary>
@@ -282,18 +282,18 @@ void TransferTask::Pause()
 /// </summary>
 void TransferTask::Resume()
 {
-	if (winrt::TransferTaskStatus::Paused == this->m_Status)
-	{
-		if (nullptr != this->m_Operation)
-		{
-			this->m_Operation.Resume();
-			this->m_Operation.AttachAsync();
-		}
-		else
-		{
-			this->m_Status = winrt::TransferTaskStatus::Error;
-		}
-	}
+    if (winrt::TransferTaskStatus::Paused == this->m_Status)
+    {
+        if (nullptr != this->m_Operation)
+        {
+            this->m_Operation.Resume();
+            this->m_Operation.AttachAsync();
+        }
+        else
+        {
+            this->m_Status = winrt::TransferTaskStatus::Error;
+        }
+    }
 }
 
 /// <summary>
@@ -301,161 +301,161 @@ void TransferTask::Resume()
 /// </summary>
 void TransferTask::Cancel()
 {
-	if (!NAIsFinalTransferTaskStatus(this->m_Status))
-	{
-		if (nullptr != this->m_Operation)
-		{
-			this->m_Operation.AttachAsync().Cancel();
-		}
-		else
-		{
-			this->m_Status = winrt::TransferTaskStatus::Error;
-		}
-	}
+    if (!NAIsFinalTransferTaskStatus(this->m_Status))
+    {
+        if (nullptr != this->m_Operation)
+        {
+            this->m_Operation.AttachAsync().Cancel();
+        }
+        else
+        {
+            this->m_Status = winrt::TransferTaskStatus::Error;
+        }
+    }
 }
 
 winrt::IAsyncAction TransferManager::Initialize(
-	bool EnableUINotify)
+    bool EnableUINotify)
 {
-	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+    M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
-	this->m_Downloader = winrt::BackgroundDownloader();
+    this->m_Downloader = winrt::BackgroundDownloader();
 
-	this->m_FutureAccessList =
-		winrt::StorageApplicationPermissions::FutureAccessList();
+    this->m_FutureAccessList =
+        winrt::StorageApplicationPermissions::FutureAccessList();
 
-	this->m_RootContainer =
-		winrt::ApplicationData::Current().LocalSettings().CreateContainer(
-			L"Nagisa",
-			winrt::ApplicationDataCreateDisposition::Always);
-	this->m_TasksContainer =
-		this->m_RootContainer.CreateContainer(
-			L"Tasks",
-			winrt::ApplicationDataCreateDisposition::Always);
+    this->m_RootContainer =
+        winrt::ApplicationData::Current().LocalSettings().CreateContainer(
+            L"Nagisa",
+            winrt::ApplicationDataCreateDisposition::Always);
+    this->m_TasksContainer =
+        this->m_RootContainer.CreateContainer(
+            L"Tasks",
+            winrt::ApplicationDataCreateDisposition::Always);
 
-	if (this->m_RootContainer.Values().HasKey(L"LastusedFolder"))
-	{
-		try
-		{
-			this->m_LastusedFolder =
-				co_await this->m_FutureAccessList.GetFolderAsync(
-					winrt::unbox_value<winrt::hstring>(
-						this->m_RootContainer.Values().Lookup(
-							L"LastusedFolder")));
-		}
-		catch (...)
-		{
-			this->m_LastusedFolder = nullptr;
-			this->m_RootContainer.Values().Remove(L"LastusedFolder");
-		}
-	}
+    if (this->m_RootContainer.Values().HasKey(L"LastusedFolder"))
+    {
+        try
+        {
+            this->m_LastusedFolder =
+                co_await this->m_FutureAccessList.GetFolderAsync(
+                    winrt::unbox_value<winrt::hstring>(
+                        this->m_RootContainer.Values().Lookup(
+                            L"LastusedFolder")));
+        }
+        catch (...)
+        {
+            this->m_LastusedFolder = nullptr;
+            this->m_RootContainer.Values().Remove(L"LastusedFolder");
+        }
+    }
 
-	if (this->m_RootContainer.Values().HasKey(L"DefaultFolder"))
-	{
-		try
-		{
-			this->m_DefaultFolder =
-				co_await this->m_FutureAccessList.GetFolderAsync(
-					winrt::unbox_value<winrt::hstring>(
-						this->m_RootContainer.Values().Lookup(
-							L"DefaultFolder")));
-		}
-		catch (...)
-		{
-			this->m_DefaultFolder = nullptr;
-			this->m_RootContainer.Values().Remove(L"DefaultFolder");
-		}
-	}
+    if (this->m_RootContainer.Values().HasKey(L"DefaultFolder"))
+    {
+        try
+        {
+            this->m_DefaultFolder =
+                co_await this->m_FutureAccessList.GetFolderAsync(
+                    winrt::unbox_value<winrt::hstring>(
+                        this->m_RootContainer.Values().Lookup(
+                            L"DefaultFolder")));
+        }
+        catch (...)
+        {
+            this->m_DefaultFolder = nullptr;
+            this->m_RootContainer.Values().Remove(L"DefaultFolder");
+        }
+    }
 
-	if (EnableUINotify)
-	{
-		this->m_UINotifyTimer = winrt::DispatcherTimer();
+    if (EnableUINotify)
+    {
+        this->m_UINotifyTimer = winrt::DispatcherTimer();
 
-		// 10,000 ticks per millisecond.
-		this->m_UINotifyTimer.Interval(winrt::TimeSpan(1000 * 10000));
+        // 10,000 ticks per millisecond.
+        this->m_UINotifyTimer.Interval(winrt::TimeSpan(1000 * 10000));
 
-		this->m_UINotifyTimer.Tick(
-			{ this, &TransferManager::UINotifyTimerTick });
+        this->m_UINotifyTimer.Tick(
+            { this, &TransferManager::UINotifyTimerTick });
 
-		this->m_UINotifyTimer.Start();
-	}
+        this->m_UINotifyTimer.Start();
+    }
 }
 
 void TransferManager::UpdateTransferTaskStatusWithoutLock(
-	bool NotifyUI)
+    bool NotifyUI)
 {
-	if (NotifyUI)
-	{
-		this->m_TotalDownloadBandwidth = 0;
-		this->m_TotalUploadBandwidth = 0;
-	}
-	
-	for (winrt::ITransferTask Task : this->m_TaskList)
-	{
-		if (nullptr == Task) continue;
+    if (NotifyUI)
+    {
+        this->m_TotalDownloadBandwidth = 0;
+        this->m_TotalUploadBandwidth = 0;
+    }
 
-		TransferTask& TaskInternal = *Task.try_as<TransferTask>();
+    for (winrt::ITransferTask Task : this->m_TaskList)
+    {
+        if (nullptr == Task) continue;
 
-		this->m_TasksContainer.Values().Insert(
-			TaskInternal.Guid(),
-			TaskInternal.GetTaskConfig());
+        TransferTask& TaskInternal = *Task.try_as<TransferTask>();
 
-		if (NotifyUI)
-		{
-			TaskInternal.UpdateChangedProperties();
-			TaskInternal.NotifyPropertyChanged();
+        this->m_TasksContainer.Values().Insert(
+            TaskInternal.Guid(),
+            TaskInternal.GetTaskConfig());
 
-			this->m_TotalDownloadBandwidth +=
-				TaskInternal.BytesReceivedSpeed();
-			this->m_TotalUploadBandwidth += 0;
-		}
-	}
+        if (NotifyUI)
+        {
+            TaskInternal.UpdateChangedProperties();
+            TaskInternal.NotifyPropertyChanged();
 
-	if (NotifyUI)
-	{
-		this->RaisePropertyChanged(L"TotalDownloadBandwidth");
-		this->RaisePropertyChanged(L"TotalUploadBandwidth");
-	}	
+            this->m_TotalDownloadBandwidth +=
+                TaskInternal.BytesReceivedSpeed();
+            this->m_TotalUploadBandwidth += 0;
+        }
+    }
+
+    if (NotifyUI)
+    {
+        this->RaisePropertyChanged(L"TotalDownloadBandwidth");
+        this->RaisePropertyChanged(L"TotalUploadBandwidth");
+    }
 }
 
 void TransferManager::UINotifyTimerTick(
-	const winrt::IInspectable sender,
-	const winrt::IInspectable args)
+    const winrt::IInspectable sender,
+    const winrt::IInspectable args)
 {
-	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+    M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
-	this->UpdateTransferTaskStatusWithoutLock(true);
+    this->UpdateTransferTaskStatusWithoutLock(true);
 }
 
 void TransferManager::CreateBackgroundWorker()
 {
-	using Windows::ApplicationModel::Background::BackgroundTaskBuilder;
-	using Windows::ApplicationModel::Background::BackgroundTaskRegistration;
-	using Windows::ApplicationModel::Background::IBackgroundTaskRegistration;
-	using Windows::ApplicationModel::Background::SocketActivityTrigger;
+    using Windows::ApplicationModel::Background::BackgroundTaskBuilder;
+    using Windows::ApplicationModel::Background::BackgroundTaskRegistration;
+    using Windows::ApplicationModel::Background::IBackgroundTaskRegistration;
+    using Windows::ApplicationModel::Background::SocketActivityTrigger;
 
-	const wchar_t* BackgroundWorkerTaskName = L"Assassin.BackgroundWorker";
-	
-	IBackgroundTaskRegistration Task = nullptr;
-	for (auto Current : BackgroundTaskRegistration::AllTasks())
-	{
-		if (BackgroundWorkerTaskName == Current.Value().Name())
-		{
-			Task = Current.Value();
-			break;
-		}
-	}
+    const wchar_t* BackgroundWorkerTaskName = L"Assassin.BackgroundWorker";
 
-	if (nullptr == Task)
-	{
-		auto TaskBuilder = BackgroundTaskBuilder();
-		TaskBuilder.Name(BackgroundWorkerTaskName);
-		TaskBuilder.TaskEntryPoint(L"Assassin.BackgroundWorker");
-		TaskBuilder.SetTrigger(SocketActivityTrigger());
-		TaskBuilder.IsNetworkRequested(true);
-		Task = TaskBuilder.Register();
-	}
-	
+    IBackgroundTaskRegistration Task = nullptr;
+    for (auto Current : BackgroundTaskRegistration::AllTasks())
+    {
+        if (BackgroundWorkerTaskName == Current.Value().Name())
+        {
+            Task = Current.Value();
+            break;
+        }
+    }
+
+    if (nullptr == Task)
+    {
+        auto TaskBuilder = BackgroundTaskBuilder();
+        TaskBuilder.Name(BackgroundWorkerTaskName);
+        TaskBuilder.TaskEntryPoint(L"Assassin.BackgroundWorker");
+        TaskBuilder.SetTrigger(SocketActivityTrigger());
+        TaskBuilder.IsNetworkRequested(true);
+        Task = TaskBuilder.Register();
+    }
+
 
 
 }
@@ -467,9 +467,9 @@ void TransferManager::CreateBackgroundWorker()
 /// Enable the UI notify timer if true.
 /// </param>
 TransferManager::TransferManager(
-	bool EnableUINotify)
+    bool EnableUINotify)
 {
-	this->Initialize(EnableUINotify);
+    this->Initialize(EnableUINotify);
 }
 
 /// <summary>
@@ -477,12 +477,12 @@ TransferManager::TransferManager(
 /// </summary>
 TransferManager::~TransferManager()
 {
-	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+    M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
-	if (nullptr != this->m_UINotifyTimer)
-	{
-		this->m_UINotifyTimer.Stop();
-	}
+    if (nullptr != this->m_UINotifyTimer)
+    {
+        this->m_UINotifyTimer.Stop();
+    }
 }
 
 /// <summary>
@@ -490,7 +490,7 @@ TransferManager::~TransferManager()
 /// </summary>
 void TransferManager::Close()
 {
-	delete this;
+    delete this;
 }
 
 /// <summary>
@@ -498,7 +498,7 @@ void TransferManager::Close()
 /// </summary>
 winrt::hstring TransferManager::Version() const
 {
-	return NAGISA_VERSION_STRING;
+    return NAGISA_VERSION_STRING;
 }
 
 /// <summary>
@@ -506,24 +506,24 @@ winrt::hstring TransferManager::Version() const
 /// </summary>
 winrt::hstring TransferManager::SearchFilter() const
 {
-	return this->m_SearchFilter;
+    return this->m_SearchFilter;
 }
 
 /// <summary>
 /// Sets the filter to use for searching the task list.
 /// </summary>
 void TransferManager::SearchFilter(
-	winrt::hstring const& value)
+    winrt::hstring const& value)
 {
-	this->m_SearchFilter = value;
+    this->m_SearchFilter = value;
 }
 
 /// <summary>
 /// Gets the last used folder.
 /// </summary>
 winrt::IStorageFolder TransferManager::LastusedFolder()
-{	
-	return this->m_LastusedFolder;
+{
+    return this->m_LastusedFolder;
 }
 
 /// <summary>
@@ -531,31 +531,31 @@ winrt::IStorageFolder TransferManager::LastusedFolder()
 /// </summary>
 winrt::IStorageFolder TransferManager::DefaultFolder()
 {
-	return this->m_DefaultFolder;
+    return this->m_DefaultFolder;
 }
 
 /// <summary>
 /// Sets the default download folder.
 /// </summary>
 void TransferManager::DefaultFolder(
-	winrt::IStorageFolder const& value)
+    winrt::IStorageFolder const& value)
 {
-	this->m_DefaultFolder = value;
+    this->m_DefaultFolder = value;
 
-	if (nullptr != this->m_DefaultFolder)
-	{
-		this->m_RootContainer.Values().Insert(
-			L"DefaultFolder",
-			winrt::box_value(this->m_FutureAccessList.Add(
-				this->m_DefaultFolder)));
-	}
-	else
-	{
-		if (this->m_RootContainer.Values().HasKey(L"DefaultFolder"))
-		{
-			this->m_RootContainer.Values().Remove(L"DefaultFolder");
-		}
-	}
+    if (nullptr != this->m_DefaultFolder)
+    {
+        this->m_RootContainer.Values().Insert(
+            L"DefaultFolder",
+            winrt::box_value(this->m_FutureAccessList.Add(
+                this->m_DefaultFolder)));
+    }
+    else
+    {
+        if (this->m_RootContainer.Values().HasKey(L"DefaultFolder"))
+        {
+            this->m_RootContainer.Values().Remove(L"DefaultFolder");
+        }
+    }
 }
 
 /// <summary>
@@ -563,7 +563,7 @@ void TransferManager::DefaultFolder(
 /// </summary>
 uint64_t TransferManager::TotalDownloadBandwidth() const
 {
-	return this->m_TotalDownloadBandwidth;
+    return this->m_TotalDownloadBandwidth;
 }
 
 /// <summary>
@@ -571,7 +571,7 @@ uint64_t TransferManager::TotalDownloadBandwidth() const
 /// </summary>
 uint64_t TransferManager::TotalUploadBandwidth() const
 {
-	return this->m_TotalUploadBandwidth;
+    return this->m_TotalUploadBandwidth;
 }
 
 /// <summary>
@@ -581,55 +581,55 @@ uint64_t TransferManager::TotalUploadBandwidth() const
 /// Returns an object which represents the task list.
 /// </returns>
 winrt::IAsyncOperation<winrt::IVectorView<winrt::ITransferTask>>
-	TransferManager::GetTasksAsync()
+TransferManager::GetTasksAsync()
 {
-	co_await winrt::resume_background();
+    co_await winrt::resume_background();
 
-	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+    M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
-	this->UpdateTransferTaskStatusWithoutLock(false);
+    this->UpdateTransferTaskStatusWithoutLock(false);
 
-	this->m_TaskList.clear();
+    this->m_TaskList.clear();
 
-	winrt::hstring CurrentSearchFilter = this->SearchFilter();
+    winrt::hstring CurrentSearchFilter = this->SearchFilter();
 
-	bool NeedSearchFilter = !CurrentSearchFilter.empty();
+    bool NeedSearchFilter = !CurrentSearchFilter.empty();
 
-	std::map<winrt::hstring, winrt::DownloadOperation> DownloadsList;
+    std::map<winrt::hstring, winrt::DownloadOperation> DownloadsList;
 
-	for (winrt::DownloadOperation Item
-		: co_await this->m_Downloader.GetCurrentDownloadsAsync())
-	{
-		DownloadsList.insert(std::pair<winrt::hstring, winrt::DownloadOperation>(
-			winrt::to_hstring(Item.Guid()), Item));
-	}
+    for (winrt::DownloadOperation Item
+        : co_await this->m_Downloader.GetCurrentDownloadsAsync())
+    {
+        DownloadsList.insert(std::pair<winrt::hstring, winrt::DownloadOperation>(
+            winrt::to_hstring(Item.Guid()), Item));
+    }
 
-	for (winrt::IKeyValuePair<winrt::hstring, winrt::IInspectable> Download
-		: this->m_TasksContainer.Values())
-	{
-		winrt::ITransferTask Task = winrt::make<TransferTask>();
+    for (winrt::IKeyValuePair<winrt::hstring, winrt::IInspectable> Download
+        : this->m_TasksContainer.Values())
+    {
+        winrt::ITransferTask Task = winrt::make<TransferTask>();
 
-		co_await Task.try_as<TransferTask>()->Initialize(
-			Download.Key(),
-			Download.Value().try_as<winrt::ApplicationDataCompositeValue>(),
-			this->m_FutureAccessList,
-			DownloadsList);
+        co_await Task.try_as<TransferTask>()->Initialize(
+            Download.Key(),
+            Download.Value().try_as<winrt::ApplicationDataCompositeValue>(),
+            this->m_FutureAccessList,
+            DownloadsList);
 
-		if (NeedSearchFilter)
-		{
-			if (!M2FindSubString(
-				Task.FileName(), CurrentSearchFilter, true))
-			{
-				continue;
-			}
-		}
+        if (NeedSearchFilter)
+        {
+            if (!M2FindSubString(
+                Task.FileName(), CurrentSearchFilter, true))
+            {
+                continue;
+            }
+        }
 
-		this->m_TaskList.push_back(Task);
-	}
+        this->m_TaskList.push_back(Task);
+    }
 
-	// Asynchronous call return.
-	co_return winrt::make<M2::BindableVectorView<winrt::ITransferTask>>(
-		this->m_TaskList);
+    // Asynchronous call return.
+    co_return winrt::make<M2::BindableVectorView<winrt::ITransferTask>>(
+        this->m_TaskList);
 }
 
 /// <summary>
@@ -648,55 +648,55 @@ winrt::IAsyncOperation<winrt::IVectorView<winrt::ITransferTask>>
 /// Returns an asynchronous object used to wait.
 /// </returns>
 winrt::IAsyncAction TransferManager::AddTaskAsync(
-	winrt::Uri const SourceUri,
-	winrt::hstring const DesiredFileName,
-	winrt::IStorageFolder const SaveFolder)
+    winrt::Uri const SourceUri,
+    winrt::hstring const DesiredFileName,
+    winrt::IStorageFolder const SaveFolder)
 {
-	co_await winrt::resume_background();
-	
-	winrt::IStorageFile SaveFile = co_await SaveFolder.CreateFileAsync(
-		DesiredFileName,
-		winrt::CreationCollisionOption::GenerateUniqueName);
+    co_await winrt::resume_background();
 
-	winrt::hstring Token = this->m_FutureAccessList.Add(SaveFolder);
+    winrt::IStorageFile SaveFile = co_await SaveFolder.CreateFileAsync(
+        DesiredFileName,
+        winrt::CreationCollisionOption::GenerateUniqueName);
 
-	this->m_LastusedFolder = SaveFolder;
-	this->m_RootContainer.Values().Insert(
-		L"LastusedFolder",
-		winrt::box_value(Token));
+    winrt::hstring Token = this->m_FutureAccessList.Add(SaveFolder);
 
-	winrt::DownloadOperation Operation = this->m_Downloader.CreateDownload(
-		SourceUri, SaveFile);
+    this->m_LastusedFolder = SaveFolder;
+    this->m_RootContainer.Values().Insert(
+        L"LastusedFolder",
+        winrt::box_value(Token));
 
-	winrt::ApplicationDataCompositeValue TaskConfig =
-		winrt::ApplicationDataCompositeValue();
+    winrt::DownloadOperation Operation = this->m_Downloader.CreateDownload(
+        SourceUri, SaveFile);
 
-	TaskConfig.Insert(
-		L"SourceUri",
-		winrt::box_value(SourceUri.RawUri()));
-	TaskConfig.Insert(
-		L"FileName",
-		winrt::box_value(SaveFile.Name()));
-	TaskConfig.Insert(
-		L"SaveFolder",
-		winrt::box_value(Token));
-	TaskConfig.Insert(
-		L"Status",
-		winrt::box_value(
-			static_cast<uint32_t>(winrt::TransferTaskStatus::Queued)));
+    winrt::ApplicationDataCompositeValue TaskConfig =
+        winrt::ApplicationDataCompositeValue();
 
-	TaskConfig.Insert(
-		L"BackgroundTransferGuid",
-		winrt::box_value(winrt::to_hstring(Operation.Guid())));
+    TaskConfig.Insert(
+        L"SourceUri",
+        winrt::box_value(SourceUri.RawUri()));
+    TaskConfig.Insert(
+        L"FileName",
+        winrt::box_value(SaveFile.Name()));
+    TaskConfig.Insert(
+        L"SaveFolder",
+        winrt::box_value(Token));
+    TaskConfig.Insert(
+        L"Status",
+        winrt::box_value(
+            static_cast<uint32_t>(winrt::TransferTaskStatus::Queued)));
 
-	this->m_TasksContainer.Values().Insert(
-		winrt::to_hstring(M2CreateGuid()),
-		TaskConfig);
+    TaskConfig.Insert(
+        L"BackgroundTransferGuid",
+        winrt::box_value(winrt::to_hstring(Operation.Guid())));
 
-	Operation.StartAsync();
+    this->m_TasksContainer.Values().Insert(
+        winrt::to_hstring(M2CreateGuid()),
+        TaskConfig);
 
-	// Asynchronous call return.
-	co_return;
+    Operation.StartAsync();
+
+    // Asynchronous call return.
+    co_return;
 }
 
 /// <summary>
@@ -709,47 +709,47 @@ winrt::IAsyncAction TransferManager::AddTaskAsync(
 /// Returns an asynchronous object used to wait.
 /// </returns>
 winrt::IAsyncAction TransferManager::RemoveTaskAsync(
-	winrt::ITransferTask const Task)
+    winrt::ITransferTask const Task)
 {
-	co_await winrt::resume_background();
-	
-	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+    co_await winrt::resume_background();
 
-	if (!NAIsFinalTransferTaskStatus(Task.Status()))
-	{
-		Task.Cancel();
-	}
+    M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
-	if (winrt::TransferTaskStatus::Completed != Task.Status())
-	{
-		try
-		{
-			winrt::IStorageFile SaveFile = Task.SaveFile();
-			if (nullptr != SaveFile)
-			{
-				co_await SaveFile.DeleteAsync(
-					winrt::StorageDeleteOption::PermanentDelete);
-			}
-		}
-		catch (...)
-		{
+    if (!NAIsFinalTransferTaskStatus(Task.Status()))
+    {
+        Task.Cancel();
+    }
 
-		}
-	}
+    if (winrt::TransferTaskStatus::Completed != Task.Status())
+    {
+        try
+        {
+            winrt::IStorageFile SaveFile = Task.SaveFile();
+            if (nullptr != SaveFile)
+            {
+                co_await SaveFile.DeleteAsync(
+                    winrt::StorageDeleteOption::PermanentDelete);
+            }
+        }
+        catch (...)
+        {
 
-	for (size_t i = 0; i < this->m_TaskList.size(); ++i)
-	{
-		if (nullptr == this->m_TaskList[i]) continue;
+        }
+    }
 
-		if (Task.Guid() == this->m_TaskList[i].Guid())
-		{
-			this->m_TaskList[i] = nullptr;
-		}
-	}
-	this->m_TasksContainer.Values().Remove(Task.Guid());
+    for (size_t i = 0; i < this->m_TaskList.size(); ++i)
+    {
+        if (nullptr == this->m_TaskList[i]) continue;
 
-	// Asynchronous call return.
-	co_return;
+        if (Task.Guid() == this->m_TaskList[i].Guid())
+        {
+            this->m_TaskList[i] = nullptr;
+        }
+    }
+    this->m_TasksContainer.Values().Remove(Task.Guid());
+
+    // Asynchronous call return.
+    co_return;
 }
 
 /// <summary>
@@ -757,14 +757,14 @@ winrt::IAsyncAction TransferManager::RemoveTaskAsync(
 /// </summary>
 void TransferManager::StartAllTasks()
 {
-	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+    M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
-	for (winrt::ITransferTask Task : this->m_TaskList)
-	{
-		if (nullptr == Task) continue;
+    for (winrt::ITransferTask Task : this->m_TaskList)
+    {
+        if (nullptr == Task) continue;
 
-		Task.Resume();
-	}
+        Task.Resume();
+    }
 }
 
 /// <summary>
@@ -772,14 +772,14 @@ void TransferManager::StartAllTasks()
 /// </summary>
 void TransferManager::PauseAllTasks()
 {
-	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+    M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
-	for (winrt::ITransferTask Task : this->m_TaskList)
-	{
-		if (nullptr == Task) continue;
+    for (winrt::ITransferTask Task : this->m_TaskList)
+    {
+        if (nullptr == Task) continue;
 
-		Task.Pause();
-	}
+        Task.Pause();
+    }
 }
 
 /// <summary>
@@ -787,13 +787,13 @@ void TransferManager::PauseAllTasks()
 /// </summary>
 void TransferManager::ClearTaskList()
 {
-	M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+    M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
-	for (winrt::ITransferTask Task : this->m_TaskList)
-	{
-		if (NAIsFinalTransferTaskStatus(Task.Status()))
-		{
-			this->RemoveTaskAsync(Task);
-		}
-	}
+    for (winrt::ITransferTask Task : this->m_TaskList)
+    {
+        if (NAIsFinalTransferTaskStatus(Task.Status()))
+        {
+            this->RemoveTaskAsync(Task);
+        }
+    }
 }

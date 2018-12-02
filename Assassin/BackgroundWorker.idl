@@ -7,10 +7,10 @@ License: The MIT License
 
 namespace Assassin
 {
-	[version(1.0)]
+    [version(1.0)]
     runtimeclass BackgroundWorker :
-		Windows.ApplicationModel.Background.IBackgroundTask
+        Windows.ApplicationModel.Background.IBackgroundTask
     {
-		BackgroundWorker();
+        BackgroundWorker();
     }
 }

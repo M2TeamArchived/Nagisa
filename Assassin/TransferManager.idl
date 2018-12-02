@@ -7,196 +7,196 @@ License: The MIT License
 
 namespace Assassin
 {
-	enum TransferTaskStatus
+    enum TransferTaskStatus
     {
-        Canceled  = 0,
+        Canceled = 0,
         Completed = 1,
-        Error     = 2,
-        Paused    = 3,
-        Queued    = 4,
-        Running   = 5
+        Error = 2,
+        Paused = 3,
+        Queued = 4,
+        Running = 5
     };
 
-	[version(1.0)]
+    [version(1.0)]
     [uuid(B70ACDED-7354-3082-BF73-D931D80C047B)]
     interface ITransferTask : IInspectable
-		requires Windows.UI.Xaml.Data.INotifyPropertyChanged
-	{
-		/// <value>
-		/// The Guid string of the task.
-		/// </value>
-		String Guid { get; };
-			
-		/// <value>
-		/// The URI which to download the file.
-		/// </value>
-		Windows.Foundation.Uri SourceUri { get; };
-
-		/// <value>
-		/// The file name which to download the file.
-		/// </value>
-		String FileName { get; };
-
-		/// <value>
-		/// The save file object which to download the file.
-		/// </value>
-		Windows.Storage.IStorageFile SaveFile { get; };
-
-		/// <value>
-		/// The save folder object which to download the file.
-		/// </value>
-		Windows.Storage.IStorageFolder SaveFolder { get; };
-
-		/// <value>
-		/// The current status of the task.
-		/// </value>
-		TransferTaskStatus Status { get; };
-
-		/// <value>
-		/// The total number of bytes received. This value does not include
-		/// bytes received as response headers. If the task has restarted, this
-		/// value may be smaller than in the previous progress report.
-		/// </value>
-		UInt64 BytesReceived { get; };
-
-		/// <value>
-		/// The speed of bytes received in one second.
-		/// </value>
-		UInt64 BytesReceivedSpeed { get; };
-
-		/// <value>
-		/// The remain time, in seconds.
-		/// </value>
-		UInt64 RemainTime { get; };
-
-		/// <value>
-		/// The total number of bytes of data to download. If this number is
-		/// unknown, this value is set to 0.
-		/// </value>
-		UInt64 TotalBytesToReceive { get; };
-
-		/// <summary>
-		/// Pauses a download operation.
-		/// </summary>
-		void Pause();
-
-		/// <summary>
-		/// Resumes a paused download operation.
-		/// </summary>
-		void Resume();
-
-		/// <summary>
-		/// Cancels a download operation.
-		/// </summary>
-		void Cancel();
-    }
-
-	typedef Windows.Foundation.Collections.IVectorView<ITransferTask> ITransferTaskVector;
-
-	[version(1.0)]
-    [uuid(976D09B5-65EE-39DE-9C00-26E47D6538D7)] 
-	interface ITransferManager : IInspectable
-		requires 
-			Windows.Foundation.IClosable, 
-			Windows.UI.Xaml.Data.INotifyPropertyChanged
-	{
-		/// <value>
-		/// The version of Nagisa.
-		/// </value>
-		String Version { get; };
-
-		/// <value>
-		/// The filter to use for searching the task list.
-		/// </value>
-		String SearchFilter { get; set; };
-
-		/// <value>
-		/// The last used folder.
-		/// </value>
-		Windows.Storage.IStorageFolder LastusedFolder { get; };
-
-		/// <value>
-		/// The default download folder.
-		/// </value>
-		Windows.Storage.IStorageFolder DefaultFolder { get; set; };
-
-		/// <value>
-		/// The total download bandwidth.
-		/// </value>
-		UInt64 TotalDownloadBandwidth { get; };
-
-		/// <value>
-		/// The total upload bandwidth.
-		/// </value>
-		UInt64 TotalUploadBandwidth { get; };
-
-		/// <summary>
-		/// Gets the task list.
-		/// </summary>
-		/// <returns>
-		/// Returns an object which represents the task list.
-		/// </returns>
-		Windows.Foundation.IAsyncOperation<ITransferTaskVector> GetTasksAsync();
-
-		/// <summary>
-		/// Add a task to the task list.
-		/// </summary>
-		/// <param name="SourceUri">
-		/// The source uri object of task.
-		/// </param>
-		/// <param name="DesiredFileName">
-		/// The file name you desire.
-		/// </param>
-		/// <param name="SaveFolder">
-		/// The object of the folder which you want to save.
-		/// </param>
-		/// <returns>
-		/// Returns an asynchronous object used to wait.
-		/// </returns>
-		Windows.Foundation.IAsyncAction AddTaskAsync(
-			Windows.Foundation.Uri SourceUri,
-			String DesiredFileName,
-			Windows.Storage.IStorageFolder SaveFolder);
-
-		/// <summary>
-		/// Removes a task to the task list.
-		/// </summary>
-		/// <param name="Task">
-		/// The task object.
-		/// </param>
-		/// <returns>
-		/// Returns an asynchronous object used to wait.
-		/// </returns>
-		Windows.Foundation.IAsyncAction RemoveTaskAsync(
-			ITransferTask Task);
-
-		/// <summary>
-		/// Start all tasks.
-		/// </summary>
-		void StartAllTasks();
-
-		/// <summary>
-		/// Pause all tasks.
-		/// </summary>
-		void PauseAllTasks();
-
-		/// <summary>
-		/// Clears the task list.
-		/// </summary>
-		void ClearTaskList();
-    }
-
-	[version(1.0)]
-    runtimeclass TransferManager :
-		[default] ITransferManager
+        requires Windows.UI.Xaml.Data.INotifyPropertyChanged
     {
-		/// <summary>
-		/// Creates a new TransferManager object.
-		/// </summary>
-		/// <param name="EnableUINotify">
-		/// Enable the UI notify timer if true.
-		/// </param>
-		TransferManager(
-			Boolean EnableUINotify);
+        /// <value>
+        /// The Guid string of the task.
+        /// </value>
+        String Guid { get; };
+
+    /// <value>
+    /// The URI which to download the file.
+    /// </value>
+    Windows.Foundation.Uri SourceUri { get; };
+
+    /// <value>
+    /// The file name which to download the file.
+    /// </value>
+    String FileName { get; };
+
+    /// <value>
+    /// The save file object which to download the file.
+    /// </value>
+    Windows.Storage.IStorageFile SaveFile { get; };
+
+    /// <value>
+    /// The save folder object which to download the file.
+    /// </value>
+    Windows.Storage.IStorageFolder SaveFolder { get; };
+
+    /// <value>
+    /// The current status of the task.
+    /// </value>
+    TransferTaskStatus Status { get; };
+
+    /// <value>
+    /// The total number of bytes received. This value does not include
+    /// bytes received as response headers. If the task has restarted, this
+    /// value may be smaller than in the previous progress report.
+    /// </value>
+    UInt64 BytesReceived { get; };
+
+    /// <value>
+    /// The speed of bytes received in one second.
+    /// </value>
+    UInt64 BytesReceivedSpeed { get; };
+
+    /// <value>
+    /// The remain time, in seconds.
+    /// </value>
+    UInt64 RemainTime { get; };
+
+    /// <value>
+    /// The total number of bytes of data to download. If this number is
+    /// unknown, this value is set to 0.
+    /// </value>
+    UInt64 TotalBytesToReceive { get; };
+
+    /// <summary>
+    /// Pauses a download operation.
+    /// </summary>
+    void Pause();
+
+    /// <summary>
+    /// Resumes a paused download operation.
+    /// </summary>
+    void Resume();
+
+    /// <summary>
+    /// Cancels a download operation.
+    /// </summary>
+    void Cancel();
+}
+
+typedef Windows.Foundation.Collections.IVectorView<ITransferTask> ITransferTaskVector;
+
+[version(1.0)]
+[uuid(976D09B5-65EE-39DE-9C00-26E47D6538D7)]
+interface ITransferManager : IInspectable
+    requires
+        Windows.Foundation.IClosable,
+        Windows.UI.Xaml.Data.INotifyPropertyChanged
+{
+    /// <value>
+    /// The version of Nagisa.
+    /// </value>
+    String Version { get; };
+
+/// <value>
+/// The filter to use for searching the task list.
+/// </value>
+String SearchFilter { get; set; };
+
+/// <value>
+/// The last used folder.
+/// </value>
+Windows.Storage.IStorageFolder LastusedFolder { get; };
+
+/// <value>
+/// The default download folder.
+/// </value>
+Windows.Storage.IStorageFolder DefaultFolder { get; set; };
+
+/// <value>
+/// The total download bandwidth.
+/// </value>
+UInt64 TotalDownloadBandwidth { get; };
+
+/// <value>
+/// The total upload bandwidth.
+/// </value>
+UInt64 TotalUploadBandwidth { get; };
+
+/// <summary>
+/// Gets the task list.
+/// </summary>
+/// <returns>
+/// Returns an object which represents the task list.
+/// </returns>
+Windows.Foundation.IAsyncOperation<ITransferTaskVector> GetTasksAsync();
+
+/// <summary>
+/// Add a task to the task list.
+/// </summary>
+/// <param name="SourceUri">
+/// The source uri object of task.
+/// </param>
+/// <param name="DesiredFileName">
+/// The file name you desire.
+/// </param>
+/// <param name="SaveFolder">
+/// The object of the folder which you want to save.
+/// </param>
+/// <returns>
+/// Returns an asynchronous object used to wait.
+/// </returns>
+Windows.Foundation.IAsyncAction AddTaskAsync(
+    Windows.Foundation.Uri SourceUri,
+    String DesiredFileName,
+    Windows.Storage.IStorageFolder SaveFolder);
+
+/// <summary>
+/// Removes a task to the task list.
+/// </summary>
+/// <param name="Task">
+/// The task object.
+/// </param>
+/// <returns>
+/// Returns an asynchronous object used to wait.
+/// </returns>
+Windows.Foundation.IAsyncAction RemoveTaskAsync(
+    ITransferTask Task);
+
+/// <summary>
+/// Start all tasks.
+/// </summary>
+void StartAllTasks();
+
+/// <summary>
+/// Pause all tasks.
+/// </summary>
+void PauseAllTasks();
+
+/// <summary>
+/// Clears the task list.
+/// </summary>
+void ClearTaskList();
+}
+
+[version(1.0)]
+runtimeclass TransferManager :
+    [default] ITransferManager
+{
+        /// <summary>
+        /// Creates a new TransferManager object.
+        /// </summary>
+        /// <param name="EnableUINotify">
+        /// Enable the UI notify timer if true.
+        /// </param>
+        TransferManager(
+            Boolean EnableUINotify);
     }
 }

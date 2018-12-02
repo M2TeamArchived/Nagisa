@@ -8,10 +8,10 @@ License: The MIT License
 namespace Assassin
 {
     [Windows.UI.Xaml.Data.Bindable]
-	[Windows.Foundation.Metadata.WebHostHidden]
-	runtimeclass CustomConverter :
+    [Windows.Foundation.Metadata.WebHostHidden]
+    runtimeclass CustomConverter :
         [default] Windows.UI.Xaml.Data.IValueConverter
     {
-		CustomConverter();
+        CustomConverter();
     }
 }

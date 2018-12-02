@@ -22,11 +22,11 @@ License: The MIT License
 
 namespace winrt
 {
-	using Windows::UI::Xaml::Data::INotifyPropertyChanged;
-	using Windows::UI::Xaml::Data::PropertyChangedEventArgs;
-	using Windows::UI::Xaml::Data::PropertyChangedEventHandler;
+    using Windows::UI::Xaml::Data::INotifyPropertyChanged;
+    using Windows::UI::Xaml::Data::PropertyChangedEventArgs;
+    using Windows::UI::Xaml::Data::PropertyChangedEventHandler;
 }
- 
+
 /// <summary>
 /// Creates a GUID, a unique 128-bit integer used for CLSIDs and interface
 /// identifiers.
@@ -35,7 +35,7 @@ namespace winrt
 /// The function will return GUID struct.
 /// </returns>
 GUID M2CreateGuid();
-  
+
 /// <summary>
 /// Finds a sub string from a source string.
 /// </summary>
@@ -52,10 +52,10 @@ GUID M2CreateGuid();
 /// Returns true if successful, or false otherwise.
 /// </returns>
 bool M2FindSubString(
-	winrt::hstring SourceString,
-	winrt::hstring SubString,
-	bool IgnoreCase);
-   
+    winrt::hstring SourceString,
+    winrt::hstring SubString,
+    bool IgnoreCase);
+
 /// <summary>
 /// Converts a numeric value into a string that represents the number expressed
 /// as a size value in byte, bytes, kibibytes, mebibytes, gibibytes, tebibytes,
@@ -68,29 +68,29 @@ bool M2FindSubString(
 /// Returns a winrt::hstring object which represents the converted string.
 /// </returns>
 winrt::hstring M2ConvertByteSizeToString(
-	uint64_t ByteSize);
+    uint64_t ByteSize);
 
 namespace M2
 {
-	struct NotifyPropertyChangedBase : winrt::implements<
-		NotifyPropertyChangedBase, winrt::INotifyPropertyChanged>
-	{
-	private:
-		winrt::event<winrt::PropertyChangedEventHandler> m_PropertyChanged;
+    struct NotifyPropertyChangedBase : winrt::implements<
+        NotifyPropertyChangedBase, winrt::INotifyPropertyChanged>
+    {
+    private:
+        winrt::event<winrt::PropertyChangedEventHandler> m_PropertyChanged;
 
-	protected:
-		void RaisePropertyChanged(
-			winrt::hstring PropertyName);
+    protected:
+        void RaisePropertyChanged(
+            winrt::hstring PropertyName);
 
-	public:
-		NotifyPropertyChangedBase() = default;
+    public:
+        NotifyPropertyChangedBase() = default;
 
-		winrt::event_token PropertyChanged(
-			winrt::PropertyChangedEventHandler const& value);
+        winrt::event_token PropertyChanged(
+            winrt::PropertyChangedEventHandler const& value);
 
-		void PropertyChanged(
-			winrt::event_token const& token);
-	};
+        void PropertyChanged(
+            winrt::event_token const& token);
+    };
 }
 
 #endif // _M2_WINRT_HELPERS_

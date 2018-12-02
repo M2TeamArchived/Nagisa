@@ -14,358 +14,358 @@ License: The MIT License
 using namespace Nagisa;
 
 MainPage::MainPage() :
-	m_TransferManager(ref new Assassin::TransferManager(true))
+    m_TransferManager(ref new Assassin::TransferManager(true))
 {
-	InitializeComponent();
+    InitializeComponent();
 }
 
 ITransferManager^ MainPage::TransferManager::get()
 {
-	return this->m_TransferManager;
+    return this->m_TransferManager;
 }
 
 void MainPage::RefreshTaskList()
 {
-	auto Tasks = M2AsyncWait(this->m_TransferManager->GetTasksAsync());
+    auto Tasks = M2AsyncWait(this->m_TransferManager->GetTasksAsync());
 
-	if (nullptr != Tasks)
-	{
-		M2ExecuteOnUIThread([this, Tasks]()
-		{
-			this->TaskList->ItemsSource = Tasks;
-		});
-	}
+    if (nullptr != Tasks)
+    {
+        M2ExecuteOnUIThread([this, Tasks]()
+        {
+            this->TaskList->ItemsSource = Tasks;
+        });
+    }
 }
 
 void Nagisa::MainPage::RefreshTaskListAsync()
 {
-	M2::CThread([this]()
-	{
-		this->RefreshTaskList();
-	});
+    M2::CThread([this]()
+    {
+        this->RefreshTaskList();
+    });
 }
 
 void Nagisa::MainPage::SearchTaskList(String^ SearchFilter)
 {
-	this->m_TransferManager->SearchFilter = SearchFilter;
+    this->m_TransferManager->SearchFilter = SearchFilter;
 
-	this->RefreshTaskListAsync();
+    this->RefreshTaskListAsync();
 }
 
 IAsyncOperation<ContentDialogResult>^ MainPage::ShowContentDialogAsync(
-	ContentDialog^ Dialog)
+    ContentDialog^ Dialog)
 {
-	double PageActualWidth = this->ActualWidth;
-	if (Dialog->MaxWidth > PageActualWidth)
-		Dialog->MaxWidth = PageActualWidth;
+    double PageActualWidth = this->ActualWidth;
+    if (Dialog->MaxWidth > PageActualWidth)
+        Dialog->MaxWidth = PageActualWidth;
 
-	double PageActualHeight = this->ActualHeight;
-	if (Dialog->MaxHeight > PageActualHeight)
-		Dialog->MaxHeight = PageActualHeight;
+    double PageActualHeight = this->ActualHeight;
+    if (Dialog->MaxHeight > PageActualHeight)
+        Dialog->MaxHeight = PageActualHeight;
 
-	return Dialog->ShowAsync();
+    return Dialog->ShowAsync();
 }
 
 void MainPage::AboutButton_Click(
-	Object^ sender,
-	RoutedEventArgs^ e)
+    Object^ sender,
+    RoutedEventArgs^ e)
 {
-	this->ShowContentDialogAsync(
-		ref new AboutDialog(this->m_TransferManager));
+    this->ShowContentDialogAsync(
+        ref new AboutDialog(this->m_TransferManager));
 }
 
 void MainPage::NewTaskButton_Click(
-	Object^ sender,
-	RoutedEventArgs^ e)
+    Object^ sender,
+    RoutedEventArgs^ e)
 {
-	using Windows::UI::Xaml::Controls::ContentDialogResult;
+    using Windows::UI::Xaml::Controls::ContentDialogResult;
 
-	IAsyncOperation<ContentDialogResult>^ Operation =
-		this->ShowContentDialogAsync(
-			ref new NewTaskDialog(this->m_TransferManager));
+    IAsyncOperation<ContentDialogResult>^ Operation =
+        this->ShowContentDialogAsync(
+            ref new NewTaskDialog(this->m_TransferManager));
 
-	M2::CThread([this, Operation]()
-	{
-		if (ContentDialogResult::Primary == M2AsyncWait(Operation))
-		{
-			this->RefreshTaskList();
-		}
-	});
+    M2::CThread([this, Operation]()
+    {
+        if (ContentDialogResult::Primary == M2AsyncWait(Operation))
+        {
+            this->RefreshTaskList();
+        }
+    });
 }
 
 void MainPage::Page_Loaded(
-	Object^ sender,
-	RoutedEventArgs^ e)
+    Object^ sender,
+    RoutedEventArgs^ e)
 {
-	using Windows::ApplicationModel::Core::CoreApplication;
-	using Windows::UI::Colors;
-	using Windows::UI::ViewManagement::ApplicationView;
-	using Windows::UI::Xaml::Application;
-	using Windows::UI::Xaml::Media::SolidColorBrush;
-	using Windows::UI::Xaml::Window;
-	
-	this->RefreshTaskListAsync();
-	//Extend main grid to titlebar
-	CoreApplication::GetCurrentView()->TitleBar->ExtendViewIntoTitleBar = true;
-	auto titleBar = ApplicationView::GetForCurrentView()->TitleBar;
-	//Change titlebar button colors to match DimButton style
-	titleBar->ButtonBackgroundColor = Colors::Transparent;
-	titleBar->ButtonInactiveBackgroundColor = Colors::Transparent;
-	titleBar->ButtonPressedBackgroundColor = ((SolidColorBrush^)Application::Current->Resources->Lookup("SystemControlHighlightListMediumBrush"))->Color;
-	titleBar->ButtonHoverBackgroundColor = ((SolidColorBrush^)Application::Current->Resources->Lookup("SystemControlHighlightListLowBrush"))->Color;
-	//Set real titlebar area
-	Window::Current->SetTitleBar(realTitle);
+    using Windows::ApplicationModel::Core::CoreApplication;
+    using Windows::UI::Colors;
+    using Windows::UI::ViewManagement::ApplicationView;
+    using Windows::UI::Xaml::Application;
+    using Windows::UI::Xaml::Media::SolidColorBrush;
+    using Windows::UI::Xaml::Window;
+
+    this->RefreshTaskListAsync();
+    //Extend main grid to titlebar
+    CoreApplication::GetCurrentView()->TitleBar->ExtendViewIntoTitleBar = true;
+    auto titleBar = ApplicationView::GetForCurrentView()->TitleBar;
+    //Change titlebar button colors to match DimButton style
+    titleBar->ButtonBackgroundColor = Colors::Transparent;
+    titleBar->ButtonInactiveBackgroundColor = Colors::Transparent;
+    titleBar->ButtonPressedBackgroundColor = ((SolidColorBrush^)Application::Current->Resources->Lookup("SystemControlHighlightListMediumBrush"))->Color;
+    titleBar->ButtonHoverBackgroundColor = ((SolidColorBrush^)Application::Current->Resources->Lookup("SystemControlHighlightListLowBrush"))->Color;
+    //Set real titlebar area
+    Window::Current->SetTitleBar(realTitle);
 }
 
 void MainPage::CopyLinkMenuItem_Click(
-	Object^ sender,
-	RoutedEventArgs^ e)
+    Object^ sender,
+    RoutedEventArgs^ e)
 {
-	try
-	{
-		using Assassin::ITransferTask;
-		using namespace Windows::UI::Xaml;
+    try
+    {
+        using Assassin::ITransferTask;
+        using namespace Windows::UI::Xaml;
 
-		ITransferTask^ Task = dynamic_cast<ITransferTask^>(
-			dynamic_cast<FrameworkElement^>(sender)->DataContext);
+        ITransferTask^ Task = dynamic_cast<ITransferTask^>(
+            dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
-		using Windows::ApplicationModel::DataTransfer::Clipboard;
-		using Windows::ApplicationModel::DataTransfer::DataPackage;
+        using Windows::ApplicationModel::DataTransfer::Clipboard;
+        using Windows::ApplicationModel::DataTransfer::DataPackage;
 
-		DataPackage^ data = ref new DataPackage();
-		data->SetText(Task->SourceUri->RawUri);
+        DataPackage^ data = ref new DataPackage();
+        data->SetText(Task->SourceUri->RawUri);
 
-		Clipboard::SetContent(data);
-	}
-	catch (...)
-	{
+        Clipboard::SetContent(data);
+    }
+    catch (...)
+    {
 
-	}
+    }
 }
 
 void MainPage::SearchAutoSuggestBox_QuerySubmitted(
-	AutoSuggestBox^ sender,
-	AutoSuggestBoxQuerySubmittedEventArgs^ args)
+    AutoSuggestBox^ sender,
+    AutoSuggestBoxQuerySubmittedEventArgs^ args)
 {
-	this->SearchTaskList(sender->Text);
+    this->SearchTaskList(sender->Text);
 }
 
 void MainPage::SearchAutoSuggestBox_TextChanged(
-	AutoSuggestBox^ sender,
-	AutoSuggestBoxTextChangedEventArgs^ args)
+    AutoSuggestBox^ sender,
+    AutoSuggestBoxTextChangedEventArgs^ args)
 {
-	using Windows::UI::Xaml::DispatcherTimer;
-	using Windows::Foundation::EventHandler;
-	using Windows::Foundation::TimeSpan;
+    using Windows::UI::Xaml::DispatcherTimer;
+    using Windows::Foundation::EventHandler;
+    using Windows::Foundation::TimeSpan;
 
-	if (nullptr == sender->DataContext)
-	{
-		DispatcherTimer^ Timer = ref new DispatcherTimer();
-		AutoSuggestBox^ SearchAutoSuggestBox = sender;
+    if (nullptr == sender->DataContext)
+    {
+        DispatcherTimer^ Timer = ref new DispatcherTimer();
+        AutoSuggestBox^ SearchAutoSuggestBox = sender;
 
-		TimeSpan Interval;
-		Interval.Duration = 250 * 10000; // 10,000 ticks per millisecond.
+        TimeSpan Interval;
+        Interval.Duration = 250 * 10000; // 10,000 ticks per millisecond.
 
-		Timer->Interval = Interval;
+        Timer->Interval = Interval;
 
-		Timer->Tick += ref new EventHandler<Object^>(
-			[this, SearchAutoSuggestBox, Timer](Object^ sender, Object^ args)
-		{
-			this->SearchTaskList(SearchAutoSuggestBox->Text);
+        Timer->Tick += ref new EventHandler<Object^>(
+            [this, SearchAutoSuggestBox, Timer](Object^ sender, Object^ args)
+        {
+            this->SearchTaskList(SearchAutoSuggestBox->Text);
 
-			dynamic_cast<DispatcherTimer^>(sender)->Stop();
-		});
+            dynamic_cast<DispatcherTimer^>(sender)->Stop();
+        });
 
-		sender->DataContext = Timer;
-	}
+        sender->DataContext = Timer;
+    }
 
-	DispatcherTimer^ Timer = dynamic_cast<DispatcherTimer^>(
-		sender->DataContext);
+    DispatcherTimer^ Timer = dynamic_cast<DispatcherTimer^>(
+        sender->DataContext);
 
-	Timer->Stop();
-	Timer->Start();
+    Timer->Stop();
+    Timer->Start();
 }
 
 void MainPage::RetryButton_Click(
-	Object^ sender,
-	RoutedEventArgs^ e)
+    Object^ sender,
+    RoutedEventArgs^ e)
 {
-	using Assassin::ITransferTask;
-	using namespace Windows::UI::Xaml;
+    using Assassin::ITransferTask;
+    using namespace Windows::UI::Xaml;
 
-	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
-		dynamic_cast<FrameworkElement^>(sender)->DataContext);
+    ITransferTask^ Task = dynamic_cast<ITransferTask^>(
+        dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
-	M2::CThread([this, Task]()
-	{
-		auto SourceUri = Task->SourceUri;
-		auto FileName = Task->FileName;
-		auto SaveFolder = Task->SaveFolder;
+    M2::CThread([this, Task]()
+    {
+        auto SourceUri = Task->SourceUri;
+        auto FileName = Task->FileName;
+        auto SaveFolder = Task->SaveFolder;
 
-		M2AsyncWait(this->m_TransferManager->RemoveTaskAsync(Task));
+        M2AsyncWait(this->m_TransferManager->RemoveTaskAsync(Task));
 
-		M2AsyncWait(this->m_TransferManager->AddTaskAsync(
-			SourceUri,
-			FileName,
-			SaveFolder));
+        M2AsyncWait(this->m_TransferManager->AddTaskAsync(
+            SourceUri,
+            FileName,
+            SaveFolder));
 
-		this->RefreshTaskList();
-	});
+        this->RefreshTaskList();
+    });
 }
 
 void MainPage::ResumeButton_Click(
-	Object^ sender,
-	RoutedEventArgs^ e)
+    Object^ sender,
+    RoutedEventArgs^ e)
 {
-	using Assassin::ITransferTask;
-	using namespace Windows::UI::Xaml;
+    using Assassin::ITransferTask;
+    using namespace Windows::UI::Xaml;
 
-	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
-		dynamic_cast<FrameworkElement^>(sender)->DataContext);
+    ITransferTask^ Task = dynamic_cast<ITransferTask^>(
+        dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
-	Task->Resume();
+    Task->Resume();
 
-	this->RefreshTaskListAsync();
+    this->RefreshTaskListAsync();
 }
 
 void MainPage::PauseButton_Click(
-	Object^ sender,
-	RoutedEventArgs^ e)
+    Object^ sender,
+    RoutedEventArgs^ e)
 {
-	using Assassin::ITransferTask;
-	using namespace Windows::UI::Xaml;
-	
-	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
-		dynamic_cast<FrameworkElement^>(sender)->DataContext);
+    using Assassin::ITransferTask;
+    using namespace Windows::UI::Xaml;
 
-	Task->Pause();
+    ITransferTask^ Task = dynamic_cast<ITransferTask^>(
+        dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
-	this->RefreshTaskListAsync();
+    Task->Pause();
+
+    this->RefreshTaskListAsync();
 }
 
 void MainPage::CancelMenuItem_Click(
-	Object^ sender,
-	RoutedEventArgs^ e)
+    Object^ sender,
+    RoutedEventArgs^ e)
 {
-	try
-	{
-		using Assassin::ITransferTask;
-		using namespace Windows::UI::Xaml;
+    try
+    {
+        using Assassin::ITransferTask;
+        using namespace Windows::UI::Xaml;
 
-		ITransferTask^ Task = dynamic_cast<ITransferTask^>(
-			dynamic_cast<FrameworkElement^>(sender)->DataContext);
+        ITransferTask^ Task = dynamic_cast<ITransferTask^>(
+            dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
-		Task->Cancel();
+        Task->Cancel();
 
-		this->RefreshTaskListAsync();
-	}
-	catch (...)
-	{
+        this->RefreshTaskListAsync();
+    }
+    catch (...)
+    {
 
-	}
+    }
 }
 
 void MainPage::RemoveMenuItem_Click(
-	Object^ sender,
-	RoutedEventArgs^ e)
+    Object^ sender,
+    RoutedEventArgs^ e)
 {
-	using Assassin::ITransferTask;
-	using namespace Windows::UI::Xaml;
+    using Assassin::ITransferTask;
+    using namespace Windows::UI::Xaml;
 
-	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
-		dynamic_cast<FrameworkElement^>(sender)->DataContext);
+    ITransferTask^ Task = dynamic_cast<ITransferTask^>(
+        dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
-	M2::CThread([this, Task]()
-	{
-		M2AsyncWait(this->m_TransferManager->RemoveTaskAsync(Task));
+    M2::CThread([this, Task]()
+    {
+        M2AsyncWait(this->m_TransferManager->RemoveTaskAsync(Task));
 
-		this->RefreshTaskList();
-	});
+        this->RefreshTaskList();
+    });
 }
 
 void MainPage::OpenFolderMenuItem_Click(
-	Object^ sender,
-	RoutedEventArgs^ e)
+    Object^ sender,
+    RoutedEventArgs^ e)
 {
-	using Assassin::ITransferTask;
-	using namespace Windows::UI::Xaml;
-	
-	ITransferTask^ Task = dynamic_cast<ITransferTask^>(
-		dynamic_cast<FrameworkElement^>(sender)->DataContext);
+    using Assassin::ITransferTask;
+    using namespace Windows::UI::Xaml;
 
-	try
-	{
-		using Windows::System::Launcher;
-		using Windows::System::FolderLauncherOptions;
+    ITransferTask^ Task = dynamic_cast<ITransferTask^>(
+        dynamic_cast<FrameworkElement^>(sender)->DataContext);
 
-		FolderLauncherOptions^ Options = ref new FolderLauncherOptions();
-		Options->ItemsToSelect->Append(Task->SaveFile);
+    try
+    {
+        using Windows::System::Launcher;
+        using Windows::System::FolderLauncherOptions;
 
-		Launcher::LaunchFolderAsync(Task->SaveFolder, Options);
-	}
-	catch (...)
-	{
+        FolderLauncherOptions^ Options = ref new FolderLauncherOptions();
+        Options->ItemsToSelect->Append(Task->SaveFile);
 
-	}
+        Launcher::LaunchFolderAsync(Task->SaveFolder, Options);
+    }
+    catch (...)
+    {
+
+    }
 }
 
 void MainPage::StartAllAppBarButton_Click(
-	Object^ sender,
-	RoutedEventArgs^ e)
+    Object^ sender,
+    RoutedEventArgs^ e)
 {
-	this->m_TransferManager->StartAllTasks();
+    this->m_TransferManager->StartAllTasks();
 
-	this->RefreshTaskListAsync();
+    this->RefreshTaskListAsync();
 }
 
 void MainPage::PauseAllAppBarButton_Click(
-	Object^ sender,
-	RoutedEventArgs^ e)
+    Object^ sender,
+    RoutedEventArgs^ e)
 {
-	this->m_TransferManager->PauseAllTasks();
+    this->m_TransferManager->PauseAllTasks();
 
-	this->RefreshTaskListAsync();
+    this->RefreshTaskListAsync();
 }
 
 void MainPage::ClearListAppBarButton_Click(
-	Object^ sender,
-	RoutedEventArgs^ e)
+    Object^ sender,
+    RoutedEventArgs^ e)
 {
-	this->m_TransferManager->ClearTaskList();
+    this->m_TransferManager->ClearTaskList();
 
-	this->RefreshTaskListAsync();
+    this->RefreshTaskListAsync();
 }
 
 void MainPage::OpenDownloadsFolderAppBarButton_Click(
-	Object^ sender,
-	RoutedEventArgs^ e)
+    Object^ sender,
+    RoutedEventArgs^ e)
 {
-	try
-	{
-		using Windows::Storage::IStorageFolder;
-		using Windows::System::Launcher;
+    try
+    {
+        using Windows::Storage::IStorageFolder;
+        using Windows::System::Launcher;
 
-		IStorageFolder^ Folder = this->m_TransferManager->DefaultFolder;
-		if (nullptr == Folder)
-		{
-			Folder = this->m_TransferManager->LastusedFolder;
-		}
+        IStorageFolder^ Folder = this->m_TransferManager->DefaultFolder;
+        if (nullptr == Folder)
+        {
+            Folder = this->m_TransferManager->LastusedFolder;
+        }
 
-		if (nullptr != Folder)
-		{
-			Launcher::LaunchFolderAsync(Folder);
-		}
-	}
-	catch (...)
-	{
+        if (nullptr != Folder)
+        {
+            Launcher::LaunchFolderAsync(Folder);
+        }
+    }
+    catch (...)
+    {
 
-	}
+    }
 }
 
 void MainPage::SettingsAppBarButton_Click(
-	Object^ sender,
-	RoutedEventArgs^ e)
+    Object^ sender,
+    RoutedEventArgs^ e)
 {
-	this->ShowContentDialogAsync(
-		ref new SettingsDialog(this->m_TransferManager));
+    this->ShowContentDialogAsync(
+        ref new SettingsDialog(this->m_TransferManager));
 }

@@ -1,24 +1,24 @@
 ﻿<ContentDialog
-    x:Class="Nagisa.AboutDialog"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:Nagisa"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    x:Uid="/AboutDialog/Dialog"
-    Title="[About]"
-    Loaded="ContentDialog_Loaded"
-    PrimaryButtonClick="GitHubButtonClick"
-    PrimaryButtonText="[GitHub Repository]"
-    SecondaryButtonText="[OK]"
-    Style="{StaticResource CustomContentDialogStyle}"
-    mc:Ignorable="d">
+  x:Class="Nagisa.AboutDialog"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:local="using:Nagisa"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  x:Uid="/AboutDialog/Dialog"
+  Title="[About]"
+  Loaded="ContentDialog_Loaded"
+  PrimaryButtonClick="GitHubButtonClick"
+  PrimaryButtonText="[GitHub Repository]"
+  SecondaryButtonText="[OK]"
+  Style="{StaticResource CustomContentDialogStyle}"
+  mc:Ignorable="d">
 
-    <TextBlock>
-        <Run Text="M2-Team Nagisa" />
-        <Run x:Name="VersionText" />
-        <LineBreak />
-        <Run Text="© M2-Team. All rights reserved." />
-    </TextBlock>
+  <TextBlock>
+    <Run Text="M2-Team Nagisa" />
+    <Run x:Name="VersionText" />
+    <LineBreak />
+    <Run Text="© M2-Team. All rights reserved." />
+  </TextBlock>
 
 </ContentDialog>

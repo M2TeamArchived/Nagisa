@@ -15,26 +15,26 @@ License: The MIT License
 
 namespace winrt
 {
-	using Windows::ApplicationModel::Background::IBackgroundTaskInstance;
+    using Windows::ApplicationModel::Background::IBackgroundTaskInstance;
 }
 
 namespace winrt::Assassin::implementation
 {
-	struct BackgroundWorker : BackgroundWorkerT<BackgroundWorker>
-	{
-	public:
-		BackgroundWorker();
-		virtual ~BackgroundWorker();
+    struct BackgroundWorker : BackgroundWorkerT<BackgroundWorker>
+    {
+    public:
+        BackgroundWorker();
+        virtual ~BackgroundWorker();
 
-		void Run(
-			winrt::IBackgroundTaskInstance const& taskInstance) const;
-	};
+        void Run(
+            winrt::IBackgroundTaskInstance const& taskInstance) const;
+    };
 }
 
 namespace winrt::Assassin::factory_implementation
 {
-	struct BackgroundWorker : BackgroundWorkerT<
-		BackgroundWorker, implementation::BackgroundWorker>
-	{
-	};
+    struct BackgroundWorker : BackgroundWorkerT<
+        BackgroundWorker, implementation::BackgroundWorker>
+    {
+    };
 }

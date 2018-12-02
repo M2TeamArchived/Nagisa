@@ -11,28 +11,28 @@ License: The MIT License
 using namespace Nagisa;
 
 AboutDialog::AboutDialog(
-	ITransferManager^ TransferManager) :
-	m_TransferManager(TransferManager)
+    ITransferManager^ TransferManager) :
+    m_TransferManager(TransferManager)
 {
-	InitializeComponent();
+    InitializeComponent();
 }
 
 void AboutDialog::ContentDialog_Loaded(
-	Object^ sender,
-	RoutedEventArgs^ e)
+    Object^ sender,
+    RoutedEventArgs^ e)
 {
-	VersionText->Text = m_TransferManager->Version;
+    VersionText->Text = m_TransferManager->Version;
 }
 
 void AboutDialog::GitHubButtonClick(
-	ContentDialog^ sender, 
-	ContentDialogButtonClickEventArgs^ args)
+    ContentDialog^ sender,
+    ContentDialogButtonClickEventArgs^ args)
 {
-	using Windows::Foundation::Uri;
-	using Windows::System::Launcher;
-	
-	Launcher::LaunchUriAsync(
-		ref new Uri(L"https://github.com/Project-Nagisa/Nagisa"));
+    using Windows::Foundation::Uri;
+    using Windows::System::Launcher;
 
-	args->Cancel = true;
+    Launcher::LaunchUriAsync(
+        ref new Uri(L"https://github.com/Project-Nagisa/Nagisa"));
+
+    args->Cancel = true;
 }
