@@ -63,13 +63,6 @@ requests and issues are welcome.**
 - Support single-thread multi-task download.
   (Temporarily based on Windows.Networking.BackgroundTransfer)
 
-# How to help to develop Nagisa
-- Direct contributions
-  - **Create pull requests directly.**
-  - Please send e-mails to Mouri_Naruto@Outlook.com if you have any
-    questions.
-- Feedback suggestions and bugs.
-
 # License
 Nagisa (not including third-party libraries) is distributed under the MIT 
 License. For more information, please read [Nagisa's License](LICENSE).
@@ -79,6 +72,8 @@ License. For more information, please read [Nagisa's License](LICENSE).
 - [Nagisa's Relevant People](People.md)
 - [Nagisa's Privacy Policy](Privacy.md)
 - [Nagisa's Windows Store](https://www.microsoft.com/store/apps/9NFW53N9MFJR)
+- [Nagisa's Code of Conduct](CODE_OF_CONDUCT.md)
+- [Contributing to Nagisa](CONTRIBUTING.md)
 
 [release.badge]: https://img.shields.io/github/release/Project-Nagisa/Nagisa.svg
 [release.link]: https://github.com/Project-Nagisa/Nagisa/releases/latest
