@@ -1,0 +1,46 @@
+﻿<ContentDialog
+  x:Class="Nagisa.SettingsDialog"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:local="using:Nagisa"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  x:Uid="/SettingsDialog/Dialog"
+  Title="[Settings]"
+  Loaded="ContentDialog_Loaded"
+  SecondaryButtonText="[Close]"
+  Style="{StaticResource CustomContentDialogStyle}"
+  mc:Ignorable="d">
+
+  <StackPanel Orientation="Vertical">
+    <TextBlock
+      x:Uid="/SettingsDialog/DefaultDownloadFolderTitle"
+      FontSize="16"
+      Text="[Default Download Folder]" />
+    <CheckBox
+      x:Name="UseCustomFolder"
+      x:Uid="/SettingsDialog/UseCustomFolder"
+      Click="UseCustomFolder_Click"
+      Content="[Use custom instead of last used folder]" />
+    <TextBox
+      x:Name="DownloadFolderPathTextBox"
+      Margin="0,8,0,0"
+      IsReadOnly="True"
+      PlaceholderText="N/A" />
+    <Button
+      x:Uid="/SettingsDialog/CustomDownloadFolderBrowseButton"
+      Margin="0,4,0,0"
+      Click="CustomDownloadFolderBrowseButton_Click"
+      Content="[Browse to modify]"
+      IsEnabled="{x:Bind UseCustomFolder.IsChecked, Converter={StaticResource CustomConverter}, ConverterParameter=NullableBooleanToBoolean, Mode=OneWay}" />
+    <TextBlock
+      x:Uid="/SettingsDialog/AdvancedTitle"
+      Margin="0,8,0,0"
+      FontSize="16"
+      Text="[Advanced]" />
+    <CheckBox
+      x:Uid="/SettingsDialog/DisableWindowsBackgroundTransferCheckBox"
+      Content="[Don't use Windows Background Transfer]"
+      IsEnabled="False" />
+  </StackPanel>
+</ContentDialog>

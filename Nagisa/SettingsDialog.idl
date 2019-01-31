@@ -1,0 +1,21 @@
+﻿/*
+ * PROJECT:   Nagisa
+ * FILE:      SettingsDialog.idl
+ * PURPOSE:   Definition for the Settings Dialog.
+ *
+ * LICENSE:   The MIT License
+ *
+ * DEVELOPER: Mouri_Naruto (Mouri_Naruto AT Outlook.com)
+ */
+
+namespace Nagisa
+{
+    [default_interface]
+    runtimeclass SettingsDialog : Windows.UI.Xaml.Controls.ContentDialog
+    {
+        SettingsDialog(
+            Assassin.ITransferManager TransferManager);
+
+        Windows.UI.Xaml.Controls.CheckBox UseCustomFolder { get; };
+    }
+}

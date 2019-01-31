@@ -1,0 +1,19 @@
+﻿/*
+ * PROJECT:   Nagisa
+ * FILE:      AboutDialog.idl
+ * PURPOSE:   Definition for the About Dialog.
+ *
+ * LICENSE:   The MIT License
+ *
+ * DEVELOPER: Mouri_Naruto (Mouri_Naruto AT Outlook.com)
+ */
+
+namespace Nagisa
+{
+    [default_interface]
+    runtimeclass AboutDialog : Windows.UI.Xaml.Controls.ContentDialog
+    {
+        AboutDialog(
+            Assassin.ITransferManager TransferManager);
+    }
+}

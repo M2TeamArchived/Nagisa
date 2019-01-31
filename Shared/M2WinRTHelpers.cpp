@@ -130,4 +130,19 @@ namespace M2
     }
 }
 
+// Execute function on the UI thread with normal priority.
+// Parameters:
+//   agileCallback: The function you want to execute.
+// Return value:
+//   The return value is Windows::Foundation::IAsyncAction^.
+winrt::IAsyncAction M2ExecuteOnUIThread(
+    winrt::DispatchedHandler const& agileCallback)
+{
+    using winrt::Windows::ApplicationModel::Core::CoreApplication;
+    using winrt::Windows::UI::Core::CoreDispatcherPriority;
+
+    return CoreApplication::MainView().CoreWindow().Dispatcher().RunAsync(
+        CoreDispatcherPriority::Normal, agileCallback);
+}
+
 #endif // _M2_WINRT_HELPERS_

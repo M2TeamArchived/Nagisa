@@ -14,6 +14,9 @@ License: The MIT License
 #include "M2BaseHelpers.h"
 
 #include <winrt\Windows.Foundation.h>
+
+#include <winrt\Windows.ApplicationModel.Core.h>
+#include <winrt\Windows.UI.Core.h>
 #include <winrt\Windows.UI.Xaml.Data.h>
 
 #include <map>
@@ -22,6 +25,8 @@ License: The MIT License
 
 namespace winrt
 {
+    using Windows::Foundation::IAsyncAction;
+    using Windows::UI::Core::DispatchedHandler;
     using Windows::UI::Xaml::Data::INotifyPropertyChanged;
     using Windows::UI::Xaml::Data::PropertyChangedEventArgs;
     using Windows::UI::Xaml::Data::PropertyChangedEventHandler;
@@ -92,5 +97,13 @@ namespace M2
             winrt::event_token const& token);
     };
 }
+
+// Execute function on the UI thread with normal priority.
+// Parameters:
+//   agileCallback: The function you want to execute.
+// Return value:
+//   The return value is Windows::Foundation::IAsyncAction^.
+winrt::IAsyncAction M2ExecuteOnUIThread(
+    winrt::DispatchedHandler const& agileCallback);
 
 #endif // _M2_WINRT_HELPERS_
