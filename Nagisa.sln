@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nagisa", "Nagisa\Nagisa.vcxproj", "{CD858CAD-04D9-4A81-8C75-26CB74323398}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{490FC2F1-8878-495F-AE81-F7D24B62F670}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -40,8 +38,6 @@ Global
 		Shared\Shared.vcxitems*{287f41f2-cf17-46f5-b43c-58293e73e813}*SharedItemsImports = 4
 		Shared\Shared.vcxitems*{318e66ea-4e29-40a5-966c-f18b7c0bac45}*SharedItemsImports = 9
 		Shared\Shared.vcxitems*{7db6fe7f-0281-49b3-92f9-497ee9cbcf6c}*SharedItemsImports = 4
-		Shared.UI\Shared.UI.vcxitems*{cd858cad-04d9-4a81-8c75-26cb74323398}*SharedItemsImports = 4
-		Shared\Shared.vcxitems*{cd858cad-04d9-4a81-8c75-26cb74323398}*SharedItemsImports = 4
 		Shared.UI\Shared.UI.vcxitems*{e0717bd1-8c33-4a3b-b215-6e72d672b729}*SharedItemsImports = 9
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,30 +51,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Debug|ARM.ActiveCfg = Debug|ARM
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Debug|ARM.Build.0 = Debug|ARM
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Debug|ARM.Deploy.0 = Debug|ARM
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Debug|ARM64.ActiveCfg = Debug|ARM64
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Debug|ARM64.Build.0 = Debug|ARM64
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Debug|ARM64.Deploy.0 = Debug|ARM64
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Debug|x64.ActiveCfg = Debug|x64
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Debug|x64.Build.0 = Debug|x64
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Debug|x64.Deploy.0 = Debug|x64
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Debug|x86.ActiveCfg = Debug|Win32
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Debug|x86.Build.0 = Debug|Win32
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Debug|x86.Deploy.0 = Debug|Win32
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Release|ARM.ActiveCfg = Release|ARM
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Release|ARM.Build.0 = Release|ARM
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Release|ARM.Deploy.0 = Release|ARM
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Release|ARM64.ActiveCfg = Release|ARM64
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Release|ARM64.Build.0 = Release|ARM64
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Release|ARM64.Deploy.0 = Release|ARM64
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Release|x64.ActiveCfg = Release|x64
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Release|x64.Build.0 = Release|x64
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Release|x64.Deploy.0 = Release|x64
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Release|x86.ActiveCfg = Release|Win32
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Release|x86.Build.0 = Release|Win32
-		{CD858CAD-04D9-4A81-8C75-26CB74323398}.Release|x86.Deploy.0 = Release|Win32
 		{7DB6FE7F-0281-49B3-92F9-497EE9CBCF6C}.Debug|ARM.ActiveCfg = Debug|ARM
 		{7DB6FE7F-0281-49B3-92F9-497EE9CBCF6C}.Debug|ARM.Build.0 = Debug|ARM
 		{7DB6FE7F-0281-49B3-92F9-497EE9CBCF6C}.Debug|ARM64.ActiveCfg = Debug|ARM64

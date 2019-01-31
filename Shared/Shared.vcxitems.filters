@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)NagisaVersion.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)M2CXHelpers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)M2BaseHelpers.h">
       <Filter>M2BaseHelpers</Filter>
     </ClInclude>
@@ -14,7 +13,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)M2CXHelpers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)M2BaseHelpers.cpp">
       <Filter>M2BaseHelpers</Filter>
     </ClCompile>
