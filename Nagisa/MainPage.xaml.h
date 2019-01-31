@@ -56,6 +56,9 @@ namespace Nagisa
         void CopyLinkMenuItem_Click(
             Object^ sender,
             RoutedEventArgs^ e);
+        void SearchAutoSuggestBox_LostFocus(
+            Object^ sender,
+            RoutedEventArgs^ e);
         void SearchAutoSuggestBox_QuerySubmitted(
             AutoSuggestBox^ sender,
             AutoSuggestBoxQuerySubmittedEventArgs^ args);
@@ -87,6 +90,9 @@ namespace Nagisa
             Object^ sender,
             RoutedEventArgs^ e);
         void ClearListAppBarButton_Click(
+            Object^ sender,
+            RoutedEventArgs^ e);
+        void SearchAppBarButton_Click(
             Object^ sender,
             RoutedEventArgs^ e);
         void OpenDownloadsFolderAppBarButton_Click(

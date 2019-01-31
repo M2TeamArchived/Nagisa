@@ -31,7 +31,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shared.UI", "Shared.UI\Shar
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSBuild", "MSBuild", "{0E3CE722-F64A-4241-BDF9-8055D16782A7}"
 	ProjectSection(SolutionItems) = preProject
-		MSBuild\AllDebugTargets.props = MSBuild\AllDebugTargets.props
 		MSBuild\AllReleaseTargets.props = MSBuild\AllReleaseTargets.props
 		MSBuild\AllTargets.props = MSBuild\AllTargets.props
 	EndProjectSection

@@ -100,21 +100,33 @@ void MainPage::Page_Loaded(
     using Windows::ApplicationModel::Core::CoreApplication;
     using Windows::UI::Colors;
     using Windows::UI::ViewManagement::ApplicationView;
+    using Windows::UI::ViewManagement::ApplicationViewTitleBar;
     using Windows::UI::Xaml::Application;
     using Windows::UI::Xaml::Media::SolidColorBrush;
+    using Windows::UI::Xaml::ResourceDictionary;
+    using Windows::UI::Xaml::Visibility;
     using Windows::UI::Xaml::Window;
 
     this->RefreshTaskListAsync();
     //Extend main grid to titlebar
     CoreApplication::GetCurrentView()->TitleBar->ExtendViewIntoTitleBar = true;
-    auto titleBar = ApplicationView::GetForCurrentView()->TitleBar;
+    ApplicationViewTitleBar^ titleBar =
+        ApplicationView::GetForCurrentView()->TitleBar;
+    ResourceDictionary^ GlobalResources =
+        Application::Current->Resources;
     //Change titlebar button colors to match DimButton style
     titleBar->ButtonBackgroundColor = Colors::Transparent;
     titleBar->ButtonInactiveBackgroundColor = Colors::Transparent;
-    titleBar->ButtonPressedBackgroundColor = ((SolidColorBrush^)Application::Current->Resources->Lookup("SystemControlHighlightListMediumBrush"))->Color;
-    titleBar->ButtonHoverBackgroundColor = ((SolidColorBrush^)Application::Current->Resources->Lookup("SystemControlHighlightListLowBrush"))->Color;
+    titleBar->ButtonPressedBackgroundColor =
+        dynamic_cast<SolidColorBrush^>(GlobalResources->Lookup(
+            "SystemControlHighlightListMediumBrush"))->Color;
+    titleBar->ButtonHoverBackgroundColor =
+        dynamic_cast<SolidColorBrush^>(GlobalResources->Lookup(
+            "SystemControlHighlightListLowBrush"))->Color;
     //Set real titlebar area
     Window::Current->SetTitleBar(realTitle);
+
+    this->SearchAutoSuggestBox->Visibility = Visibility::Collapsed;
 }
 
 void MainPage::CopyLinkMenuItem_Click(
@@ -143,6 +155,16 @@ void MainPage::CopyLinkMenuItem_Click(
     }
 }
 
+void MainPage::SearchAutoSuggestBox_LostFocus(
+    Object^ sender,
+    RoutedEventArgs^ e)
+{
+    using Windows::UI::Xaml::Visibility;
+
+    this->SearchAutoSuggestBox->Visibility = Visibility::Collapsed;
+    this->SearchAppBarButton->Visibility = Visibility::Visible;
+}
+
 void MainPage::SearchAutoSuggestBox_QuerySubmitted(
     AutoSuggestBox^ sender,
     AutoSuggestBoxQuerySubmittedEventArgs^ args)
@@ -161,7 +183,7 @@ void MainPage::SearchAutoSuggestBox_TextChanged(
     if (nullptr == sender->DataContext)
     {
         DispatcherTimer^ Timer = ref new DispatcherTimer();
-        AutoSuggestBox^ SearchAutoSuggestBox = sender;
+        AutoSuggestBox^ pSearchAutoSuggestBox = sender;
 
         TimeSpan Interval;
         Interval.Duration = 250 * 10000; // 10,000 ticks per millisecond.
@@ -169,9 +191,9 @@ void MainPage::SearchAutoSuggestBox_TextChanged(
         Timer->Interval = Interval;
 
         Timer->Tick += ref new EventHandler<Object^>(
-            [this, SearchAutoSuggestBox, Timer](Object^ sender, Object^ args)
+            [this, pSearchAutoSuggestBox, Timer](Object^ sender, Object^ args)
         {
-            this->SearchTaskList(SearchAutoSuggestBox->Text);
+            this->SearchTaskList(pSearchAutoSuggestBox->Text);
 
             dynamic_cast<DispatcherTimer^>(sender)->Stop();
         });
@@ -334,6 +356,18 @@ void MainPage::ClearListAppBarButton_Click(
     this->m_TransferManager->ClearTaskList();
 
     this->RefreshTaskListAsync();
+}
+
+void MainPage::SearchAppBarButton_Click(
+    Object^ sender,
+    RoutedEventArgs^ e)
+{
+    using Windows::UI::Xaml::FocusState;
+    using Windows::UI::Xaml::Visibility;
+
+    this->SearchAppBarButton->Visibility = Visibility::Collapsed;
+    this->SearchAutoSuggestBox->Visibility = Visibility::Visible;
+    this->SearchAutoSuggestBox->Focus(FocusState::Programmatic);
 }
 
 void MainPage::OpenDownloadsFolderAppBarButton_Click(

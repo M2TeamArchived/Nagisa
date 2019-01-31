@@ -3,7 +3,6 @@
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:Assassin="using:Assassin"
-  xmlns:Windows10FallCreatorsUpdate="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 5)"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:local="using:Nagisa"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -23,7 +22,7 @@
     <Grid
       x:Name="TitleGrid"
       Height="32"
-      Background="{Windows10FallCreatorsUpdate:ThemeResource SystemControlChromeMediumAcrylicWindowMediumBrush}">
+      Background="{ThemeResource SystemChromeHighColor}">
       <Grid
         x:Name="realTitle"
         Grid.Column="0"
@@ -41,21 +40,23 @@
     <Grid
       x:Name="ToolBarGrid"
       Grid.Row="1"
-      Height="52"
-      Padding="8"
-      Background="{Windows10FallCreatorsUpdate:ThemeResource SystemControlChromeMediumAcrylicWindowMediumBrush}">
+      Height="44"
+      Background="{ThemeResource SystemChromeHighColor}">
       <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="8" />
         <ColumnDefinition Width="44" />
         <ColumnDefinition Width="44" />
         <ColumnDefinition Width="44" />
         <ColumnDefinition Width="44" />
         <ColumnDefinition Width="*" />
         <ColumnDefinition Width="44" />
+        <ColumnDefinition Width="44" />
+        <ColumnDefinition Width="8" />
       </Grid.ColumnDefinitions>
 
       <Button
         x:Uid="/MainPage/NewTaskAppBarButton"
-        Grid.Column="0"
+        Grid.Column="1"
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch"
         Background="Transparent"
@@ -67,7 +68,7 @@
         ToolTipService.ToolTip="[New Task]" />
       <Button
         x:Uid="/MainPage/StartAllAppBarButton"
-        Grid.Column="1"
+        Grid.Column="2"
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch"
         Background="Transparent"
@@ -79,7 +80,7 @@
         ToolTipService.ToolTip="[Start All]" />
       <Button
         x:Uid="/MainPage/PauseAllAppBarButton"
-        Grid.Column="2"
+        Grid.Column="3"
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch"
         Background="Transparent"
@@ -91,7 +92,7 @@
         ToolTipService.ToolTip="[Pause All]" />
       <Button
         x:Uid="/MainPage/ClearListAppBarButton"
-        Grid.Column="3"
+        Grid.Column="4"
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch"
         Background="Transparent"
@@ -102,20 +103,36 @@
         Style="{StaticResource CustomDimButtonStyle}"
         ToolTipService.ToolTip="[Clear List]" />
       <AutoSuggestBox
+        x:Name="SearchAutoSuggestBox"
         x:Uid="/MainPage/SearchAutoSuggestBox"
-        Grid.Column="4"
-        Margin="8,0"
+        Grid.Column="5"
+        Grid.ColumnSpan="2"
+        Margin="6,0"
         HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
+        VerticalAlignment="Center"
         BorderThickness="0"
+        LostFocus="SearchAutoSuggestBox_LostFocus"
         PlaceholderText="[Search Downloads]"
         QueryIcon="Find"
         QuerySubmitted="SearchAutoSuggestBox_QuerySubmitted"
         TextBoxStyle="{StaticResource CustomAutoSuggestBoxTextBoxStyle}"
         TextChanged="SearchAutoSuggestBox_TextChanged" />
       <Button
+        x:Name="SearchAppBarButton"
+        x:Uid="/MainPage/SearchAppBarButton"
+        Grid.Column="6"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        Background="Transparent"
+        Click="SearchAppBarButton_Click"
+        Content="&#xE721;"
+        FontFamily="Segoe MDL2 Assets"
+        FontSize="20"
+        Style="{StaticResource CustomDimButtonStyle}"
+        ToolTipService.ToolTip="[Search]" />
+      <Button
         x:Uid="/MainPage/TaskItemMoreButton"
-        Grid.Column="5"
+        Grid.Column="7"
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch"
         Background="Transparent"
@@ -376,7 +393,7 @@
       x:Name="StatusBarStackPanel"
       Grid.Row="3"
       Padding="8"
-      Background="{Windows10FallCreatorsUpdate:ThemeResource SystemControlChromeMediumAcrylicWindowMediumBrush}"
+      Background="{ThemeResource SystemChromeHighColor}"
       Orientation="Horizontal">
       <StackPanel
         x:Uid="/MainPage/TotalDownloadBandwidthStackPanel"

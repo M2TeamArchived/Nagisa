@@ -29,6 +29,7 @@
       PlaceholderText="N/A" />
     <Button
       x:Uid="/SettingsDialog/CustomDownloadFolderBrowseButton"
+      Margin="0,4,0,0"
       Click="CustomDownloadFolderBrowseButton_Click"
       Content="[Browse to modify]"
       IsEnabled="{x:Bind UseCustomFolder.IsChecked, Converter={StaticResource CustomConverter}, ConverterParameter=NullableBooleanToBoolean, Mode=OneWay}" />

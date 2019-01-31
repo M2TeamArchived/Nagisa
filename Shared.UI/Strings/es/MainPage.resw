@@ -149,6 +149,10 @@
     <value>Reintentar</value>
     <comment>Retry</comment>
   </data>
+  <data name="SearchAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Buscar</value>
+    <comment>Search</comment>
+  </data>
   <data name="SearchAutoSuggestBox.PlaceholderText" xml:space="preserve">
     <value>Buscar descargas</value>
     <comment>Search Downloads</comment>
