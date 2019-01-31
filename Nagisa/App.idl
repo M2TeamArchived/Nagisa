@@ -1,0 +1,13 @@
+﻿/*
+ * PROJECT:   Nagisa
+ * FILE:      App.idl
+ * PURPOSE:   Definition for the App Entry.
+ *
+ * LICENSE:   The MIT License
+ *
+ * DEVELOPER: Mouri_Naruto (Mouri_Naruto AT Outlook.com)
+ */
+
+namespace Nagisa
+{
+}

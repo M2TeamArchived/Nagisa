@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Midl Include="App.idl" />
+    <Midl Include="MainPage.idl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="App.cpp" />
+    <ClCompile Include="MainPage.cpp" />
+    <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.h" />
+    <ClInclude Include="MainPage.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Package.StoreAssociation.xml" />
+    <None Include="Nagisa_StoreKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="XamlResources">
+      <UniqueIdentifier>{2ef2c03f-5db7-44ee-9dcb-4cb55dcbcc54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Xaml">
+      <UniqueIdentifier>{e1dcbdf9-89f0-4150-803f-50d9035658c0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Filter>Xaml</Filter>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="MainPage.xaml">
+      <Filter>Xaml</Filter>
+    </Page>
+    <Page Include="XamlResources\CustomAutoSuggestBoxTextBoxStyle.xaml">
+      <Filter>XamlResources</Filter>
+    </Page>
+    <Page Include="XamlResources\CustomContentDialogStyle.xaml">
+      <Filter>XamlResources</Filter>
+    </Page>
+    <Page Include="XamlResources\CustomConverters.xaml">
+      <Filter>XamlResources</Filter>
+    </Page>
+    <Page Include="XamlResources\CustomDimButtonStyle.xaml">
+      <Filter>XamlResources</Filter>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Nagisa.rc" />
+  </ItemGroup>
+</Project>

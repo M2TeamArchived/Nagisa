@@ -1,0 +1,16 @@
+﻿<Application
+  x:Class="Nagisa.App"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:local="using:Nagisa">
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///XamlResources/CustomContentDialogStyle.xaml" />
+        <ResourceDictionary Source="ms-appx:///XamlResources/CustomConverters.xaml" />
+        <ResourceDictionary Source="ms-appx:///XamlResources/CustomDimButtonStyle.xaml" />
+        <ResourceDictionary Source="ms-appx:///XamlResources/CustomAutoSuggestBoxTextBoxStyle.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Application.Resources>
+</Application>
