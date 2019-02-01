@@ -1,13 +1,438 @@
 ﻿<Page
-    x:Class="Nagisa.MainPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Nagisa"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+  x:Class="Nagisa.MainPage"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:Assassin="using:Assassin"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:local="using:Nagisa"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  Background="{ThemeResource SystemChromeMediumColor}"
+  Loaded="Page_Loaded"
+  mc:Ignorable="d">
 
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="myButton" Click="ClickHandler">Click Me</Button>
+  <Grid>
+
+    <Grid.RowDefinitions>
+      <RowDefinition Height="auto" />
+      <RowDefinition Height="auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="auto" />
+    </Grid.RowDefinitions>
+
+    <Grid
+      x:Name="TitleGrid"
+      Height="32"
+      Background="{ThemeResource SystemChromeHighColor}">
+      <Grid
+        x:Name="realTitle"
+        Grid.Column="0"
+        Grid.ColumnSpan="6"
+        Background="Transparent" />
+
+      <TextBlock
+        Grid.Column="1"
+        Margin="12,0,0,0"
+        VerticalAlignment="Center"
+        FontSize="12"
+        Text="Nagisa" />
+    </Grid>
+
+    <Grid
+      x:Name="ToolBarGrid"
+      Grid.Row="1"
+      Height="44"
+      Background="{ThemeResource SystemChromeHighColor}">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="8" />
+        <ColumnDefinition Width="44" />
+        <ColumnDefinition Width="44" />
+        <ColumnDefinition Width="44" />
+        <ColumnDefinition Width="44" />
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="44" />
+        <ColumnDefinition Width="44" />
+        <ColumnDefinition Width="8" />
+      </Grid.ColumnDefinitions>
+
+      <Button
+        x:Uid="/MainPage/NewTaskAppBarButton"
+        Grid.Column="1"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        Background="Transparent"
+        Click="NewTaskButton_Click"
+        Content="&#xE710;"
+        FontFamily="Segoe MDL2 Assets"
+        FontSize="20"
+        Style="{StaticResource CustomDimButtonStyle}"
+        ToolTipService.ToolTip="[New Task]" />
+      <Button
+        x:Uid="/MainPage/StartAllAppBarButton"
+        Grid.Column="2"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        Background="Transparent"
+        Click="StartAllAppBarButton_Click"
+        Content="&#xE768;"
+        FontFamily="Segoe MDL2 Assets"
+        FontSize="20"
+        Style="{StaticResource CustomDimButtonStyle}"
+        ToolTipService.ToolTip="[Start All]" />
+      <Button
+        x:Uid="/MainPage/PauseAllAppBarButton"
+        Grid.Column="3"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        Background="Transparent"
+        Click="PauseAllAppBarButton_Click"
+        Content="&#xE769;"
+        FontFamily="Segoe MDL2 Assets"
+        FontSize="20"
+        Style="{StaticResource CustomDimButtonStyle}"
+        ToolTipService.ToolTip="[Pause All]" />
+      <Button
+        x:Uid="/MainPage/ClearListAppBarButton"
+        Grid.Column="4"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        Background="Transparent"
+        Click="ClearListAppBarButton_Click"
+        Content="&#xE74D;"
+        FontFamily="Segoe MDL2 Assets"
+        FontSize="20"
+        Style="{StaticResource CustomDimButtonStyle}"
+        ToolTipService.ToolTip="[Clear List]" />
+      <AutoSuggestBox
+        x:Name="SearchAutoSuggestBox"
+        x:Uid="/MainPage/SearchAutoSuggestBox"
+        Grid.Column="5"
+        Grid.ColumnSpan="2"
+        Margin="6,0"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Center"
+        BorderThickness="0"
+        LostFocus="SearchAutoSuggestBox_LostFocus"
+        PlaceholderText="[Search Downloads]"
+        QueryIcon="Find"
+        QuerySubmitted="SearchAutoSuggestBox_QuerySubmitted"
+        TextBoxStyle="{StaticResource CustomAutoSuggestBoxTextBoxStyle}"
+        TextChanged="SearchAutoSuggestBox_TextChanged" />
+      <Button
+        x:Name="SearchAppBarButton"
+        x:Uid="/MainPage/SearchAppBarButton"
+        Grid.Column="6"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        Background="Transparent"
+        Click="SearchAppBarButton_Click"
+        Content="&#xE721;"
+        FontFamily="Segoe MDL2 Assets"
+        FontSize="20"
+        Style="{StaticResource CustomDimButtonStyle}"
+        ToolTipService.ToolTip="[Search]" />
+      <Button
+        x:Uid="/MainPage/TaskItemMoreButton"
+        Grid.Column="7"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        Background="Transparent"
+        Content="&#xE712;"
+        FontFamily="Segoe MDL2 Assets"
+        FontSize="20"
+        Style="{StaticResource CustomDimButtonStyle}"
+        ToolTipService.ToolTip="[Menu]">
+        <Button.Flyout>
+          <MenuFlyout>
+            <MenuFlyoutItem
+              x:Uid="/MainPage/OpenDownloadsFolderAppBarButton"
+              Click="OpenDownloadsFolderAppBarButton_Click"
+              Icon="Folder"
+              Text="[Open Downloads Folder]" />
+            <MenuFlyoutItem
+              x:Uid="/MainPage/SettingsAppBarButton"
+              Click="SettingsAppBarButton_Click"
+              Icon="Setting"
+              Text="[Settings]" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem
+              x:Uid="/MainPage/AboutAppBarButton"
+              Click="AboutButton_Click"
+              Icon="Help"
+              Text="[About]" />
+          </MenuFlyout>
+        </Button.Flyout>
+      </Button>
+
+
+    </Grid>
+
+    <ListView x:Name="TaskList" Grid.Row="2">
+      <ListView.ItemContainerStyle>
+        <Style TargetType="ListViewItem">
+          <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+          <Setter Property="VerticalContentAlignment" Value="Stretch" />
+          <Setter Property="Padding" Value="0" />
+        </Style>
+      </ListView.ItemContainerStyle>
+
+      <ListView.Header>
+        <TextBlock
+          x:Uid="/MainPage/TaskListNoItemsTextBlock"
+          Margin="16"
+          Text="[No Downloads]"
+          TextAlignment="Center"
+          Visibility="{x:Bind TaskList.ItemsSource, Converter={StaticResource CustomConverter}, ConverterParameter=TaskListEmptyToVisibility, Mode=OneWay}" />
+      </ListView.Header>
+
+      <ListView.ItemTemplate>
+        <DataTemplate x:DataType="Assassin:ITransferTask">
+          <Grid Margin="8">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="44" />
+              <ColumnDefinition Width="160" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="44" />
+              <ColumnDefinition Width="44" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+              Grid.Column="0"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              FontFamily="Segoe MDL2 Assets"
+              FontSize="20"
+              Text="" />
+
+            <TextBlock
+              Grid.Row="0"
+              Grid.Column="1"
+              HorizontalAlignment="Left"
+              VerticalAlignment="Center"
+              FontWeight="Bold"
+              Text="{x:Bind FileName, Mode=OneWay}"
+              TextTrimming="CharacterEllipsis"
+              ToolTipService.ToolTip="{x:Bind FileName, Mode=OneWay}" />
+
+            <StackPanel
+              Grid.Row="0"
+              Grid.Column="2"
+              Margin="8,0,8,0"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Center"
+              Orientation="Vertical">
+              <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="12" Text="{x:Bind BytesReceivedSpeed, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ByteSizeToString, Mode=OneWay}" />
+                <TextBlock FontSize="12">
+                  <Run Text="/s" />
+
+                  <Run Text="{x:Bind BytesReceived, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ByteSizeToString, Mode=OneWay}" />
+                  <Run Text="/" />
+                  <Run Text="{x:Bind TotalBytesToReceive, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ByteSizeToString, Mode=OneWay}" />
+
+                  <Run Text="{x:Bind RemainTime, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64RemainTimeToString, Mode=OneWay}" />
+                </TextBlock>
+              </StackPanel>
+              <Grid Height="4" Margin="0,8,0,0">
+                <Grid.Resources>
+                  <SolidColorBrush
+                    x:Key="ProgressBarBackgroundColor"
+                    Opacity="0.1"
+                    Color="Black" />
+                  <SolidColorBrush
+                    x:Key="ProgressBarErrorForegroundColor"
+                    Opacity="0.8"
+                    Color="Red" />
+                  <SolidColorBrush
+                    x:Key="ProgressBarPausedForegroundColor"
+                    Opacity="0.8"
+                    Color="Orange" />
+                  <SolidColorBrush
+                    x:Key="ProgressBarRunningForegroundColor"
+                    Opacity="0.8"
+                    Color="Green" />
+                </Grid.Resources>
+
+                <ProgressBar
+                  VerticalAlignment="Stretch"
+                  Background="{StaticResource ProgressBarBackgroundColor}"
+                  BorderThickness="0"
+                  Foreground="{StaticResource ProgressBarErrorForegroundColor}"
+                  Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}"
+                  Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskErrorStatusToVisible, Mode=OneWay}"
+                  Value="{x:Bind BytesReceived, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}" />
+                <ProgressBar
+                  VerticalAlignment="Stretch"
+                  Background="{StaticResource ProgressBarBackgroundColor}"
+                  BorderThickness="0"
+                  Foreground="{StaticResource ProgressBarPausedForegroundColor}"
+                  Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}"
+                  Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskPausedStatusToVisible, Mode=OneWay}"
+                  Value="{x:Bind BytesReceived, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}" />
+                <ProgressBar
+                  VerticalAlignment="Stretch"
+                  Background="{StaticResource ProgressBarBackgroundColor}"
+                  BorderThickness="0"
+                  Foreground="{StaticResource ProgressBarRunningForegroundColor}"
+                  Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}"
+                  Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskRunningStatusToVisible, Mode=OneWay}"
+                  Value="{x:Bind BytesReceived, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ToDouble, Mode=OneWay}" />
+              </Grid>
+
+
+            </StackPanel>
+
+            <Grid Grid.Row="0" Grid.Column="3">
+              <Grid.Resources>
+                <x:String x:Key="RetryIcon">
+                  &#xE72C;
+                </x:String>
+                <x:String x:Key="ResumeIcon">
+                  &#xE768;
+                </x:String>
+                <x:String x:Key="PauseIcon">
+                  &#xE769;
+                </x:String>
+              </Grid.Resources>
+
+              <Button
+                x:Uid="/MainPage/RetryButton"
+                Width="44"
+                Height="44"
+                Background="Transparent"
+                Click="RetryButton_Click"
+                Content="{StaticResource RetryIcon}"
+                FontFamily="Segoe MDL2 Assets"
+                FontSize="20"
+                Style="{StaticResource CustomDimButtonStyle}"
+                ToolTipService.ToolTip="[Retry]"
+                Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskErrorStatusToVisible, Mode=OneWay}" />
+              <Button
+                x:Uid="/MainPage/RetryButton"
+                Width="44"
+                Height="44"
+                Background="Transparent"
+                Click="RetryButton_Click"
+                Content="{StaticResource RetryIcon}"
+                FontFamily="Segoe MDL2 Assets"
+                FontSize="20"
+                Style="{StaticResource CustomDimButtonStyle}"
+                ToolTipService.ToolTip="[Retry]"
+                Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskCanceledStatusToVisible, Mode=OneWay}" />
+              <Button
+                x:Uid="/MainPage/ResumeButton"
+                Width="44"
+                Height="44"
+                Background="Transparent"
+                Click="ResumeButton_Click"
+                Content="{StaticResource ResumeIcon}"
+                FontFamily="Segoe MDL2 Assets"
+                FontSize="20"
+                Style="{StaticResource CustomDimButtonStyle}"
+                ToolTipService.ToolTip="[Resume]"
+                Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskPausedStatusToVisible, Mode=OneWay}" />
+              <Button
+                x:Uid="/MainPage/PauseButton"
+                Width="44"
+                Height="44"
+                Background="Transparent"
+                Click="PauseButton_Click"
+                Content="{StaticResource PauseIcon}"
+                FontFamily="Segoe MDL2 Assets"
+                FontSize="20"
+                Style="{StaticResource CustomDimButtonStyle}"
+                ToolTipService.ToolTip="[Pause]"
+                Visibility="{x:Bind Status, Converter={StaticResource CustomConverter}, ConverterParameter=TaskRunningStatusToVisible, Mode=OneWay}" />
+            </Grid>
+
+            <Button
+              x:Uid="/MainPage/TaskItemMoreButton"
+              Grid.Row="0"
+              Grid.Column="4"
+              Width="44"
+              Height="44"
+              Background="Transparent"
+              Content="&#xE10C;"
+              FontFamily="Segoe MDL2 Assets"
+              FontSize="20"
+              Style="{StaticResource CustomDimButtonStyle}"
+              ToolTipService.ToolTip="[More]">
+              <Button.Flyout>
+                <MenuFlyout>
+                  <MenuFlyoutItem
+                    x:Uid="/MainPage/TaskItemCopyLinkMenuItem"
+                    Click="CopyLinkMenuItem_Click"
+                    Icon="Link"
+                    Text="[Copy Link]" />
+                  <MenuFlyoutItem
+                    x:Uid="/MainPage/TaskItemOpenFolderMenuItem"
+                    Click="OpenFolderMenuItem_Click"
+                    Icon="OpenLocal"
+                    Text="[Open Folder]" />
+                  <MenuFlyoutSeparator />
+                  <MenuFlyoutItem
+                    x:Uid="/MainPage/TaskItemCancelMenuItem"
+                    Click="CancelMenuItem_Click"
+                    Icon="Cancel"
+                    Text="[Cancel]" />
+                  <MenuFlyoutItem
+                    x:Uid="/MainPage/TaskItemRemoveMenuItem"
+                    Click="RemoveMenuItem_Click"
+                    Icon="Delete"
+                    Text="[Remove]" />
+                </MenuFlyout>
+              </Button.Flyout>
+            </Button>
+
+          </Grid>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+
+    </ListView>
+
+    <StackPanel
+      x:Name="StatusBarStackPanel"
+      Grid.Row="3"
+      Padding="8"
+      Background="{ThemeResource SystemChromeHighColor}"
+      Orientation="Horizontal">
+      <StackPanel
+        x:Uid="/MainPage/TotalDownloadBandwidthStackPanel"
+        Margin="8"
+        Orientation="Horizontal"
+        ToolTipService.ToolTip="[Total Download Bandwidth]">
+        <FontIcon
+          Margin="0,0,8,0"
+          VerticalAlignment="Center"
+          FontSize="15"
+          Glyph="&#xE74B;" />
+        <TextBlock
+          VerticalAlignment="Center"
+          FontSize="15"
+          Text="{x:Bind Path=TransferManager.TotalDownloadBandwidth, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ByteSizeToString, Mode=OneWay}" />
+        <TextBlock
+          VerticalAlignment="Center"
+          FontSize="15"
+          Text="/s" />
+      </StackPanel>
+      <StackPanel
+        x:Uid="/MainPage/TotalUploadBandwidthStackPanel"
+        Margin="8"
+        Orientation="Horizontal"
+        ToolTipService.ToolTip="[Total Upload Bandwidth]">
+        <FontIcon
+          Margin="0,0,8,0"
+          VerticalAlignment="Center"
+          FontSize="15"
+          Glyph="&#xE74A;" />
+        <TextBlock
+          VerticalAlignment="Center"
+          FontSize="15"
+          Text="{x:Bind Path=TransferManager.TotalUploadBandwidth, Converter={StaticResource CustomConverter}, ConverterParameter=Uint64ByteSizeToString, Mode=OneWay}" />
+        <TextBlock
+          VerticalAlignment="Center"
+          FontSize="15"
+          Text="/s" />
+      </StackPanel>
     </StackPanel>
+  </Grid>
 </Page>

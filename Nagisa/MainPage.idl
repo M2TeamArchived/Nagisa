@@ -1,9 +1,22 @@
+﻿/*
+ * PROJECT:   Nagisa
+ * FILE:      MainPage.idl
+ * PURPOSE:   Definition for the Main Window.
+ *
+ * LICENSE:   The MIT License
+ *
+ * DEVELOPER: Mouri_Naruto (Mouri_Naruto AT Outlook.com)
+ */
+
 namespace Nagisa
 {
     [default_interface]
     runtimeclass MainPage : Windows.UI.Xaml.Controls.Page
     {
         MainPage();
-        Int32 MyProperty;
+
+        Assassin.ITransferManager TransferManager { get; };
+
+        Windows.UI.Xaml.Controls.ListView TaskList { get; };
     }
 }
