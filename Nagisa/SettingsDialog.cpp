@@ -18,15 +18,9 @@ namespace winrt::Nagisa::implementation
 {
     SettingsDialog::SettingsDialog(
         ITransferManager const& TransferManager) :
-        m_TransferManager(TransferManager),
-        m_UseCustomFolder(CheckBox())
+        m_TransferManager(TransferManager)
     {
         InitializeComponent();
-    }
-
-    CheckBox SettingsDialog::UseCustomFolder()
-    {
-        return this->m_UseCustomFolder;
     }
 
     void SettingsDialog::ContentDialog_Loaded(
@@ -43,6 +37,8 @@ namespace winrt::Nagisa::implementation
         bool IsUseCustomFolder = (nullptr != DefaultFolder);
 
         this->UseCustomFolder().IsChecked(IsUseCustomFolder);
+
+        this->CustomDownloadFolderBrowseButton().IsEnabled(IsUseCustomFolder);
 
         this->DownloadFolderPathTextBox().Text((
             IsUseCustomFolder
@@ -94,6 +90,8 @@ namespace winrt::Nagisa::implementation
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
         bool IsUseCustomFolder = this->UseCustomFolder().IsChecked().Value();
+
+        this->CustomDownloadFolderBrowseButton().IsEnabled(IsUseCustomFolder);
 
         if (!IsUseCustomFolder)
         {

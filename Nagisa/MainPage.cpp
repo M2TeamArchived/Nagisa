@@ -22,8 +22,7 @@ using namespace Windows::UI::Xaml;
 namespace winrt::Nagisa::implementation
 {
     MainPage::MainPage() :
-        m_TransferManager(Assassin::TransferManager(true)),
-        m_TaskList(ListView())
+        m_TransferManager(Assassin::TransferManager(true))
     {
         InitializeComponent();
     }
@@ -31,11 +30,6 @@ namespace winrt::Nagisa::implementation
     ITransferManager MainPage::TransferManager()
     {
         return this->m_TransferManager;
-    }
-
-    ListView MainPage::TaskList()
-    {
-        return this->m_TaskList;
     }
 
     void MainPage::RefreshTaskList()
@@ -46,7 +40,14 @@ namespace winrt::Nagisa::implementation
         {
             M2ExecuteOnUIThread([this, Tasks]()
             {
+                using Windows::UI::Xaml::Visibility;
+
                 this->TaskList().ItemsSource(Tasks);
+
+                this->TaskListNoItemsTextBlock().Visibility(
+                    (nullptr == Tasks || 0 == Tasks.Size())
+                    ? Visibility::Visible
+                    : Visibility::Collapsed);
             });
         }
     }
@@ -68,7 +69,7 @@ namespace winrt::Nagisa::implementation
     }
 
     IAsyncOperation<ContentDialogResult> MainPage::ShowContentDialogAsync(
-        ContentDialog Dialog)
+        ContentDialog const& Dialog)
     {
         double PageActualWidth = this->ActualWidth();
         if (Dialog.MaxWidth() > PageActualWidth)
@@ -88,7 +89,8 @@ namespace winrt::Nagisa::implementation
         UNREFERENCED_PARAMETER(sender);  // Unused parameter.
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
-        this->ShowContentDialogAsync(AboutDialog(this->m_TransferManager));
+        this->ShowContentDialogAsync(
+            winrt::make<AboutDialog>(this->m_TransferManager));
     }
 
     void MainPage::NewTaskButton_Click(
@@ -102,7 +104,7 @@ namespace winrt::Nagisa::implementation
 
         IAsyncOperation<ContentDialogResult> Operation =
             this->ShowContentDialogAsync(
-                NewTaskDialog(this->m_TransferManager));
+                winrt::make<NewTaskDialog>(this->m_TransferManager));
 
         M2::CThread([this, Operation]()
         {
@@ -462,6 +464,7 @@ namespace winrt::Nagisa::implementation
         UNREFERENCED_PARAMETER(sender);  // Unused parameter.
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
-        this->ShowContentDialogAsync(SettingsDialog(this->m_TransferManager));
+        this->ShowContentDialogAsync(
+            winrt::make<SettingsDialog>(this->m_TransferManager));
     }
 }

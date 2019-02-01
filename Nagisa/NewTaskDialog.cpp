@@ -51,7 +51,7 @@ namespace winrt::Nagisa::implementation
             this->m_TransferManager.AddTaskAsync(
                 this->m_DownloadSource,
                 this->m_FileName,
-                this->m_SaveFolder).get();
+                this->m_SaveFolder);
         }
     }
 

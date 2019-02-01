@@ -175,15 +175,6 @@
         </Style>
       </ListView.ItemContainerStyle>
 
-      <ListView.Header>
-        <TextBlock
-          x:Uid="/MainPage/TaskListNoItemsTextBlock"
-          Margin="16"
-          Text="[No Downloads]"
-          TextAlignment="Center"
-          Visibility="{x:Bind TaskList.ItemsSource, Converter={StaticResource CustomConverter}, ConverterParameter=TaskListEmptyToVisibility, Mode=OneWay}" />
-      </ListView.Header>
-
       <ListView.ItemTemplate>
         <DataTemplate x:DataType="Assassin:ITransferTask">
           <Grid Margin="8">
@@ -388,6 +379,14 @@
       </ListView.ItemTemplate>
 
     </ListView>
+
+    <TextBlock
+      x:Name="TaskListNoItemsTextBlock"
+      x:Uid="/MainPage/TaskListNoItemsTextBlock"
+      Grid.Row="2"
+      Margin="16"
+      Text="[No Downloads]"
+      TextAlignment="Center"/>
 
     <StackPanel
       x:Name="StatusBarStackPanel"

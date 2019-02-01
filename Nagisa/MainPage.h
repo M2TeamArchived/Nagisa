@@ -31,21 +31,17 @@ namespace winrt::Nagisa::implementation
     private:
         ITransferManager m_TransferManager = nullptr;
 
-        ListView m_TaskList = nullptr;
-
         void RefreshTaskList();
         void RefreshTaskListAsync();
         void SearchTaskList(
             hstring const& SearchFilter);
         IAsyncOperation<ContentDialogResult> ShowContentDialogAsync(
-            ContentDialog Dialog);
+            ContentDialog const& Dialog);
 
     public:
         MainPage();
 
         ITransferManager TransferManager();
-
-        ListView TaskList();
 
         void AboutButton_Click(
             IInspectable const& sender,

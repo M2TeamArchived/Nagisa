@@ -26,13 +26,10 @@ namespace winrt::Nagisa::implementation
     private:
         ITransferManager m_TransferManager = nullptr;
         IStorageFolder m_LastusedFolder = nullptr;
-        CheckBox m_UseCustomFolder = nullptr;
 
     public:
         SettingsDialog(
             ITransferManager const& TransferManager);
-
-        CheckBox UseCustomFolder();
 
         void ContentDialog_Loaded(
             IInspectable const& sender,

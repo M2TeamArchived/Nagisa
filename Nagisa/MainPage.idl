@@ -16,7 +16,5 @@ namespace Nagisa
         MainPage();
 
         Assassin.ITransferManager TransferManager { get; };
-
-        Windows.UI.Xaml.Controls.ListView TaskList { get; };
     }
 }
