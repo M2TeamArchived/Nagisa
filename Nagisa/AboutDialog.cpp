@@ -17,7 +17,7 @@ using namespace Windows::UI::Xaml;
 namespace winrt::Nagisa::implementation
 {
     AboutDialog::AboutDialog(
-        Assassin::ITransferManager const& TransferManager) :
+        ITransferManager const& TransferManager) :
         m_TransferManager(TransferManager)
     {
         InitializeComponent();
@@ -30,7 +30,7 @@ namespace winrt::Nagisa::implementation
         UNREFERENCED_PARAMETER(sender);  // Unused parameter.
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
-        VersionText().Text(m_TransferManager.Version());
+        this->VersionText().Text(m_TransferManager.Version());
     }
 
     void AboutDialog::GitHubButtonClick(

@@ -24,13 +24,13 @@ namespace winrt::Nagisa::implementation
     struct SettingsDialog : SettingsDialogT<SettingsDialog>
     {
     private:
-        Assassin::ITransferManager m_TransferManager = nullptr;
+        ITransferManager m_TransferManager = nullptr;
         IStorageFolder m_LastusedFolder = nullptr;
         CheckBox m_UseCustomFolder = nullptr;
 
     public:
         SettingsDialog(
-            Assassin::ITransferManager const& TransferManager);
+            ITransferManager const& TransferManager);
 
         CheckBox UseCustomFolder();
 

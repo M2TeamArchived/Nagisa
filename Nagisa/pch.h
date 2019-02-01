@@ -22,6 +22,7 @@
 #include <winrt/Windows.Storage.Pickers.h>
 #include <winrt/Windows.System.h>
 #include <winrt/Windows.UI.Xaml.Documents.h>
+#include <winrt/Windows.UI.Xaml.Media.h>
 
 #include "winrt/Assassin.h"
 

@@ -1,0 +1,19 @@
+﻿/*
+ * PROJECT:   Nagisa
+ * FILE:      NewTaskDialog.idl
+ * PURPOSE:   Definition for the New Task Dialog.
+ *
+ * LICENSE:   The MIT License
+ *
+ * DEVELOPER: Mouri_Naruto (Mouri_Naruto AT Outlook.com)
+ */
+
+namespace Nagisa
+{
+    [default_interface]
+    runtimeclass NewTaskDialog : Windows.UI.Xaml.Controls.ContentDialog
+    {
+        NewTaskDialog(
+            Assassin.ITransferManager TransferManager);
+    }
+}

@@ -17,7 +17,7 @@ using namespace Windows::UI::Xaml;
 namespace winrt::Nagisa::implementation
 {
     SettingsDialog::SettingsDialog(
-        Assassin::ITransferManager const& TransferManager) :
+        ITransferManager const& TransferManager) :
         m_TransferManager(TransferManager),
         m_UseCustomFolder(CheckBox())
     {

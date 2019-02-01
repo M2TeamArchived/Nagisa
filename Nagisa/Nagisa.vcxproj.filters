@@ -59,6 +59,9 @@
     <Page Include="SettingsDialog.xaml">
       <Filter>Xaml</Filter>
     </Page>
+    <Page Include="NewTaskDialog.xaml">
+      <Filter>Xaml</Filter>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Nagisa.rc" />

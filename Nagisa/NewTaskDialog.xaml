@@ -1,0 +1,70 @@
+﻿<ContentDialog
+  x:Class="Nagisa.NewTaskDialog"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:local="using:Nagisa"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  x:Uid="/NewTaskDialog/Dialog"
+  Title="[New Task]"
+  Loaded="ContentDialog_Loaded"
+  PrimaryButtonClick="DownloadButtonClick"
+  PrimaryButtonText="[Download]"
+  SecondaryButtonText="[Cancel]"
+  Style="{StaticResource CustomContentDialogStyle}"
+  mc:Ignorable="d">
+  <StackPanel Orientation="Vertical">
+    <StackPanel Orientation="Vertical">
+      <TextBlock
+        x:Uid="/NewTaskDialog/DownloadSourceTitle"
+        FontSize="16"
+        Text="[Download Source]" />
+      <TextBox
+        x:Name="DownloadSourceTextBox"
+        x:Uid="/NewTaskDialog/DownloadSourceTextBox"
+        Margin="0,4,0,0"
+        BorderThickness="1"
+        LostFocus="DownloadSourceTextBox_LostFocus"
+        PlaceholderText="[Please input the download source here.]" />
+    </StackPanel>
+    <StackPanel Margin="0,8,0,0" Orientation="Vertical">
+      <TextBlock
+        x:Uid="/NewTaskDialog/FileNameTitle"
+        FontSize="16"
+        Text="[File Name]" />
+      <TextBox
+        x:Name="FileNameTextBox"
+        x:Uid="/NewTaskDialog/FileNameTextBox"
+        Margin="0,4,0,0"
+        BorderThickness="1"
+        LostFocus="FileNameTextBox_LostFocus"
+        PlaceholderText="[Please input the file name here.]" />
+    </StackPanel>
+    <StackPanel Margin="0,8,0,0" Orientation="Vertical">
+      <TextBlock
+        x:Uid="/NewTaskDialog/SaveFolderTitle"
+        FontSize="16"
+        Text="[Save Folder]" />
+      <Grid Margin="0,4,0,0" HorizontalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition />
+          <ColumnDefinition Width="32" />
+        </Grid.ColumnDefinitions>
+        <TextBox
+          x:Name="SaveFolderTextBox"
+          HorizontalAlignment="Stretch"
+          BorderThickness="1"
+          IsReadOnly="True"
+          PlaceholderText="N/A" />
+        <Button
+          Grid.Column="1"
+          Width="32"
+          Height="32"
+          Click="BrowseButtonClick"
+          Content=""
+          FontFamily="Segoe MDL2 Assets"
+          FontSize="12" />
+      </Grid>
+    </StackPanel>
+  </StackPanel>
+</ContentDialog>

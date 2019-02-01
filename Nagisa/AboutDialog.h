@@ -23,11 +23,11 @@ namespace winrt::Nagisa::implementation
     struct AboutDialog : AboutDialogT<AboutDialog>
     {
     private:
-        Assassin::ITransferManager m_TransferManager = nullptr;
+        ITransferManager m_TransferManager = nullptr;
 
     public:
         AboutDialog(
-            Assassin::ITransferManager const& TransferManager);
+            ITransferManager const& TransferManager);
 
         void ContentDialog_Loaded(
             IInspectable const& sender,
