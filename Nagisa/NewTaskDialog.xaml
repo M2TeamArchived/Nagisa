@@ -7,7 +7,6 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   x:Uid="/NewTaskDialog/Dialog"
   Title="[New Task]"
-  Loaded="ContentDialog_Loaded"
   PrimaryButtonClick="DownloadButtonClick"
   PrimaryButtonText="[Download]"
   SecondaryButtonText="[Cancel]"

@@ -25,6 +25,39 @@ namespace winrt::Nagisa::implementation
         m_TransferManager(Assassin::TransferManager(true))
     {
         InitializeComponent();
+
+        using Windows::ApplicationModel::Core::CoreApplication;
+        using Windows::UI::Colors;
+        using Windows::UI::ViewManagement::ApplicationView;
+        using Windows::UI::ViewManagement::ApplicationViewTitleBar;
+        using Windows::UI::Xaml::Application;
+        using Windows::UI::Xaml::Media::SolidColorBrush;
+        using Windows::UI::Xaml::ResourceDictionary;
+        using Windows::UI::Xaml::Visibility;
+        using Windows::UI::Xaml::Window;
+
+        //Extend main grid to titlebar
+        CoreApplication::GetCurrentView().TitleBar().ExtendViewIntoTitleBar(
+            true);
+        ApplicationViewTitleBar titleBar =
+            ApplicationView::GetForCurrentView().TitleBar();
+        ResourceDictionary GlobalResources =
+            Application::Current().Resources();
+        //Change titlebar button colors to match DimButton style
+        titleBar.ButtonBackgroundColor(Colors::Transparent());
+        titleBar.ButtonInactiveBackgroundColor(Colors::Transparent());
+        titleBar.ButtonPressedBackgroundColor(GlobalResources.Lookup(box_value(
+            L"SystemControlHighlightListMediumBrush")).try_as<SolidColorBrush>(
+                ).Color());
+        titleBar.ButtonHoverBackgroundColor(GlobalResources.Lookup(box_value(
+            L"SystemControlHighlightListLowBrush")).try_as<SolidColorBrush>(
+                ).Color());
+        //Set real titlebar area
+        Window::Current().SetTitleBar(this->realTitle());
+
+        this->SearchAutoSuggestBox().Visibility(Visibility::Collapsed);
+
+        this->RefreshTaskListAsync();
     }
 
     ITransferManager MainPage::TransferManager()
@@ -113,46 +146,6 @@ namespace winrt::Nagisa::implementation
                 this->RefreshTaskList();
             }
         });
-    }
-
-    void MainPage::Page_Loaded(
-        IInspectable const& sender,
-        RoutedEventArgs const& e)
-    {
-        UNREFERENCED_PARAMETER(sender);  // Unused parameter.
-        UNREFERENCED_PARAMETER(e);   // Unused parameter.
-
-        using Windows::ApplicationModel::Core::CoreApplication;
-        using Windows::UI::Colors;
-        using Windows::UI::ViewManagement::ApplicationView;
-        using Windows::UI::ViewManagement::ApplicationViewTitleBar;
-        using Windows::UI::Xaml::Application;
-        using Windows::UI::Xaml::Media::SolidColorBrush;
-        using Windows::UI::Xaml::ResourceDictionary;
-        using Windows::UI::Xaml::Visibility;
-        using Windows::UI::Xaml::Window;
-
-        this->RefreshTaskListAsync();
-        //Extend main grid to titlebar
-        CoreApplication::GetCurrentView().TitleBar().ExtendViewIntoTitleBar(
-            true);
-        ApplicationViewTitleBar titleBar =
-            ApplicationView::GetForCurrentView().TitleBar();
-        ResourceDictionary GlobalResources =
-            Application::Current().Resources();
-        //Change titlebar button colors to match DimButton style
-        titleBar.ButtonBackgroundColor(Colors::Transparent());
-        titleBar.ButtonInactiveBackgroundColor(Colors::Transparent());
-        titleBar.ButtonPressedBackgroundColor(GlobalResources.Lookup(box_value(
-            L"SystemControlHighlightListMediumBrush")).try_as<SolidColorBrush>(
-                ).Color());
-        titleBar.ButtonHoverBackgroundColor(GlobalResources.Lookup(box_value(
-            L"SystemControlHighlightListLowBrush")).try_as<SolidColorBrush>(
-                ).Color());
-        //Set real titlebar area
-        Window::Current().SetTitleBar(this->realTitle());
-
-        this->SearchAutoSuggestBox().Visibility(Visibility::Collapsed);
     }
 
     void MainPage::CopyLinkMenuItem_Click(

@@ -7,7 +7,6 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   x:Uid="/AboutDialog/Dialog"
   Title="[About]"
-  Loaded="ContentDialog_Loaded"
   PrimaryButtonClick="GitHubButtonClick"
   PrimaryButtonText="[GitHub Repository]"
   SecondaryButtonText="[OK]"

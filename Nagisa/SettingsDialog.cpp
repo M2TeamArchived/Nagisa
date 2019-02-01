@@ -21,14 +21,6 @@ namespace winrt::Nagisa::implementation
         m_TransferManager(TransferManager)
     {
         InitializeComponent();
-    }
-
-    void SettingsDialog::ContentDialog_Loaded(
-        IInspectable const& sender,
-        RoutedEventArgs const& e)
-    {
-        UNREFERENCED_PARAMETER(sender);  // Unused parameter.
-        UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
         this->m_LastusedFolder = this->m_TransferManager.LastusedFolder();
 

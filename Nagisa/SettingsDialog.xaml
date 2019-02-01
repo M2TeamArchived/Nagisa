@@ -7,7 +7,6 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   x:Uid="/SettingsDialog/Dialog"
   Title="[Settings]"
-  Loaded="ContentDialog_Loaded"
   SecondaryButtonText="[Close]"
   Style="{StaticResource CustomContentDialogStyle}"
   mc:Ignorable="d">
@@ -33,7 +32,7 @@
       Margin="0,4,0,0"
       Click="CustomDownloadFolderBrowseButton_Click"
       Content="[Browse to modify]"
-      IsEnabled="False"/>
+      IsEnabled="False" />
     <TextBlock
       x:Uid="/SettingsDialog/AdvancedTitle"
       Margin="0,8,0,0"

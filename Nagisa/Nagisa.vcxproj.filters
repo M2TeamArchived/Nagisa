@@ -3,18 +3,27 @@
   <ItemGroup>
     <Midl Include="App.idl" />
     <Midl Include="MainPage.idl" />
+    <Midl Include="AboutDialog.idl" />
+    <Midl Include="NewTaskDialog.idl" />
+    <Midl Include="SettingsDialog.idl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="MainPage.cpp" />
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
+    <ClCompile Include="AboutDialog.cpp" />
+    <ClCompile Include="NewTaskDialog.cpp" />
+    <ClCompile Include="SettingsDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="MainPage.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="AboutDialog.h" />
+    <ClInclude Include="NewTaskDialog.h" />
+    <ClInclude Include="SettingsDialog.h" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />

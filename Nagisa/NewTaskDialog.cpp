@@ -23,9 +23,20 @@ namespace winrt::Nagisa::implementation
         m_NoticeableBrush(SolidColorBrush(Colors::Red()))
     {
         InitializeComponent();
+
+        this->m_SaveFolder = this->m_TransferManager.DefaultFolder();
+        if (nullptr == this->m_SaveFolder)
+        {
+            this->m_SaveFolder = this->m_TransferManager.LastusedFolder();
+        }
+
+        if (nullptr != this->m_SaveFolder)
+        {
+            this->SaveFolderTextBox().Text(this->m_SaveFolder.Path());
+        }
     }
 
-    void NewTaskDialog::DownloadButtonClick(
+    IAsyncAction NewTaskDialog::DownloadButtonClick(
         ContentDialog const& sender,
         ContentDialogButtonClickEventArgs const& args)
     {
@@ -48,7 +59,7 @@ namespace winrt::Nagisa::implementation
         }
         else
         {
-            this->m_TransferManager.AddTaskAsync(
+            co_await this->m_TransferManager.AddTaskAsync(
                 this->m_DownloadSource,
                 this->m_FileName,
                 this->m_SaveFolder);
@@ -127,24 +138,5 @@ namespace winrt::Nagisa::implementation
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
         this->m_FileName = this->FileNameTextBox().Text();
-    }
-
-    void NewTaskDialog::ContentDialog_Loaded(
-        IInspectable const& sender,
-        RoutedEventArgs const& e)
-    {
-        UNREFERENCED_PARAMETER(sender);  // Unused parameter.
-        UNREFERENCED_PARAMETER(e);   // Unused parameter.
-
-        this->m_SaveFolder = this->m_TransferManager.DefaultFolder();
-        if (nullptr == this->m_SaveFolder)
-        {
-            this->m_SaveFolder = this->m_TransferManager.LastusedFolder();
-        }
-
-        if (nullptr != this->m_SaveFolder)
-        {
-            this->SaveFolderTextBox().Text(this->m_SaveFolder.Path());
-        }
     }
 }

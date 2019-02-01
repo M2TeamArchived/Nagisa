@@ -7,7 +7,6 @@
   xmlns:local="using:Nagisa"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   Background="{ThemeResource SystemChromeMediumColor}"
-  Loaded="Page_Loaded"
   mc:Ignorable="d">
 
   <Grid>

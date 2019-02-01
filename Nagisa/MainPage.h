@@ -49,9 +49,6 @@ namespace winrt::Nagisa::implementation
         void NewTaskButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
-        void Page_Loaded(
-            IInspectable const& sender,
-            RoutedEventArgs const& e);
         void CopyLinkMenuItem_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);

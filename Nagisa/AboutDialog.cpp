@@ -17,20 +17,11 @@ using namespace Windows::UI::Xaml;
 namespace winrt::Nagisa::implementation
 {
     AboutDialog::AboutDialog(
-        ITransferManager const& TransferManager) :
-        m_TransferManager(TransferManager)
+        ITransferManager const& TransferManager)
     {
         InitializeComponent();
-    }
 
-    void AboutDialog::ContentDialog_Loaded(
-        IInspectable const& sender,
-        RoutedEventArgs const& e)
-    {
-        UNREFERENCED_PARAMETER(sender);  // Unused parameter.
-        UNREFERENCED_PARAMETER(e);   // Unused parameter.
-
-        this->VersionText().Text(m_TransferManager.Version());
+        this->VersionText().Text(TransferManager.Version());
     }
 
     void AboutDialog::GitHubButtonClick(

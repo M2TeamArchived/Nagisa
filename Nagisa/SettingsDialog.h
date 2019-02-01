@@ -31,9 +31,6 @@ namespace winrt::Nagisa::implementation
         SettingsDialog(
             ITransferManager const& TransferManager);
 
-        void ContentDialog_Loaded(
-            IInspectable const& sender,
-            RoutedEventArgs const& e);
         void CustomDownloadFolderBrowseButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);

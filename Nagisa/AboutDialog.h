@@ -22,16 +22,10 @@ namespace winrt::Nagisa::implementation
 
     struct AboutDialog : AboutDialogT<AboutDialog>
     {
-    private:
-        ITransferManager m_TransferManager = nullptr;
-
     public:
         AboutDialog(
             ITransferManager const& TransferManager);
 
-        void ContentDialog_Loaded(
-            IInspectable const& sender,
-            RoutedEventArgs const& e);
         void GitHubButtonClick(
             ContentDialog const& sender,
             ContentDialogButtonClickEventArgs const& args);
