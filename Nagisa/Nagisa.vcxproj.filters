@@ -50,18 +50,6 @@
     <Page Include="MainPage.xaml">
       <Filter>Xaml</Filter>
     </Page>
-    <Page Include="XamlResources\CustomAutoSuggestBoxTextBoxStyle.xaml">
-      <Filter>XamlResources</Filter>
-    </Page>
-    <Page Include="XamlResources\CustomContentDialogStyle.xaml">
-      <Filter>XamlResources</Filter>
-    </Page>
-    <Page Include="XamlResources\CustomConverters.xaml">
-      <Filter>XamlResources</Filter>
-    </Page>
-    <Page Include="XamlResources\CustomDimButtonStyle.xaml">
-      <Filter>XamlResources</Filter>
-    </Page>
     <Page Include="AboutDialog.xaml">
       <Filter>Xaml</Filter>
     </Page>
@@ -70,6 +58,18 @@
     </Page>
     <Page Include="NewTaskDialog.xaml">
       <Filter>Xaml</Filter>
+    </Page>
+    <Page Include="CustomAutoSuggestBoxTextBoxStyle.xaml">
+      <Filter>XamlResources</Filter>
+    </Page>
+    <Page Include="CustomContentDialogStyle.xaml">
+      <Filter>XamlResources</Filter>
+    </Page>
+    <Page Include="CustomConverters.xaml">
+      <Filter>XamlResources</Filter>
+    </Page>
+    <Page Include="CustomDimButtonStyle.xaml">
+      <Filter>XamlResources</Filter>
     </Page>
   </ItemGroup>
   <ItemGroup>

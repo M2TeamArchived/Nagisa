@@ -149,10 +149,10 @@
     <Page Include="SettingsDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="XamlResources\CustomAutoSuggestBoxTextBoxStyle.xaml" />
-    <Page Include="XamlResources\CustomContentDialogStyle.xaml" />
-    <Page Include="XamlResources\CustomConverters.xaml" />
-    <Page Include="XamlResources\CustomDimButtonStyle.xaml" />
+    <Page Include="CustomAutoSuggestBoxTextBoxStyle.xaml" />
+    <Page Include="CustomContentDialogStyle.xaml" />
+    <Page Include="CustomConverters.xaml" />
+    <Page Include="CustomDimButtonStyle.xaml" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
