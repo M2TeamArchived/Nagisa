@@ -6,6 +6,9 @@
     <Midl Include="AboutDialog.idl" />
     <Midl Include="NewTaskDialog.idl" />
     <Midl Include="SettingsDialog.idl" />
+    <Midl Include="CustomConverter.idl">
+      <Filter>CustomConverter</Filter>
+    </Midl>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -15,6 +18,9 @@
     <ClCompile Include="AboutDialog.cpp" />
     <ClCompile Include="NewTaskDialog.cpp" />
     <ClCompile Include="SettingsDialog.cpp" />
+    <ClCompile Include="CustomConverter.cpp">
+      <Filter>CustomConverter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -24,6 +30,9 @@
     <ClInclude Include="AboutDialog.h" />
     <ClInclude Include="NewTaskDialog.h" />
     <ClInclude Include="SettingsDialog.h" />
+    <ClInclude Include="CustomConverter.h">
+      <Filter>CustomConverter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
@@ -39,6 +48,9 @@
     </Filter>
     <Filter Include="Xaml">
       <UniqueIdentifier>{e1dcbdf9-89f0-4150-803f-50d9035658c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CustomConverter">
+      <UniqueIdentifier>{43c040cb-7586-41ab-a6d3-3b258846b4af}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

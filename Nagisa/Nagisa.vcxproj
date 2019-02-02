@@ -116,6 +116,7 @@
       <DependentUpon>AboutDialog.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClInclude>
+    <ClInclude Include="CustomConverter.h" />
     <ClInclude Include="NewTaskDialog.h">
       <DependentUpon>NewTaskDialog.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -166,6 +167,7 @@
       <DependentUpon>AboutDialog.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClCompile>
+    <ClCompile Include="CustomConverter.cpp" />
     <ClCompile Include="NewTaskDialog.cpp">
       <DependentUpon>NewTaskDialog.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -193,6 +195,7 @@
     <Midl Include="App.idl">
       <DependentUpon>App.xaml</DependentUpon>
     </Midl>
+    <Midl Include="CustomConverter.idl" />
     <Midl Include="MainPage.idl">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Midl>

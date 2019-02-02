@@ -4,6 +4,6 @@
   xmlns:Assassin="using:Assassin"
   xmlns:local="using:Nagisa">
 
-  <Assassin:CustomConverter x:Name="CustomConverter" />
+  <local:CustomConverter x:Name="CustomConverter" />
 
 </ResourceDictionary>

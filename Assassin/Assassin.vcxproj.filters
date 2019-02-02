@@ -10,9 +10,6 @@
     <Filter Include="TransferManager">
       <UniqueIdentifier>{edc7ca39-1cc4-406e-b2fc-dbd879f73849}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CustomConverter">
-      <UniqueIdentifier>{f14fa212-ce08-4e4d-a36c-5cff428339ed}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -25,9 +22,6 @@
     <ClCompile Include="TransferManager.cpp">
       <Filter>TransferManager</Filter>
     </ClCompile>
-    <ClCompile Include="CustomConverter.cpp">
-      <Filter>CustomConverter</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -37,9 +31,6 @@
     </ClInclude>
     <ClInclude Include="TransferManager.h">
       <Filter>TransferManager</Filter>
-    </ClInclude>
-    <ClInclude Include="CustomConverter.h">
-      <Filter>CustomConverter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -55,9 +46,6 @@
     </Midl>
     <Midl Include="TransferManager.idl">
       <Filter>TransferManager</Filter>
-    </Midl>
-    <Midl Include="CustomConverter.idl">
-      <Filter>CustomConverter</Filter>
     </Midl>
   </ItemGroup>
 </Project>

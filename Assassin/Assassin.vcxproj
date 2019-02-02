@@ -106,14 +106,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BackgroundWorker.h" />
-    <ClInclude Include="CustomConverter.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="TransferManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BackgroundWorker.cpp" />
-    <ClCompile Include="CustomConverter.cpp" />
     <ClCompile Include="Generated Files\module.g.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
@@ -124,7 +122,6 @@
     <ResourceCompile Include="Assassin.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="CustomConverter.idl" />
     <Midl Include="TransferManager.idl" />
     <Midl Include="BackgroundWorker.idl" />
   </ItemGroup>

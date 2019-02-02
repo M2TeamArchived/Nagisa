@@ -1,5 +1,5 @@
 ﻿/******************************************************************************
-Project: Assassin
+Project: Nagisa
 Description: Definition for the CustomConverter.
 File Name: CustomConverter.h
 License: The MIT License
@@ -19,7 +19,7 @@ namespace winrt
     using Windows::UI::Xaml::Interop::TypeName;
 }
 
-namespace winrt::Assassin::implementation
+namespace winrt::Nagisa::implementation
 {
     struct CustomConverter :
         CustomConverterT<CustomConverter>
@@ -40,7 +40,7 @@ namespace winrt::Assassin::implementation
     };
 }
 
-namespace winrt::Assassin::factory_implementation
+namespace winrt::Nagisa::factory_implementation
 {
     struct CustomConverter : CustomConverterT<
         CustomConverter,

@@ -1,11 +1,11 @@
 ﻿/******************************************************************************
-Project: Assassin
+Project: Nagisa
 Description: Definition for the CustomConverter.
 File Name: CustomConverter.idl
 License: The MIT License
 ******************************************************************************/
 
-namespace Assassin
+namespace Nagisa
 {
     [Windows.UI.Xaml.Data.Bindable]
     [Windows.Foundation.Metadata.WebHostHidden]

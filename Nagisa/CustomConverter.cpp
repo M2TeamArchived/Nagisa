@@ -9,7 +9,7 @@ License: The MIT License
 
 #include "CustomConverter.h"
 
-using namespace winrt::Assassin::implementation;
+using namespace winrt::Nagisa::implementation;
 
 #include <winrt\Assassin.h>
 #include <winrt\Windows.UI.Xaml.h>
