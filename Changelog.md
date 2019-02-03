@@ -7,12 +7,7 @@
 
 ## Changelog
 
-**Nagisa 0.4 [Build *Current*]**
-- Update documents.
-- Update the version number.
-- Start to add the BackgroundWorker.
-
-### Nagisa 0.4 [Build 124]
+### Nagisa 0.4 [Build 140] - (Developing)
 - Improve several implementations.
 - Remove OpenSSL static library binaries.
 - Remove AppVeyor CI support because we can't use C++/WinRT in the AppVeyor CI 
@@ -20,6 +15,7 @@
 - Decided to upgrade the system requirement to Windows 10, version 1703. 
 - Introduce the new user interface. (Partially contributed by 鳶一雨音.)
 - Improve the user experience. (Thanks to Yue Yin.)
+- Implement the project entirely using C++/WinRT.
 
 ### Nagisa 0.3 [Build 62]
 - Add Multi-language Support: Spanish. (Contributed by Jhovany200.)
