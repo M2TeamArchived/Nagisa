@@ -1,9 +1,12 @@
-﻿/******************************************************************************
-Project: Assassin
-Description: Implementation for CustomConverter.
-File Name: CustomConverter.cpp
-License: The MIT License
-******************************************************************************/
+﻿/*
+ * PROJECT:   Nagisa
+ * FILE:      CustomConverter.cpp
+ * PURPOSE:   Implementation for the CustomConverter.
+ *
+ * LICENSE:   The MIT License
+ *
+ * DEVELOPER: Mouri_Naruto (Mouri_Naruto AT Outlook.com)
+ */
 
 #include "pch.h"
 

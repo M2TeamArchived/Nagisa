@@ -77,9 +77,6 @@
     <Page Include="CustomContentDialogStyle.xaml">
       <Filter>XamlResources</Filter>
     </Page>
-    <Page Include="CustomConverters.xaml">
-      <Filter>XamlResources</Filter>
-    </Page>
     <Page Include="CustomDimButtonStyle.xaml">
       <Filter>XamlResources</Filter>
     </Page>

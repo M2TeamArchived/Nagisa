@@ -1,9 +1,12 @@
-﻿/******************************************************************************
-Project: Nagisa
-Description: Definition for the CustomConverter.
-File Name: CustomConverter.h
-License: The MIT License
-******************************************************************************/
+﻿/*
+ * PROJECT:   Nagisa
+ * FILE:      CustomConverter.h
+ * PURPOSE:   Definition for the CustomConverter.
+ *
+ * LICENSE:   The MIT License
+ *
+ * DEVELOPER: Mouri_Naruto (Mouri_Naruto AT Outlook.com)
+ */
 
 #pragma once
 

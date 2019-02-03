@@ -152,7 +152,6 @@
     </Page>
     <Page Include="CustomAutoSuggestBoxTextBoxStyle.xaml" />
     <Page Include="CustomContentDialogStyle.xaml" />
-    <Page Include="CustomConverters.xaml" />
     <Page Include="CustomDimButtonStyle.xaml" />
   </ItemGroup>
   <ItemGroup>

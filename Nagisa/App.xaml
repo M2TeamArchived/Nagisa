@@ -7,10 +7,12 @@
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ms-appx:///CustomContentDialogStyle.xaml" />
-        <ResourceDictionary Source="ms-appx:///CustomConverters.xaml" />
         <ResourceDictionary Source="ms-appx:///CustomDimButtonStyle.xaml" />
         <ResourceDictionary Source="ms-appx:///CustomAutoSuggestBoxTextBoxStyle.xaml" />
       </ResourceDictionary.MergedDictionaries>
+
+      <local:CustomConverter x:Name="CustomConverter" />
+
     </ResourceDictionary>
   </Application.Resources>
 </Application>
