@@ -1,9 +1,12 @@
-﻿/******************************************************************************
-Project: Assassin
-Description: Definition for the TransferManager.
-File Name: TransferManager.h
-License: The MIT License
-******************************************************************************/
+﻿/*
+ * PROJECT:   Assassin
+ * FILE:      TransferManager.h
+ * PURPOSE:   Definition for the TransferManager
+ *
+ * LICENSE:   The MIT License
+ *
+ * DEVELOPER: Mouri_Naruto (Mouri_Naruto AT Outlook.com)
+ */
 
 #pragma once
 

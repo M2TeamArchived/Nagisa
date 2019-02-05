@@ -1,9 +1,12 @@
-﻿/******************************************************************************
-Project: Assassin
-Description: Implementation for TransferManager.
-File Name: TransferManager.cpp
-License: The MIT License
-******************************************************************************/
+﻿/*
+ * PROJECT:   Assassin
+ * FILE:      TransferManager.cpp
+ * PURPOSE:   Implementation for the TransferManager
+ *
+ * LICENSE:   The MIT License
+ *
+ * DEVELOPER: Mouri_Naruto (Mouri_Naruto AT Outlook.com)
+ */
 
 #include "pch.h"
 #include "TransferManager.h"
