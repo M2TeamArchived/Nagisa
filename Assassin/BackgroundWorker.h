@@ -1,9 +1,12 @@
-﻿/******************************************************************************
-Project: Assassin
-Description: Definition for the BackgroundWorker.
-File Name: BackgroundWorker.h
-License: The MIT License
-******************************************************************************/
+﻿/*
+ * PROJECT:   Assassin
+ * FILE:      BackgroundWorker.h
+ * PURPOSE:   Definition for the BackgroundWorker
+ *
+ * LICENSE:   The MIT License
+ *
+ * DEVELOPER: Mouri_Naruto (Mouri_Naruto AT Outlook.com)
+ */
 
 #pragma once
 
@@ -13,13 +16,10 @@ License: The MIT License
 #include <winrt\Windows.ApplicationModel.Background.h>
 #include <winrt\Windows.Networking.Sockets.h>
 
-namespace winrt
-{
-    using Windows::ApplicationModel::Background::IBackgroundTaskInstance;
-}
-
 namespace winrt::Assassin::implementation
 {
+    using Windows::ApplicationModel::Background::IBackgroundTaskInstance;
+
     struct BackgroundWorker : BackgroundWorkerT<BackgroundWorker>
     {
     public:
@@ -27,7 +27,7 @@ namespace winrt::Assassin::implementation
         virtual ~BackgroundWorker();
 
         void Run(
-            winrt::IBackgroundTaskInstance const& taskInstance) const;
+            IBackgroundTaskInstance const& taskInstance) const;
     };
 }
 
