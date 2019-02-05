@@ -14,6 +14,6 @@ namespace Nagisa
     runtimeclass SettingsDialog : Windows.UI.Xaml.Controls.ContentDialog
     {
         SettingsDialog(
-            Assassin.ITransferManager TransferManager);
+            Assassin.TransferManager TransferManager);
     }
 }

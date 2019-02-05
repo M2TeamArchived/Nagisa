@@ -14,7 +14,7 @@
 
 namespace winrt::Nagisa::implementation
 {
-    using Assassin::ITransferManager;
+    using Assassin::TransferManager;
     using Windows::Foundation::IAsyncOperation;
     using Windows::UI::Xaml::RoutedEventArgs;
     using Windows::UI::Xaml::Controls::AutoSuggestBox;
@@ -29,7 +29,7 @@ namespace winrt::Nagisa::implementation
     struct MainPage : MainPageT<MainPage>
     {
     private:
-        ITransferManager m_TransferManager = nullptr;
+        TransferManager m_TransferManager = nullptr;
 
         void RefreshTaskList();
         void RefreshTaskListAsync();
@@ -41,7 +41,7 @@ namespace winrt::Nagisa::implementation
     public:
         MainPage();
 
-        ITransferManager TransferManager();
+        TransferManager TransferManager();
 
         void AboutButton_Click(
             IInspectable const& sender,

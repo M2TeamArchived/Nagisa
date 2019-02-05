@@ -14,6 +14,6 @@ namespace Nagisa
     runtimeclass NewTaskDialog : Windows.UI.Xaml.Controls.ContentDialog
     {
         NewTaskDialog(
-            Assassin.ITransferManager TransferManager);
+            Assassin.TransferManager TransferManager);
     }
 }

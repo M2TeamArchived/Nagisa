@@ -15,7 +15,7 @@
 
 namespace winrt::Nagisa::implementation
 {
-    using Assassin::ITransferManager;
+    using Assassin::TransferManager;
     using Windows::UI::Xaml::Controls::ContentDialog;
     using Windows::UI::Xaml::Controls::ContentDialogButtonClickEventArgs;
     using Windows::UI::Xaml::RoutedEventArgs;
@@ -24,7 +24,7 @@ namespace winrt::Nagisa::implementation
     {
     public:
         AboutDialog(
-            ITransferManager const& TransferManager);
+            TransferManager const& TransferManager);
 
         void GitHubButtonClick(
             ContentDialog const& sender,

@@ -14,7 +14,7 @@
 
 namespace winrt::Nagisa::implementation
 {
-    using Assassin::ITransferManager;
+    using Assassin::TransferManager;
     using Windows::Storage::IStorageFolder;
     using Windows::UI::Xaml::Controls::CheckBox;
     using Windows::UI::Xaml::Controls::ContentDialog;
@@ -24,12 +24,12 @@ namespace winrt::Nagisa::implementation
     struct SettingsDialog : SettingsDialogT<SettingsDialog>
     {
     private:
-        ITransferManager m_TransferManager = nullptr;
+        TransferManager m_TransferManager = nullptr;
         IStorageFolder m_LastusedFolder = nullptr;
 
     public:
         SettingsDialog(
-            ITransferManager const& TransferManager);
+            TransferManager const& TransferManager);
 
         void CustomDownloadFolderBrowseButton_Click(
             IInspectable const& sender,

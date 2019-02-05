@@ -17,7 +17,7 @@ using namespace Windows::UI::Xaml;
 namespace winrt::Nagisa::implementation
 {
     NewTaskDialog::NewTaskDialog(
-        ITransferManager const& TransferManager) :
+        TransferManager const& TransferManager) :
         m_TransferManager(TransferManager),
         m_NormalBrush(SolidColorBrush(Colors::Gray())),
         m_NoticeableBrush(SolidColorBrush(Colors::Red()))

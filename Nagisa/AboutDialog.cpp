@@ -17,7 +17,7 @@ using namespace Windows::UI::Xaml;
 namespace winrt::Nagisa::implementation
 {
     AboutDialog::AboutDialog(
-        ITransferManager const& TransferManager)
+        TransferManager const& TransferManager)
     {
         InitializeComponent();
 

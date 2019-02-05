@@ -97,41 +97,48 @@ namespace Assassin
     typedef Windows.Foundation.Collections.IVectorView<ITransferTask> ITransferTaskVector;
 
     [version(1.0)]
-    [uuid(976D09B5-65EE-39DE-9C00-26E47D6538D7)]
-    interface ITransferManager : IInspectable
-        requires
-            Windows.Foundation.IClosable,
-            Windows.UI.Xaml.Data.INotifyPropertyChanged
+    runtimeclass TransferManager :
+        Windows.Foundation.IClosable,
+        Windows.UI.Xaml.Data.INotifyPropertyChanged
     {
+        /// <summary>
+        /// Creates a new TransferManager object.
+        /// </summary>
+        /// <param name="EnableUINotify">
+        /// Enable the UI notify timer if true.
+        /// </param>
+        TransferManager(
+            Boolean EnableUINotify);
+
         /// <value>
         /// The version of Nagisa.
         /// </value>
-        String Version { get; };
+        String Version{ get; };
 
         /// <value>
         /// The filter to use for searching the task list.
         /// </value>
-        String SearchFilter { get; set; };
+        String SearchFilter{ get; set; };
 
         /// <value>
         /// The last used folder.
         /// </value>
-        Windows.Storage.IStorageFolder LastusedFolder { get; };
+        Windows.Storage.IStorageFolder LastusedFolder{ get; };
 
         /// <value>
         /// The default download folder.
         /// </value>
-        Windows.Storage.IStorageFolder DefaultFolder { get; set; };
+        Windows.Storage.IStorageFolder DefaultFolder{ get; set; };
 
         /// <value>
         /// The total download bandwidth.
         /// </value>
-        UInt64 TotalDownloadBandwidth { get; };
+        UInt64 TotalDownloadBandwidth{ get; };
 
         /// <value>
         /// The total upload bandwidth.
         /// </value>
-        UInt64 TotalUploadBandwidth { get; };
+        UInt64 TotalUploadBandwidth{ get; };
 
         /// <summary>
         /// Gets the task list.
@@ -187,19 +194,5 @@ namespace Assassin
         /// Clears the task list.
         /// </summary>
         void ClearTaskList();
-    }
-
-    [version(1.0)]
-    runtimeclass TransferManager :
-        [default] ITransferManager
-    {
-        /// <summary>
-        /// Creates a new TransferManager object.
-        /// </summary>
-        /// <param name="EnableUINotify">
-        /// Enable the UI notify timer if true.
-        /// </param>
-        TransferManager(
-            Boolean EnableUINotify);
     }
 }

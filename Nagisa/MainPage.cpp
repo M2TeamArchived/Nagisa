@@ -60,7 +60,7 @@ namespace winrt::Nagisa::implementation
         this->RefreshTaskListAsync();
     }
 
-    ITransferManager MainPage::TransferManager()
+    TransferManager MainPage::TransferManager()
     {
         return this->m_TransferManager;
     }

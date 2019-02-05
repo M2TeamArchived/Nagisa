@@ -14,7 +14,7 @@
 
 namespace winrt::Nagisa::implementation
 {
-    using Assassin::ITransferManager;
+    using Assassin::TransferManager;
     using Windows::Foundation::Uri;
     using Windows::Storage::IStorageFolder;
     using Windows::UI::Colors;
@@ -26,7 +26,7 @@ namespace winrt::Nagisa::implementation
     struct NewTaskDialog : NewTaskDialogT<NewTaskDialog>
     {
     private:
-        ITransferManager m_TransferManager = nullptr;
+        TransferManager m_TransferManager = nullptr;
 
         SolidColorBrush m_NormalBrush = nullptr;
         SolidColorBrush m_NoticeableBrush = nullptr;
@@ -37,7 +37,7 @@ namespace winrt::Nagisa::implementation
 
     public:
         NewTaskDialog(
-            ITransferManager const& TransferManager);
+            TransferManager const& TransferManager);
 
         IAsyncAction DownloadButtonClick(
             ContentDialog const& sender,
