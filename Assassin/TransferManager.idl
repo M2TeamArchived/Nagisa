@@ -25,72 +25,52 @@ namespace Assassin
     interface ITransferTask : IInspectable
         requires Windows.UI.Xaml.Data.INotifyPropertyChanged
     {
-        /// <value>
-        /// The Guid string of the task.
-        /// </value>
+        // The Guid string of the task.
         String Guid { get; };
 
-        /// <value>
-        /// The URI which to download the file.
-        /// </value>
+        // The URI which to download the file.
         Windows.Foundation.Uri SourceUri { get; };
 
-        /// <value>
-        /// The file name which to download the file.
-        /// </value>
+        // The file name which to download the file.
         String FileName { get; };
 
-        /// <value>
-        /// The save file object which to download the file.
-        /// </value>
+        // The save file object which to download the file.
         Windows.Storage.IStorageFile SaveFile { get; };
 
-        /// <value>
-        /// The save folder object which to download the file.
-        /// </value>
+        // The save folder object which to download the file.
         Windows.Storage.IStorageFolder SaveFolder { get; };
 
-        /// <value>
-        /// The current status of the task.
-        /// </value>
+        // The current status of the task.
         TransferTaskStatus Status { get; };
 
-        /// <value>
-        /// The total number of bytes received. This value does not include
-        /// bytes received as response headers. If the task has restarted, this
-        /// value may be smaller than in the previous progress report.
-        /// </value>
+        // The total number of bytes received. This value does not include
+        // bytes received as response headers. If the task has restarted, this
+        // value may be smaller than in the previous progress report.
         UInt64 BytesReceived { get; };
 
-        /// <value>
-        /// The speed of bytes received in one second.
-        /// </value>
+        // The speed of bytes received in one second.
         UInt64 BytesReceivedSpeed { get; };
 
-        /// <value>
-        /// The remain time, in seconds.
-        /// </value>
+        // The remain time, in seconds.
         UInt64 RemainTime { get; };
 
-        /// <value>
-        /// The total number of bytes of data to download. If this number is
-        /// unknown, this value is set to 0.
-        /// </value>
+        // The total number of bytes of data to download. If this number is
+        // unknown, this value is set to 0.
         UInt64 TotalBytesToReceive { get; };
 
-        /// <summary>
-        /// Pauses a download operation.
-        /// </summary>
+        /**
+         * Pauses a download operation.
+         */
         void Pause();
 
-        /// <summary>
-        /// Resumes a paused download operation.
-        /// </summary>
+        /**
+         * Resumes a paused download operation.
+         */
         void Resume();
 
-        /// <summary>
-        /// Cancels a download operation.
-        /// </summary>
+        /**
+         * Cancels a download operation.
+         */
         void Cancel();
     }
 
@@ -101,98 +81,74 @@ namespace Assassin
         Windows.Foundation.IClosable,
         Windows.UI.Xaml.Data.INotifyPropertyChanged
     {
-        /// <summary>
-        /// Creates a new TransferManager object.
-        /// </summary>
-        /// <param name="EnableUINotify">
-        /// Enable the UI notify timer if true.
-        /// </param>
+        /**
+         * Creates a new TransferManager object.
+         *
+         * @param EnableUINotify Enable the UI notify timer if true.
+         */
         TransferManager(
             Boolean EnableUINotify);
 
-        /// <value>
-        /// The version of Nagisa.
-        /// </value>
+        // The version of Nagisa.
         String Version{ get; };
 
-        /// <value>
-        /// The filter to use for searching the task list.
-        /// </value>
+        // The filter to use for searching the task list.
         String SearchFilter{ get; set; };
 
-        /// <value>
-        /// The last used folder.
-        /// </value>
+        // The last used folder.
         Windows.Storage.IStorageFolder LastusedFolder{ get; };
 
-        /// <value>
-        /// The default download folder.
-        /// </value>
+        // The default download folder.
         Windows.Storage.IStorageFolder DefaultFolder{ get; set; };
 
-        /// <value>
-        /// The total download bandwidth.
-        /// </value>
+        // The total download bandwidth.
         UInt64 TotalDownloadBandwidth{ get; };
 
-        /// <value>
-        /// The total upload bandwidth.
-        /// </value>
+        // The total upload bandwidth.
         UInt64 TotalUploadBandwidth{ get; };
 
-        /// <summary>
-        /// Gets the task list.
-        /// </summary>
-        /// <returns>
-        /// Returns an object which represents the task list.
-        /// </returns>
+        /**
+         * Gets the task list.
+         *
+         * @return The object which represents the task list.
+         */
         Windows.Foundation.IAsyncOperation<ITransferTaskVector> GetTasksAsync();
 
-        /// <summary>
-        /// Add a task to the task list.
-        /// </summary>
-        /// <param name="SourceUri">
-        /// The source uri object of task.
-        /// </param>
-        /// <param name="DesiredFileName">
-        /// The file name you desire.
-        /// </param>
-        /// <param name="SaveFolder">
-        /// The object of the folder which you want to save.
-        /// </param>
-        /// <returns>
-        /// Returns an asynchronous object used to wait.
-        /// </returns>
+        /**
+         * Add a task to the task list.
+         *
+         * @param SourceUri The source uri object of task.
+         * @param DesiredFileName The file name you desire.
+         * @param SaveFolder The object of the folder which you want to save.
+         * @return The asynchronous object used to wait.
+         */
         Windows.Foundation.IAsyncAction AddTaskAsync(
             Windows.Foundation.Uri SourceUri,
             String DesiredFileName,
             Windows.Storage.IStorageFolder SaveFolder);
 
-        /// <summary>
-        /// Removes a task to the task list.
-        /// </summary>
-        /// <param name="Task">
-        /// The task object.
-        /// </param>
-        /// <returns>
-        /// Returns an asynchronous object used to wait.
-        /// </returns>
+        /**
+         * Removes a task to the task list.
+         *
+         * @param The task object.
+         * @return The asynchronous object used to wait.
+         */
         Windows.Foundation.IAsyncAction RemoveTaskAsync(
             ITransferTask Task);
 
-        /// <summary>
-        /// Start all tasks.
-        /// </summary>
+        /**
+         * Start all tasks.
+         */
         void StartAllTasks();
 
-        /// <summary>
-        /// Pause all tasks.
-        /// </summary>
+        /**
+         * Pause all tasks.
+         */
         void PauseAllTasks();
 
-        /// <summary>
-        /// Clears the task list.
-        /// </summary>
+        /**
+         * Clears the task list.
+         */
         void ClearTaskList();
     }
 }
