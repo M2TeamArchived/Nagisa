@@ -251,7 +251,7 @@ namespace winrt::Nagisa::implementation
         {
             auto SourceUri = Task.SourceUri();
             auto FileName = Task.FileName();
-            auto SaveFolder = Task.SaveFolder();
+            auto SaveFolder = Task.SaveFolder().get();
 
             this->m_TransferManager.RemoveTaskAsync(Task).get();
 
@@ -354,20 +354,23 @@ namespace winrt::Nagisa::implementation
         ITransferTask Task = sender.try_as<FrameworkElement>(
             ).DataContext().try_as<ITransferTask>();
 
-        try
+        M2::CThread([this, Task]()
         {
-            using Windows::System::Launcher;
-            using Windows::System::FolderLauncherOptions;
+            try
+            {
+                using Windows::System::Launcher;
+                using Windows::System::FolderLauncherOptions;
 
-            FolderLauncherOptions Options = FolderLauncherOptions();
-            Options.ItemsToSelect().Append(Task.SaveFile());
+                FolderLauncherOptions Options = FolderLauncherOptions();
+                Options.ItemsToSelect().Append(Task.SaveFile().get());
 
-            Launcher::LaunchFolderAsync(Task.SaveFolder(), Options);
-        }
-        catch (...)
-        {
+                Launcher::LaunchFolderAsync(Task.SaveFolder().get(), Options);
+            }
+            catch (...)
+            {
 
-        }
+            }
+        });
     }
 
     void MainPage::StartAllAppBarButton_Click(

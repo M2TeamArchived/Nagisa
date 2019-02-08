@@ -49,17 +49,25 @@ namespace winrt::Assassin::implementation
 
         ApplicationDataCompositeValue m_TaskConfig = nullptr;
 
+        IStorageItemAccessList m_FutureAccessList = nullptr;
+
         ULONGLONG m_TickCount = 0;
         hstring m_Guid;
-        Uri m_SourceUri = nullptr;
-        hstring m_FileName;
-        IStorageFile m_SaveFile = nullptr;
-        IStorageFolder m_SaveFolder = nullptr;
-        TransferTaskStatus m_Status = TransferTaskStatus::Canceled;
-        uint64_t m_BytesReceived = 0;
-        uint64_t m_BytesReceivedSpeed = 0;
-        uint64_t m_RemainTime = 0;
-        uint64_t m_TotalBytesToReceive = 0;
+
+        void Status(
+            TransferTaskStatus const& value);
+
+        void BytesReceived(
+            uint64_t const& value);
+
+        void BytesReceivedSpeed(
+            uint64_t const& value);
+
+        void RemainTime(
+            uint64_t const& value);
+
+        void TotalBytesToReceive(
+            uint64_t const& value);
 
     public:
         TransferTask() = default;
@@ -85,10 +93,10 @@ namespace winrt::Assassin::implementation
         hstring FileName() const;
       
         // Gets the save file object which to download the file.
-        IStorageFile SaveFile() const;
+        IAsyncOperation<IStorageFile> SaveFile() const;
    
         // Gets the save folder object which to download the file. 
-        IStorageFolder SaveFolder() const;
+        IAsyncOperation<IStorageFolder> SaveFolder() const;
 
         // Gets the current status of the task.
         TransferTaskStatus Status() const;

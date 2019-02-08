@@ -35,10 +35,10 @@ namespace Assassin
         String FileName { get; };
 
         // The save file object which to download the file.
-        Windows.Storage.IStorageFile SaveFile { get; };
+        Windows.Foundation.IAsyncOperation<Windows.Storage.IStorageFile> SaveFile { get; };
 
         // The save folder object which to download the file.
-        Windows.Storage.IStorageFolder SaveFolder { get; };
+        Windows.Foundation.IAsyncOperation<Windows.Storage.IStorageFolder> SaveFolder { get; };
 
         // The current status of the task.
         TransferTaskStatus Status { get; };
