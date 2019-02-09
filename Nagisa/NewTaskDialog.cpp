@@ -35,9 +35,7 @@ namespace winrt::Nagisa::implementation
             co_await this->m_TransferManager.LastusedFolder();
 
         if (this->m_SaveFolder)
-        {
             this->SaveFolderTextBox().Text(this->m_SaveFolder.Path());
-        }
     }
 
     IAsyncAction NewTaskDialog::DownloadButtonClick(
@@ -88,12 +86,11 @@ namespace winrt::Nagisa::implementation
         picker.SuggestedStartLocation(PickerLocationId::ComputerFolder);
         picker.FileTypeFilter().Append(L"*");
 
-        StorageFolder Folder = co_await picker.PickSingleFolderAsync();
+        this->m_SaveFolder = co_await picker.PickSingleFolderAsync();
 
-        if (Folder)
+        if (this->m_SaveFolder)
         {
-            this->m_SaveFolder = Folder;
-            this->SaveFolderTextBox().Text(Folder.Path());
+            this->SaveFolderTextBox().Text(this->m_SaveFolder.Path());
         }
     }
 

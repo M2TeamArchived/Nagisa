@@ -32,12 +32,6 @@ namespace winrt::Nagisa::implementation
         return this->m_TransferManager;
     }
 
-    void MainPage::SearchTaskList(
-        hstring const& SearchFilter)
-    {
-        this->m_TransferManager.SearchFilter(SearchFilter);
-    }
-
     IAsyncOperation<ContentDialogResult> MainPage::ShowContentDialogAsync(
         ContentDialog const& Dialog)
     {
@@ -50,6 +44,15 @@ namespace winrt::Nagisa::implementation
             Dialog.MaxHeight(PageActualHeight);
 
         return Dialog.ShowAsync();
+    }
+
+    ITransferTask MainPage::GetTransferTaskFromEventSender(
+        IInspectable const& sender)
+    {
+        using Windows::UI::Xaml::FrameworkElement;
+
+        return sender.try_as<FrameworkElement>(
+            ).DataContext().try_as<ITransferTask>();
     }
 
     void MainPage::Page_Loaded(
@@ -99,34 +102,31 @@ namespace winrt::Nagisa::implementation
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
         this->TaskListNoItemsTextBlock().Visibility(
-            (sender.Items().Size() == 0)
+            !sender.ItemsSource()
             ? Visibility::Visible
             : Visibility::Collapsed);
     }
 
-    void MainPage::AboutButton_Click(
+    IAsyncAction MainPage::AboutButton_Click(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
         UNREFERENCED_PARAMETER(sender);  // Unused parameter.
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
-        this->ShowContentDialogAsync(
+        co_await this->ShowContentDialogAsync(
             make<AboutDialog>(this->m_TransferManager));
     }
 
-    void MainPage::NewTaskButton_Click(
+    IAsyncAction MainPage::NewTaskButton_Click(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
         UNREFERENCED_PARAMETER(sender);  // Unused parameter.
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
-        using Windows::UI::Xaml::Controls::ContentDialogResult;
-
-        IAsyncOperation<ContentDialogResult> Operation =
-            this->ShowContentDialogAsync(
-                make<NewTaskDialog>(this->m_TransferManager));
+        co_await this->ShowContentDialogAsync(
+            make<NewTaskDialog>(this->m_TransferManager));
     }
 
     void MainPage::CopyLinkMenuItem_Click(
@@ -137,11 +137,7 @@ namespace winrt::Nagisa::implementation
 
         try
         {
-            using Assassin::ITransferTask;
-            using namespace Windows::UI::Xaml;
-
-            ITransferTask Task = sender.try_as<FrameworkElement>(
-                ).DataContext().try_as<ITransferTask>();
+            ITransferTask Task = this->GetTransferTaskFromEventSender(sender);
 
             using Windows::ApplicationModel::DataTransfer::Clipboard;
             using Windows::ApplicationModel::DataTransfer::DataPackage;
@@ -170,76 +166,24 @@ namespace winrt::Nagisa::implementation
         this->SearchAppBarButton().Visibility(Visibility::Visible);
     }
 
-    void MainPage::SearchAutoSuggestBox_QuerySubmitted(
-        AutoSuggestBox const& sender,
-        AutoSuggestBoxQuerySubmittedEventArgs const& args)
-    {
-        UNREFERENCED_PARAMETER(args);   // Unused parameter.
-
-        this->SearchTaskList(sender.Text());
-    }
-
-    void MainPage::SearchAutoSuggestBox_TextChanged(
-        AutoSuggestBox const& sender,
-        AutoSuggestBoxTextChangedEventArgs const& args)
-    {
-        UNREFERENCED_PARAMETER(args);   // Unused parameter.
-
-        using Windows::UI::Xaml::DispatcherTimer;
-        using Windows::Foundation::EventHandler;
-        using Windows::Foundation::TimeSpan;
-
-        if (nullptr == sender.DataContext())
-        {
-            DispatcherTimer Timer = DispatcherTimer();
-            AutoSuggestBox pSearchAutoSuggestBox = sender;
-
-            Timer.Interval(std::chrono::milliseconds(250));
-
-            Timer.Tick([this, pSearchAutoSuggestBox, Timer](
-                IInspectable const& sender, IInspectable const& args)
-            {
-                UNREFERENCED_PARAMETER(args);   // Unused parameter.
-
-                this->SearchTaskList(pSearchAutoSuggestBox.Text());
-
-                sender.try_as<DispatcherTimer>().Stop();
-            });
-
-            sender.DataContext(Timer);
-        }
-
-        DispatcherTimer Timer = sender.DataContext().try_as<DispatcherTimer>();
-
-        Timer.Stop();
-        Timer.Start();
-    }
-
-    void MainPage::RetryButton_Click(
+    IAsyncAction MainPage::RetryButton_Click(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
-        using Assassin::ITransferTask;
-        using namespace Windows::UI::Xaml;
+        ITransferTask Task = this->GetTransferTaskFromEventSender(sender);
 
-        ITransferTask Task = sender.try_as<FrameworkElement>(
-            ).DataContext().try_as<ITransferTask>();
+        auto SourceUri = Task.SourceUri();
+        auto FileName = Task.FileName();
+        auto SaveFolder = co_await Task.SaveFolder();
 
-        M2::CThread([this, Task]()
-        {
-            auto SourceUri = Task.SourceUri();
-            auto FileName = Task.FileName();
-            auto SaveFolder = Task.SaveFolder().get();
+        co_await this->m_TransferManager.RemoveTaskAsync(Task);
 
-            this->m_TransferManager.RemoveTaskAsync(Task).get();
-
-            this->m_TransferManager.AddTaskAsync(
-                SourceUri,
-                FileName,
-                SaveFolder).get();
-        });
+        co_await this->m_TransferManager.AddTaskAsync(
+            SourceUri,
+            FileName,
+            SaveFolder);
     }
 
     void MainPage::ResumeButton_Click(
@@ -248,13 +192,7 @@ namespace winrt::Nagisa::implementation
     {
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
-        using Assassin::ITransferTask;
-        using namespace Windows::UI::Xaml;
-
-        ITransferTask Task = sender.try_as<FrameworkElement>(
-            ).DataContext().try_as<ITransferTask>();
-
-        Task.Resume();
+        this->GetTransferTaskFromEventSender(sender).Resume();
     }
 
     void MainPage::PauseButton_Click(
@@ -263,13 +201,7 @@ namespace winrt::Nagisa::implementation
     {
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
-        using Assassin::ITransferTask;
-        using namespace Windows::UI::Xaml;
-
-        ITransferTask Task = sender.try_as<FrameworkElement>(
-            ).DataContext().try_as<ITransferTask>();
-
-        Task.Pause();
+        this->GetTransferTaskFromEventSender(sender).Pause();
     }
 
     void MainPage::CancelMenuItem_Click(
@@ -280,13 +212,7 @@ namespace winrt::Nagisa::implementation
 
         try
         {
-            using Assassin::ITransferTask;
-            using namespace Windows::UI::Xaml;
-
-            ITransferTask Task = sender.try_as<FrameworkElement>(
-                ).DataContext().try_as<ITransferTask>();
-
-            Task.Cancel();
+            this->GetTransferTaskFromEventSender(sender).Cancel();
         }
         catch (...)
         {
@@ -294,53 +220,41 @@ namespace winrt::Nagisa::implementation
         }
     }
 
-    void MainPage::RemoveMenuItem_Click(
+    IAsyncAction MainPage::RemoveMenuItem_Click(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
-        using Assassin::ITransferTask;
-        using namespace Windows::UI::Xaml;
-
-        ITransferTask Task = sender.try_as<FrameworkElement>(
-            ).DataContext().try_as<ITransferTask>();
-
-        M2::CThread([this, Task]()
-        {
-            this->m_TransferManager.RemoveTaskAsync(Task).get();
-        });
+        co_await this->m_TransferManager.RemoveTaskAsync(
+            this->GetTransferTaskFromEventSender(sender));
     }
 
-    void MainPage::OpenFolderMenuItem_Click(
+    IAsyncAction MainPage::OpenFolderMenuItem_Click(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
-        using Assassin::ITransferTask;
-        using namespace Windows::UI::Xaml;
-
-        ITransferTask Task = sender.try_as<FrameworkElement>(
-            ).DataContext().try_as<ITransferTask>();
-
-        M2::CThread([this, Task]()
+        try
         {
-            try
-            {
-                using Windows::System::Launcher;
-                using Windows::System::FolderLauncherOptions;
+            using Windows::System::Launcher;
+            using Windows::System::FolderLauncherOptions;
 
-                FolderLauncherOptions Options = FolderLauncherOptions();
-                Options.ItemsToSelect().Append(Task.SaveFile().get());
+            ITransferTask Task = this->GetTransferTaskFromEventSender(sender);
 
-                Launcher::LaunchFolderAsync(Task.SaveFolder().get(), Options);
-            }
-            catch (...)
-            {
+            FolderLauncherOptions Options = FolderLauncherOptions();
+            Options.ItemsToSelect().Append(
+                co_await Task.SaveFile());
 
-            }
-        });
+            co_await Launcher::LaunchFolderAsync(
+                co_await Task.SaveFolder(),
+                Options);
+        }
+        catch (...)
+        {
+
+        }
     }
 
     void MainPage::StartAllAppBarButton_Click(
@@ -363,14 +277,14 @@ namespace winrt::Nagisa::implementation
         this->m_TransferManager.PauseAllTasks();
     }
 
-    void MainPage::ClearListAppBarButton_Click(
+    IAsyncAction MainPage::ClearListAppBarButton_Click(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
         UNREFERENCED_PARAMETER(sender);  // Unused parameter.
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
-        this->m_TransferManager.ClearTaskListAsync();
+        co_await this->m_TransferManager.ClearTaskListAsync();
     }
 
     void MainPage::SearchAppBarButton_Click(
@@ -414,14 +328,14 @@ namespace winrt::Nagisa::implementation
         }
     }
 
-    void MainPage::SettingsAppBarButton_Click(
+    IAsyncAction MainPage::SettingsAppBarButton_Click(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
         UNREFERENCED_PARAMETER(sender);  // Unused parameter.
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
-        this->ShowContentDialogAsync(
+        co_await this->ShowContentDialogAsync(
             winrt::make<SettingsDialog>(this->m_TransferManager));
     }
 }

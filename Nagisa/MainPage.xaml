@@ -114,9 +114,8 @@
         LostFocus="SearchAutoSuggestBox_LostFocus"
         PlaceholderText="[Search Downloads]"
         QueryIcon="Find"
-        QuerySubmitted="SearchAutoSuggestBox_QuerySubmitted"
-        TextBoxStyle="{StaticResource CustomAutoSuggestBoxTextBoxStyle}"
-        TextChanged="SearchAutoSuggestBox_TextChanged" />
+        Text="{x:Bind TransferManager.SearchFilter, Mode=TwoWay}"
+        TextBoxStyle="{StaticResource CustomAutoSuggestBoxTextBoxStyle}" />
       <Button
         x:Name="SearchAppBarButton"
         x:Uid="/MainPage/SearchAppBarButton"
@@ -169,8 +168,8 @@
     <ListView
       x:Name="TaskList"
       Grid.Row="2"
-      ItemsSource="{x:Bind TransferManager.Tasks, Mode=OneWay}"
-      ContainerContentChanging="TaskList_ContainerContentChanging">
+      ContainerContentChanging="TaskList_ContainerContentChanging"
+      ItemsSource="{x:Bind TransferManager.Tasks, Mode=OneWay}">
       <ListView.ItemContainerStyle>
         <Style TargetType="ListViewItem">
           <Setter Property="HorizontalContentAlignment" Value="Stretch" />

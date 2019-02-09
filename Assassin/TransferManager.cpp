@@ -410,11 +410,11 @@ namespace winrt::Assassin::implementation
     {
         UNREFERENCED_PARAMETER(source);  // Unused parameter.
 
-        if (this->m_TaskListUpdateCS.TryLock())
+        M2::AutoTryCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+
+        if (Lock.IsLocked())
         {
             this->UpdateTransferTaskStatusWithoutLock();
-
-            this->m_TaskListUpdateCS.Unlock();
         }
     }
 
@@ -653,7 +653,11 @@ namespace winrt::Assassin::implementation
     // Gets the task list.
     IVectorView<ITransferTask> TransferManager::Tasks()
     {
-        if (this->m_TaskListUpdateCS.TryLock())
+        M2::AutoTryCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+
+        IVectorView<ITransferTask> Result = nullptr;
+
+        if (Lock.IsLocked())
         {
             hstring CurrentSearchFilter = this->SearchFilter();
 
@@ -677,15 +681,15 @@ namespace winrt::Assassin::implementation
                 TaskList.push_back(Task.second);
             }
 
-            this->m_TaskListUpdateCS.Unlock();
-
-            return make<M2::BindableVectorView<ITransferTask>>(TaskList);  
+            if (TaskList.size())
+                Result = make<M2::BindableVectorView<ITransferTask>>(TaskList);
         }
         else
         {
             this->NotifyTaskListUpdated();
-            return nullptr;
-        }
+        } 
+
+        return Result;
     }
 
     /**

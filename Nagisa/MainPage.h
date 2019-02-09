@@ -15,6 +15,7 @@
 namespace winrt::Nagisa::implementation
 {
     using Assassin::TransferManager;
+    using Assassin::ITransferTask;
     using Windows::Foundation::IAsyncOperation;
     using Windows::UI::Xaml::RoutedEventArgs;
     using Windows::UI::Xaml::Controls::AutoSuggestBox;
@@ -33,10 +34,11 @@ namespace winrt::Nagisa::implementation
     private:
         TransferManager m_TransferManager = nullptr;
 
-        void SearchTaskList(
-            hstring const& SearchFilter);
         IAsyncOperation<ContentDialogResult> ShowContentDialogAsync(
             ContentDialog const& Dialog);
+
+        ITransferTask GetTransferTaskFromEventSender(
+            IInspectable const& sender);
 
     public:
         MainPage();
@@ -49,10 +51,10 @@ namespace winrt::Nagisa::implementation
         void TaskList_ContainerContentChanging(
             ListViewBase const& sender,
             ContainerContentChangingEventArgs const& e);
-        void AboutButton_Click(
+        IAsyncAction AboutButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
-        void NewTaskButton_Click(
+        IAsyncAction NewTaskButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
         void CopyLinkMenuItem_Click(
@@ -61,13 +63,7 @@ namespace winrt::Nagisa::implementation
         void SearchAutoSuggestBox_LostFocus(
             IInspectable const& sender,
             RoutedEventArgs const& e);
-        void SearchAutoSuggestBox_QuerySubmitted(
-            AutoSuggestBox const& sender,
-            AutoSuggestBoxQuerySubmittedEventArgs const& args);
-        void SearchAutoSuggestBox_TextChanged(
-            AutoSuggestBox const& sender,
-            AutoSuggestBoxTextChangedEventArgs const& args);
-        void RetryButton_Click(
+        IAsyncAction RetryButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
         void ResumeButton_Click(
@@ -79,10 +75,10 @@ namespace winrt::Nagisa::implementation
         void CancelMenuItem_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
-        void RemoveMenuItem_Click(
+        IAsyncAction RemoveMenuItem_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
-        void OpenFolderMenuItem_Click(
+        IAsyncAction OpenFolderMenuItem_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
         void StartAllAppBarButton_Click(
@@ -91,7 +87,7 @@ namespace winrt::Nagisa::implementation
         void PauseAllAppBarButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
-        void ClearListAppBarButton_Click(
+        IAsyncAction ClearListAppBarButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
         void SearchAppBarButton_Click(
@@ -100,7 +96,7 @@ namespace winrt::Nagisa::implementation
         IAsyncAction OpenDownloadsFolderAppBarButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
-        void SettingsAppBarButton_Click(
+        IAsyncAction SettingsAppBarButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
     };
