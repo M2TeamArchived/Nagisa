@@ -20,9 +20,11 @@ namespace winrt::Nagisa::implementation
     using Windows::UI::Xaml::Controls::AutoSuggestBox;
     using Windows::UI::Xaml::Controls::AutoSuggestBoxQuerySubmittedEventArgs;
     using Windows::UI::Xaml::Controls::AutoSuggestBoxTextChangedEventArgs;
+    using Windows::UI::Xaml::Controls::ContainerContentChangingEventArgs;
     using Windows::UI::Xaml::Controls::ContentDialog;
     using Windows::UI::Xaml::Controls::ContentDialogResult;
     using Windows::UI::Xaml::Controls::ListView;
+    using Windows::UI::Xaml::Controls::ListViewBase;
     using Windows::UI::Xaml::Data::INotifyPropertyChanged;
     using Windows::UI::Xaml::Data::PropertyChangedEventHandler;
 
@@ -31,8 +33,6 @@ namespace winrt::Nagisa::implementation
     private:
         TransferManager m_TransferManager = nullptr;
 
-        void RefreshTaskList();
-        void RefreshTaskListAsync();
         void SearchTaskList(
             hstring const& SearchFilter);
         IAsyncOperation<ContentDialogResult> ShowContentDialogAsync(
@@ -46,6 +46,9 @@ namespace winrt::Nagisa::implementation
         void Page_Loaded(
             IInspectable const& sender,
             RoutedEventArgs const& e);
+        void TaskList_ContainerContentChanging(
+            ListViewBase const& sender,
+            ContainerContentChangingEventArgs const& e);
         void AboutButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);

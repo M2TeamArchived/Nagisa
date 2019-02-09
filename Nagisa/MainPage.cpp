@@ -32,40 +32,10 @@ namespace winrt::Nagisa::implementation
         return this->m_TransferManager;
     }
 
-    void MainPage::RefreshTaskList()
-    {
-        auto Tasks = this->m_TransferManager.GetTasksAsync().get();
-
-        if (nullptr != Tasks)
-        {
-            M2ExecuteOnUIThread([this, Tasks]()
-            {
-                using Windows::UI::Xaml::Visibility;
-
-                this->TaskList().ItemsSource(Tasks);
-
-                this->TaskListNoItemsTextBlock().Visibility(
-                    (nullptr == Tasks || 0 == Tasks.Size())
-                    ? Visibility::Visible
-                    : Visibility::Collapsed);
-            });
-        }
-    }
-
-    void MainPage::RefreshTaskListAsync()
-    {
-        M2::CThread([this]()
-        {
-            this->RefreshTaskList();
-        });
-    }
-
     void MainPage::SearchTaskList(
         hstring const& SearchFilter)
     {
         this->m_TransferManager.SearchFilter(SearchFilter);
-
-        this->RefreshTaskListAsync();
     }
 
     IAsyncOperation<ContentDialogResult> MainPage::ShowContentDialogAsync(
@@ -119,8 +89,19 @@ namespace winrt::Nagisa::implementation
         Window::Current().SetTitleBar(this->realTitle());
 
         this->SearchAutoSuggestBox().Visibility(Visibility::Collapsed);
+    }
 
-        this->RefreshTaskListAsync();
+    void MainPage::TaskList_ContainerContentChanging(
+        ListViewBase const& sender,
+        ContainerContentChangingEventArgs const& e)
+    {
+        UNREFERENCED_PARAMETER(sender);  // Unused parameter.
+        UNREFERENCED_PARAMETER(e);   // Unused parameter.
+
+        this->TaskListNoItemsTextBlock().Visibility(
+            (sender.Items().Size() == 0)
+            ? Visibility::Visible
+            : Visibility::Collapsed);
     }
 
     void MainPage::AboutButton_Click(
@@ -146,14 +127,6 @@ namespace winrt::Nagisa::implementation
         IAsyncOperation<ContentDialogResult> Operation =
             this->ShowContentDialogAsync(
                 make<NewTaskDialog>(this->m_TransferManager));
-
-        M2::CThread([this, Operation]()
-        {
-            if (ContentDialogResult::Primary == Operation.get())
-            {
-                this->RefreshTaskList();
-            }
-        });
     }
 
     void MainPage::CopyLinkMenuItem_Click(
@@ -221,8 +194,7 @@ namespace winrt::Nagisa::implementation
             DispatcherTimer Timer = DispatcherTimer();
             AutoSuggestBox pSearchAutoSuggestBox = sender;
 
-            // 10,000 ticks per millisecond.
-            Timer.Interval(TimeSpan(250 * 10000));
+            Timer.Interval(std::chrono::milliseconds(250));
 
             Timer.Tick([this, pSearchAutoSuggestBox, Timer](
                 IInspectable const& sender, IInspectable const& args)
@@ -267,8 +239,6 @@ namespace winrt::Nagisa::implementation
                 SourceUri,
                 FileName,
                 SaveFolder).get();
-
-            this->RefreshTaskList();
         });
     }
 
@@ -285,8 +255,6 @@ namespace winrt::Nagisa::implementation
             ).DataContext().try_as<ITransferTask>();
 
         Task.Resume();
-
-        this->RefreshTaskListAsync();
     }
 
     void MainPage::PauseButton_Click(
@@ -302,8 +270,6 @@ namespace winrt::Nagisa::implementation
             ).DataContext().try_as<ITransferTask>();
 
         Task.Pause();
-
-        this->RefreshTaskListAsync();
     }
 
     void MainPage::CancelMenuItem_Click(
@@ -321,8 +287,6 @@ namespace winrt::Nagisa::implementation
                 ).DataContext().try_as<ITransferTask>();
 
             Task.Cancel();
-
-            this->RefreshTaskListAsync();
         }
         catch (...)
         {
@@ -345,8 +309,6 @@ namespace winrt::Nagisa::implementation
         M2::CThread([this, Task]()
         {
             this->m_TransferManager.RemoveTaskAsync(Task).get();
-
-            this->RefreshTaskList();
         });
     }
 
@@ -389,8 +351,6 @@ namespace winrt::Nagisa::implementation
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
         this->m_TransferManager.ResumeAllTasks();
-
-        this->RefreshTaskListAsync();
     }
 
     void MainPage::PauseAllAppBarButton_Click(
@@ -401,8 +361,6 @@ namespace winrt::Nagisa::implementation
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
         this->m_TransferManager.PauseAllTasks();
-
-        this->RefreshTaskListAsync();
     }
 
     void MainPage::ClearListAppBarButton_Click(
@@ -413,8 +371,6 @@ namespace winrt::Nagisa::implementation
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
         this->m_TransferManager.ClearTaskListAsync();
-
-        this->RefreshTaskListAsync();
     }
 
     void MainPage::SearchAppBarButton_Click(

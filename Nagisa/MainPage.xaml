@@ -166,7 +166,11 @@
 
     </Grid>
 
-    <ListView x:Name="TaskList" Grid.Row="2">
+    <ListView
+      x:Name="TaskList"
+      Grid.Row="2"
+      ItemsSource="{x:Bind TransferManager.Tasks, Mode=OneWay}"
+      ContainerContentChanging="TaskList_ContainerContentChanging">
       <ListView.ItemContainerStyle>
         <Style TargetType="ListViewItem">
           <Setter Property="HorizontalContentAlignment" Value="Stretch" />

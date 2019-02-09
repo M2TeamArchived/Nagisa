@@ -105,14 +105,8 @@ namespace Assassin
         // The total upload bandwidth.
         UInt64 TotalUploadBandwidth{ get; };
 
-        /**
-         * Gets the task list.
-         *
-         * @return The object which represents the task list.
-         */
-        Windows.Foundation.IAsyncOperation<
-            Windows.Foundation.Collections.IVectorView<
-                ITransferTask> > GetTasksAsync();
+        // Task list.
+        Windows.Foundation.Collections.IVectorView<ITransferTask> Tasks{ get; };
 
         /**
          * Add a task to the task list.

@@ -320,6 +320,11 @@ namespace M2
         {
             LeaveCriticalSection(&this->m_CriticalSection);
         }
+
+        _Acquires_lock_(m_CriticalSection) bool TryLock()
+        {
+            return TryEnterCriticalSection(&this->m_CriticalSection);
+        }
     };
 
     /**

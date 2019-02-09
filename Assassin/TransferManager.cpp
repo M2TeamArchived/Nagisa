@@ -375,11 +375,9 @@ namespace winrt::Assassin::implementation
         this->m_TotalDownloadBandwidth = 0;
         this->m_TotalUploadBandwidth = 0;
 
-        for (ITransferTask Task : this->m_TaskList)
+        for (auto& Task : this->m_TaskList)
         {
-            if (nullptr == Task) continue;
-
-            TransferTask& TaskInternal = *Task.try_as<TransferTask>();
+            TransferTask& TaskInternal = *Task.second.try_as<TransferTask>();
 
             TaskInternal.UpdateChangedProperties();
 
@@ -407,13 +405,17 @@ namespace winrt::Assassin::implementation
         }
     }
 
-    void TransferManager::UINotifyTimerTick(
-        const IInspectable sender,
-        const IInspectable args)
+    void TransferManager::NotifyTimerTick(
+        ThreadPoolTimer const& source)
     {
-        M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+        UNREFERENCED_PARAMETER(source);  // Unused parameter.
 
-        this->UpdateTransferTaskStatusWithoutLock();
+        if (this->m_TaskListUpdateCS.TryLock())
+        {
+            this->UpdateTransferTaskStatusWithoutLock();
+
+            this->m_TaskListUpdateCS.Unlock();
+        }
     }
 
     void TransferManager::CreateBackgroundWorker()
@@ -460,6 +462,17 @@ namespace winrt::Assassin::implementation
         }
     }
 
+    void TransferManager::NotifyTaskListUpdated()
+    {
+        if (this->m_EnableUINotify)
+        {
+            M2ExecuteOnUIThread([this]()
+            {
+                this->RaisePropertyChanged(L"Tasks");
+            });
+        }
+    }
+
     /**
      * Creates a new TransferManager object.
      *
@@ -485,18 +498,68 @@ namespace winrt::Assassin::implementation
                 L"Tasks",
                 ApplicationDataCreateDisposition::Always);
 
-        if (this->m_EnableUINotify)
+        M2::CThread([this]()
         {
-            this->m_UINotifyTimer = DispatcherTimer();
+            std::map<hstring, DownloadOperation> DownloadsList;
 
-            // 10,000 ticks per millisecond.
-            this->m_UINotifyTimer.Interval(TimeSpan(1000 * 10000));
+            for (DownloadOperation Item
+                : this->m_Downloader.GetCurrentDownloadsAsync().get())
+            {
+                DownloadsList.insert(std::pair(to_hstring(Item.Guid()), Item));
+            }
 
-            this->m_UINotifyTimer.Tick(
-                { this, &TransferManager::UINotifyTimerTick });
+            for (IKeyValuePair<hstring, IInspectable> Download
+                : this->m_TasksContainer.Values())
+            {
+                ITransferTask Task = make<TransferTask>();
 
-            this->m_UINotifyTimer.Start();
-        }
+                TransferTask& TaskInternal = *Task.try_as<TransferTask>();
+
+                TaskInternal.Guid(
+                    Download.Key());
+                TaskInternal.TaskConfig(
+                    Download.Value().try_as<ApplicationDataCompositeValue>());
+                TaskInternal.FutureAccessList(
+                    this->m_FutureAccessList);
+
+                try
+                {
+                    std::map<hstring, DownloadOperation>::iterator iterator =
+                        DownloadsList.find(unbox_value_or<hstring>(
+                            TaskInternal.TaskConfig().Lookup(
+                                L"BackgroundTransferGuid"),
+                            hstring()));
+                    if (DownloadsList.end() != iterator)
+                    {
+                        TaskInternal.Operation(iterator->second);
+                    }
+                    else
+                    {
+                        throw_hresult(E_FAIL);
+                    }
+
+                    if (TransferTaskStatus::Running == TaskInternal.Status())
+                    {
+                        TaskInternal.Operation().AttachAsync();
+                    }
+                }
+                catch (...)
+                {
+                    if (!NAIsFinalTransferTaskStatus(TaskInternal.Status()))
+                    {
+                        TaskInternal.Status(TransferTaskStatus::Error);
+                    }
+                }
+
+                this->m_TaskList.insert(std::pair(Task.Guid(), Task));
+            }
+        }).Wait();
+
+        using Windows::System::Threading::TimerElapsedHandler;
+
+        this->m_NotifyTimer = ThreadPoolTimer::CreatePeriodicTimer(
+            { this, &TransferManager::NotifyTimerTick },
+            std::chrono::seconds(1));
     }
 
     /**
@@ -506,9 +569,9 @@ namespace winrt::Assassin::implementation
     {
         M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
-        if (nullptr != this->m_UINotifyTimer)
+        if (this->m_NotifyTimer)
         {
-            this->m_UINotifyTimer.Stop();
+            this->m_NotifyTimer.Cancel();
         }
     }
 
@@ -537,6 +600,8 @@ namespace winrt::Assassin::implementation
         hstring const& value)
     {
         this->m_SearchFilter = value;
+
+        this->NotifyTaskListUpdated();
     }
 
     // Gets the last used folder.
@@ -585,92 +650,42 @@ namespace winrt::Assassin::implementation
         return this->m_TotalUploadBandwidth;
     }
 
-    /**
-     * Gets the task list.
-     *
-     * @return The object which represents the task list.
-     */
-    IAsyncOperation<IVectorView<ITransferTask>>
-        TransferManager::GetTasksAsync()
+    // Gets the task list.
+    IVectorView<ITransferTask> TransferManager::Tasks()
     {
-        co_await resume_background();
-
-        M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
-
-        this->UpdateTransferTaskStatusWithoutLock();
-
-        this->m_TaskList.clear();
-
-        hstring CurrentSearchFilter = this->SearchFilter();
-
-        bool NeedSearchFilter = !CurrentSearchFilter.empty();
-
-        std::map<hstring, DownloadOperation> DownloadsList;
-
-        for (DownloadOperation Item
-            : co_await this->m_Downloader.GetCurrentDownloadsAsync())
+        if (this->m_TaskListUpdateCS.TryLock())
         {
-            DownloadsList.insert(std::pair(to_hstring(Item.Guid()), Item));
-        }
+            hstring CurrentSearchFilter = this->SearchFilter();
 
-        for (IKeyValuePair<hstring, IInspectable> Download
-            : this->m_TasksContainer.Values())
+            bool NeedSearchFilter = !CurrentSearchFilter.empty();
+
+            std::vector<ITransferTask> TaskList;
+
+            for (auto& Task : this->m_TaskList)
+            {
+                if (NeedSearchFilter)
+                {
+                    if (!M2FindSubString(
+                        Task.second.FileName(),
+                        CurrentSearchFilter,
+                        true))
+                    {
+                        continue;
+                    }
+                }
+
+                TaskList.push_back(Task.second);
+            }
+
+            this->m_TaskListUpdateCS.Unlock();
+
+            return make<M2::BindableVectorView<ITransferTask>>(TaskList);  
+        }
+        else
         {
-            ITransferTask Task = make<TransferTask>();
-
-            TransferTask& TaskInternal = *Task.try_as<TransferTask>();
-
-            TaskInternal.Guid(
-                Download.Key());
-            TaskInternal.TaskConfig(
-                Download.Value().try_as<ApplicationDataCompositeValue>());
-            TaskInternal.FutureAccessList(
-                this->m_FutureAccessList);
-
-            try
-            {
-                std::map<hstring, DownloadOperation>::iterator iterator =
-                    DownloadsList.find(unbox_value_or<hstring>(
-                        TaskInternal.TaskConfig().Lookup(
-                            L"BackgroundTransferGuid"),
-                        hstring()));
-                if (DownloadsList.end() != iterator)
-                {
-                    TaskInternal.Operation(iterator->second);
-                }
-                else
-                {
-                    throw_hresult(E_FAIL);
-                }
-
-                if (TransferTaskStatus::Running == TaskInternal.Status())
-                {
-                    TaskInternal.Operation().AttachAsync();
-                }
-            }
-            catch (...)
-            {
-                if (!NAIsFinalTransferTaskStatus(TaskInternal.Status()))
-                {
-                    TaskInternal.Status(TransferTaskStatus::Error);
-                }
-            }
-
-            if (NeedSearchFilter)
-            {
-                if (!M2FindSubString(
-                    Task.FileName(), CurrentSearchFilter, true))
-                {
-                    continue;
-                }
-            }
-
-            this->m_TaskList.push_back(Task);
+            this->NotifyTaskListUpdated();
+            return nullptr;
         }
-
-        // Asynchronous call return.
-        co_return make<M2::BindableVectorView<ITransferTask>>(
-            this->m_TaskList);
     }
 
     /**
@@ -687,6 +702,8 @@ namespace winrt::Assassin::implementation
         IStorageFolder const SaveFolder)
     {
         co_await resume_background();
+
+        M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
         IStorageFile SaveFile = co_await SaveFolder.CreateFileAsync(
             DesiredFileName,
@@ -720,9 +737,11 @@ namespace winrt::Assassin::implementation
             TaskInternal.Guid(),
             TaskInternal.TaskConfig());
 
-        this->m_TaskList.push_back(Task);
+        this->m_TaskList.insert(std::pair(Task.Guid(), Task));
 
         TaskInternal.Operation().StartAsync();
+
+        this->NotifyTaskListUpdated();
 
         // Asynchronous call return.
         co_return;
@@ -763,16 +782,10 @@ namespace winrt::Assassin::implementation
             }
         }
 
-        for (size_t i = 0; i < this->m_TaskList.size(); ++i)
-        {
-            if (nullptr == this->m_TaskList[i]) continue;
-
-            if (Task.Guid() == this->m_TaskList[i].Guid())
-            {
-                this->m_TaskList[i] = nullptr;
-            }
-        }
+        this->m_TaskList.erase(Task.Guid());
         this->m_TasksContainer.Values().Remove(Task.Guid());
+
+        this->NotifyTaskListUpdated();
 
         // Asynchronous call return.
         co_return;
@@ -785,11 +798,9 @@ namespace winrt::Assassin::implementation
     {
         M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
-        for (ITransferTask Task : this->m_TaskList)
+        for (auto& Task : this->m_TaskList)
         {
-            if (nullptr == Task) continue;
-
-            Task.Resume();
+            Task.second.Resume();
         }
     }
 
@@ -800,11 +811,9 @@ namespace winrt::Assassin::implementation
     {
         M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
-        for (ITransferTask Task : this->m_TaskList)
+        for (auto& Task : this->m_TaskList)
         {
-            if (nullptr == Task) continue;
-
-            Task.Pause();
+            Task.second.Pause();
         }
     }
 
@@ -816,11 +825,11 @@ namespace winrt::Assassin::implementation
     {
         M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
-        for (ITransferTask Task : this->m_TaskList)
+        for (auto& Task : this->m_TaskList)
         {
-            if (NAIsFinalTransferTaskStatus(Task.Status()))
+            if (NAIsFinalTransferTaskStatus(Task.second.Status()))
             {
-                co_await this->RemoveTaskAsync(Task);
+                co_await this->RemoveTaskAsync(Task.second);
             }
         }
     }

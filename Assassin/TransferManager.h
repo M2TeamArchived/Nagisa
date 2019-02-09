@@ -18,7 +18,7 @@
 #include <winrt\Windows.Networking.BackgroundTransfer.h>
 #include <winrt\Windows.Storage.h>
 #include <winrt\Windows.Storage.AccessCache.h>
-#include <winrt\Windows.UI.Xaml.h>
+#include <winrt\Windows.System.Threading.h>
 
 namespace winrt::Assassin::implementation
 {
@@ -37,7 +37,7 @@ namespace winrt::Assassin::implementation
     using Windows::Storage::ApplicationDataContainer;
     using Windows::Storage::IStorageFile;
     using Windows::Storage::IStorageFolder;
-    using Windows::UI::Xaml::DispatcherTimer;
+    using Windows::System::Threading::ThreadPoolTimer;
 
     bool NAIsFinalTransferTaskStatus(
         TransferTaskStatus Status) noexcept;
@@ -163,10 +163,10 @@ namespace winrt::Assassin::implementation
         bool m_EnableUINotify = false;
 
         BackgroundDownloader m_Downloader = nullptr;
-        DispatcherTimer m_UINotifyTimer = nullptr;
+        ThreadPoolTimer m_NotifyTimer = nullptr;
 
         M2::CCriticalSection m_TaskListUpdateCS;
-        std::vector<ITransferTask> m_TaskList;
+        std::map<hstring, ITransferTask> m_TaskList;
 
         ApplicationDataContainer m_RootContainer = nullptr;
         ApplicationDataContainer m_TasksContainer = nullptr;
@@ -180,14 +180,15 @@ namespace winrt::Assassin::implementation
 
         void UpdateTransferTaskStatusWithoutLock();
 
-        void UINotifyTimerTick(
-            const IInspectable sender,
-            const IInspectable args);
+        void NotifyTimerTick(
+            ThreadPoolTimer const& source);
 
         void CreateBackgroundWorker();
 
         void LastusedFolder(
             IStorageFolder const& value);
+
+        void NotifyTaskListUpdated();
 
     public:
         /**
@@ -230,13 +231,8 @@ namespace winrt::Assassin::implementation
         // Gets the total upload bandwidth.
         uint64_t TotalUploadBandwidth() const;
 
-        /**
-         * Gets the task list.
-         *
-         * @return The object which represents the task list.
-         */
-        IAsyncOperation<IVectorView<ITransferTask>>
-            GetTasksAsync();
+        // Gets the task list.
+        IVectorView<ITransferTask> Tasks();
 
         /**
          * Add a task to the task list.
