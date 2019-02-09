@@ -31,7 +31,10 @@ namespace winrt::Nagisa::implementation
         SettingsDialog(
             TransferManager const& TransferManager);
 
-        void CustomDownloadFolderBrowseButton_Click(
+        IAsyncAction ContentDialog_Loaded(
+            IInspectable const& sender,
+            RoutedEventArgs const& e);
+        IAsyncAction CustomDownloadFolderBrowseButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
         void UseCustomFolder_Click(

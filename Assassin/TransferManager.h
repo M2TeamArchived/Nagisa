@@ -27,6 +27,7 @@ namespace winrt::Assassin::implementation
     using Windows::Foundation::Collections::IVectorView;
     using Windows::Foundation::IAsyncAction;
     using Windows::Foundation::IAsyncOperation;
+    using Windows::Foundation::IClosable;
     using Windows::Foundation::IInspectable;
     using Windows::Foundation::Uri;
     using Windows::Networking::BackgroundTransfer::BackgroundDownloader;
@@ -54,6 +55,35 @@ namespace winrt::Assassin::implementation
         ULONGLONG m_TickCount = 0;
         hstring m_Guid;
 
+    public:
+
+        DownloadOperation Operation() const;
+
+        ApplicationDataCompositeValue TaskConfig() const;
+
+        IStorageItemAccessList FutureAccessList() const;
+
+        void Operation(
+            DownloadOperation const& value);
+
+        void TaskConfig(
+            ApplicationDataCompositeValue const& value);
+
+        void FutureAccessList(
+            IStorageItemAccessList const& value);
+
+        void Guid(
+            hstring const& value);
+
+        void SourceUri(
+            Uri const& value);
+
+        void FileName(
+            hstring const& value);
+
+        void SaveFolder(
+            IStorageFolder const& value);
+
         void Status(
             TransferTaskStatus const& value);
 
@@ -72,15 +102,9 @@ namespace winrt::Assassin::implementation
     public:
         TransferTask() = default;
 
-        IAsyncAction Initialize(
-            hstring Guid,
-            ApplicationDataCompositeValue TaskConfig,
-            IStorageItemAccessList FutureAccessList,
-            std::map<hstring, DownloadOperation>& DownloadOperationMap);
-
         void UpdateChangedProperties();
         void NotifyPropertyChanged();
-        ApplicationDataCompositeValue GetTaskConfig();
+        
 
     public:
         // Gets the Guid string of the task.
@@ -136,6 +160,8 @@ namespace winrt::Assassin::implementation
         TransferManager, M2::NotifyPropertyChangedBase>
     {
     private:
+        bool m_EnableUINotify = false;
+
         BackgroundDownloader m_Downloader = nullptr;
         DispatcherTimer m_UINotifyTimer = nullptr;
 
@@ -147,25 +173,21 @@ namespace winrt::Assassin::implementation
 
         IStorageItemAccessList m_FutureAccessList = nullptr;
 
-        IStorageFolder m_LastusedFolder = nullptr;
-        IStorageFolder m_DefaultFolder = nullptr;
-
         uint64_t m_TotalDownloadBandwidth = 0;
         uint64_t m_TotalUploadBandwidth = 0;
 
         hstring m_SearchFilter;
 
-        IAsyncAction Initialize(
-            bool EnableUINotify);
-
-        void UpdateTransferTaskStatusWithoutLock(
-            bool NotifyUI);
+        void UpdateTransferTaskStatusWithoutLock();
 
         void UINotifyTimerTick(
             const IInspectable sender,
             const IInspectable args);
 
         void CreateBackgroundWorker();
+
+        void LastusedFolder(
+            IStorageFolder const& value);
 
     public:
         /**
@@ -197,14 +219,10 @@ namespace winrt::Assassin::implementation
             hstring const& value);
 
         // Gets the last used folder.
-        IStorageFolder LastusedFolder();
+        IAsyncOperation<IStorageFolder> LastusedFolder();
 
         // Gets the default download folder.
-        IStorageFolder DefaultFolder();
-
-        // Sets the default download folder.
-        void DefaultFolder(
-            IStorageFolder const& value);
+        IAsyncOperation<IStorageFolder> DefaultFolder();
 
         // Gets the total download bandwidth.
         uint64_t TotalDownloadBandwidth() const;
@@ -236,16 +254,16 @@ namespace winrt::Assassin::implementation
         /**
          * Removes a task to the task list.
          *
-         * @param The task object.
+         * @param Task The task object.
          * @return The asynchronous object used to wait.
          */
         IAsyncAction RemoveTaskAsync(
             ITransferTask const Task);
 
         /**
-         * Start all tasks.
+         * Resume all tasks.
          */
-        void StartAllTasks();
+        void ResumeAllTasks();
 
         /**
          * Pause all tasks.
@@ -254,8 +272,16 @@ namespace winrt::Assassin::implementation
 
         /**
          * Clears the task list.
+         * @return The asynchronous object used to wait.
          */
-        void ClearTaskList();
+        IAsyncAction ClearTaskListAsync();
+
+        /**
+         * Set the default folder.
+         * @param DefaultFolder The default folder you want to set.
+         */
+        void SetDefaultFolder(
+            IStorageFolder const& DefaultFolder);
     };
 }
 

@@ -22,15 +22,19 @@ namespace winrt::Nagisa::implementation
         m_NormalBrush(SolidColorBrush(Colors::Gray())),
         m_NoticeableBrush(SolidColorBrush(Colors::Red()))
     {
-        InitializeComponent();
+        InitializeComponent();  
+    }
 
-        this->m_SaveFolder = this->m_TransferManager.DefaultFolder();
-        if (nullptr == this->m_SaveFolder)
-        {
-            this->m_SaveFolder = this->m_TransferManager.LastusedFolder();
-        }
+    IAsyncAction NewTaskDialog::ContentDialog_Loaded(
+        IInspectable const& sender,
+        RoutedEventArgs const& e)
+    {
+        this->m_SaveFolder =
+            co_await this->m_TransferManager.DefaultFolder();
+        if (!this->m_SaveFolder) this->m_SaveFolder =
+            co_await this->m_TransferManager.LastusedFolder();
 
-        if (nullptr != this->m_SaveFolder)
+        if (this->m_SaveFolder)
         {
             this->SaveFolderTextBox().Text(this->m_SaveFolder.Path());
         }
@@ -42,8 +46,10 @@ namespace winrt::Nagisa::implementation
     {
         UNREFERENCED_PARAMETER(sender);  // Unused parameter.
 
+        hstring FileName = this->FileNameTextBox().Text();
+
         bool IsDownloadSourceEmpty = (nullptr == this->m_DownloadSource);
-        bool IsFileNameEmpty = this->m_FileName.empty();
+        bool IsFileNameEmpty = FileName.empty();
         bool IsSaveFolderEmpty = (nullptr == this->m_SaveFolder);
 
         this->DownloadSourceTextBox().BorderBrush(IsDownloadSourceEmpty
@@ -61,12 +67,12 @@ namespace winrt::Nagisa::implementation
         {
             co_await this->m_TransferManager.AddTaskAsync(
                 this->m_DownloadSource,
-                this->m_FileName,
+                FileName,
                 this->m_SaveFolder);
         }
     }
 
-    void NewTaskDialog::BrowseButtonClick(
+    IAsyncAction NewTaskDialog::BrowseButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -82,28 +88,22 @@ namespace winrt::Nagisa::implementation
         picker.SuggestedStartLocation(PickerLocationId::ComputerFolder);
         picker.FileTypeFilter().Append(L"*");
 
-        IAsyncOperation<StorageFolder> Operation =
-            picker.PickSingleFolderAsync();
+        StorageFolder Folder = co_await picker.PickSingleFolderAsync();
 
-        M2::CThread([this, Operation]()
+        if (Folder)
         {
-            StorageFolder Folder = Operation.get();
-
-            if (nullptr != Folder)
-            {
-                M2ExecuteOnUIThread([this, Folder]()
-                {
-                    this->m_SaveFolder = Folder;
-                    this->SaveFolderTextBox().Text(Folder.Path());
-                });
-            }
-        });
+            this->m_SaveFolder = Folder;
+            this->SaveFolderTextBox().Text(Folder.Path());
+        }
     }
 
     void NewTaskDialog::DownloadSourceTextBox_LostFocus(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
+        UNREFERENCED_PARAMETER(sender);  // Unused parameter.
+        UNREFERENCED_PARAMETER(e);   // Unused parameter.
+
         hstring DownloadSourceText = this->DownloadSourceTextBox().Text();
         Uri DownloadSource = nullptr;
 
@@ -119,24 +119,12 @@ namespace winrt::Nagisa::implementation
             DownloadSource = Uri(L"http://" + DownloadSourceText);
         }
 
-        if (nullptr != DownloadSource)
+        if (DownloadSource)
         {
             this->FileNameTextBox().Text(
                 M2PathFindFileName(DownloadSource.Path().data()));
-
-            this->FileNameTextBox_LostFocus(sender, e);
         }
 
         this->m_DownloadSource = DownloadSource;
-    }
-
-    void NewTaskDialog::FileNameTextBox_LostFocus(
-        IInspectable const& sender,
-        RoutedEventArgs const& e)
-    {
-        UNREFERENCED_PARAMETER(sender);  // Unused parameter.
-        UNREFERENCED_PARAMETER(e);   // Unused parameter.
-
-        this->m_FileName = this->FileNameTextBox().Text();
     }
 }

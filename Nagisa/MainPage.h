@@ -43,6 +43,9 @@ namespace winrt::Nagisa::implementation
 
         TransferManager TransferManager();
 
+        void Page_Loaded(
+            IInspectable const& sender,
+            RoutedEventArgs const& e);
         void AboutButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
@@ -91,7 +94,7 @@ namespace winrt::Nagisa::implementation
         void SearchAppBarButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
-        void OpenDownloadsFolderAppBarButton_Click(
+        IAsyncAction OpenDownloadsFolderAppBarButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
         void SettingsAppBarButton_Click(

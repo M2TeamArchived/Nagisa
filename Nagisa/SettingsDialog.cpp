@@ -21,10 +21,17 @@ namespace winrt::Nagisa::implementation
         m_TransferManager(TransferManager)
     {
         InitializeComponent();
+    }
 
-        this->m_LastusedFolder = this->m_TransferManager.LastusedFolder();
+    IAsyncAction SettingsDialog::ContentDialog_Loaded(
+        IInspectable const& sender,
+        RoutedEventArgs const& e)
+    {
+        this->m_LastusedFolder =
+            co_await this->m_TransferManager.LastusedFolder();
 
-        IStorageFolder DefaultFolder = this->m_TransferManager.DefaultFolder();
+        IStorageFolder DefaultFolder =
+            co_await this->m_TransferManager.DefaultFolder();
 
         bool IsUseCustomFolder = (nullptr != DefaultFolder);
 
@@ -40,7 +47,7 @@ namespace winrt::Nagisa::implementation
                 : L"")));
     }
 
-    void SettingsDialog::CustomDownloadFolderBrowseButton_Click(
+    IAsyncAction SettingsDialog::CustomDownloadFolderBrowseButton_Click(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -56,22 +63,13 @@ namespace winrt::Nagisa::implementation
         picker.SuggestedStartLocation(PickerLocationId::ComputerFolder);
         picker.FileTypeFilter().Append(L"*");
 
-        IAsyncOperation<StorageFolder> Operation =
-            picker.PickSingleFolderAsync();
+        StorageFolder Folder = co_await picker.PickSingleFolderAsync();
 
-        M2::CThread([this, Operation]()
+        if (nullptr != Folder)
         {
-            StorageFolder Folder = Operation.get();
-
-            if (nullptr != Folder)
-            {
-                M2ExecuteOnUIThread([this, Folder]()
-                {
-                    this->m_TransferManager.DefaultFolder(Folder);
-                    this->DownloadFolderPathTextBox().Text(Folder.Path());
-                });
-            }
-        });
+            this->m_TransferManager.SetDefaultFolder(Folder);
+            this->DownloadFolderPathTextBox().Text(Folder.Path());
+        }
     }
 
     void SettingsDialog::UseCustomFolder_Click(
@@ -87,7 +85,7 @@ namespace winrt::Nagisa::implementation
 
         if (!IsUseCustomFolder)
         {
-            this->m_TransferManager.DefaultFolder(nullptr);
+            this->m_TransferManager.SetDefaultFolder(nullptr);
         }
 
         this->DownloadFolderPathTextBox().Text(

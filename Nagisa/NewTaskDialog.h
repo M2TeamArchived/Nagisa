@@ -32,23 +32,23 @@ namespace winrt::Nagisa::implementation
         SolidColorBrush m_NoticeableBrush = nullptr;
 
         Uri m_DownloadSource = nullptr;
-        hstring m_FileName = L"";
+
         IStorageFolder m_SaveFolder = nullptr;
 
     public:
         NewTaskDialog(
             TransferManager const& TransferManager);
 
+        IAsyncAction ContentDialog_Loaded(
+            IInspectable const& sender,
+            RoutedEventArgs const& e);
         IAsyncAction DownloadButtonClick(
             ContentDialog const& sender,
             ContentDialogButtonClickEventArgs const& args);
-        void BrowseButtonClick(
+        IAsyncAction BrowseButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
         void DownloadSourceTextBox_LostFocus(
-            IInspectable const& sender,
-            RoutedEventArgs const& e);
-        void FileNameTextBox_LostFocus(
             IInspectable const& sender,
             RoutedEventArgs const& e);
     };

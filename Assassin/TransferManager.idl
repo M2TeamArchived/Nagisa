@@ -20,7 +20,6 @@ namespace Assassin
         Running = 5
     };
 
-    [version(1.0)]
     [uuid(B70ACDED-7354-3082-BF73-D931D80C047B)]
     interface ITransferTask : IInspectable
         requires Windows.UI.Xaml.Data.INotifyPropertyChanged
@@ -74,9 +73,6 @@ namespace Assassin
         void Cancel();
     }
 
-    typedef Windows.Foundation.Collections.IVectorView<ITransferTask> ITransferTaskVector;
-
-    [version(1.0)]
     runtimeclass TransferManager :
         Windows.Foundation.IClosable,
         Windows.UI.Xaml.Data.INotifyPropertyChanged
@@ -96,10 +92,12 @@ namespace Assassin
         String SearchFilter{ get; set; };
 
         // The last used folder.
-        Windows.Storage.IStorageFolder LastusedFolder{ get; };
+        Windows.Foundation.IAsyncOperation<Windows.Storage.IStorageFolder>
+            LastusedFolder{ get; };
 
         // The default download folder.
-        Windows.Storage.IStorageFolder DefaultFolder{ get; set; };
+        Windows.Foundation.IAsyncOperation<Windows.Storage.IStorageFolder>
+            DefaultFolder{ get; };
 
         // The total download bandwidth.
         UInt64 TotalDownloadBandwidth{ get; };
@@ -112,7 +110,9 @@ namespace Assassin
          *
          * @return The object which represents the task list.
          */
-        Windows.Foundation.IAsyncOperation<ITransferTaskVector> GetTasksAsync();
+        Windows.Foundation.IAsyncOperation<
+            Windows.Foundation.Collections.IVectorView<
+                ITransferTask> > GetTasksAsync();
 
         /**
          * Add a task to the task list.
@@ -130,16 +130,16 @@ namespace Assassin
         /**
          * Removes a task to the task list.
          *
-         * @param The task object.
+         * @param Task The task object.
          * @return The asynchronous object used to wait.
          */
         Windows.Foundation.IAsyncAction RemoveTaskAsync(
             ITransferTask Task);
 
         /**
-         * Start all tasks.
+         * Resume all tasks.
          */
-        void StartAllTasks();
+        void ResumeAllTasks();
 
         /**
          * Pause all tasks.
@@ -148,7 +148,15 @@ namespace Assassin
 
         /**
          * Clears the task list.
+         * @return The asynchronous object used to wait.
          */
-        void ClearTaskList();
+        Windows.Foundation.IAsyncAction ClearTaskListAsync();
+
+        /**
+         * Set the default folder.
+         * @param DefaultFolder The default folder you want to set.
+         */
+        void SetDefaultFolder(
+            Windows.Storage.IStorageFolder DefaultFolder);
     }
 }
