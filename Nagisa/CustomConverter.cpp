@@ -12,185 +12,233 @@
 
 #include "CustomConverter.h"
 
-using namespace winrt::Nagisa::implementation;
-
 #include <winrt\Assassin.h>
 #include <winrt\Windows.UI.Xaml.h>
 
-namespace winrt
+namespace winrt::Nagisa::implementation
 {
     using Assassin::ITransferTask;
     using Assassin::TransferTaskStatus;
     using Windows::Foundation::Collections::IVectorView;
     using Windows::UI::Xaml::Visibility;
-}
 
-winrt::IInspectable ConvertNullableBooleanToBoolean(
-    winrt::IInspectable const& value)
-{
-    return winrt::box_value(winrt::unbox_value_or<bool>(value, false));
-}
-
-winrt::IInspectable ConvertBooleanToNullableBoolean(
-    winrt::IInspectable const& value)
-{
-    return winrt::box_value(winrt::unbox_value_or<bool>(value, false));
-}
-
-winrt::IInspectable ConvertUint64ToDouble(
-    winrt::IInspectable const& value)
-{
-    return winrt::box_value(
-        static_cast<double>(winrt::unbox_value_or<uint64_t>(value, 0)));
-}
-
-winrt::IInspectable ConvertTaskListEmptyToVisibility(
-    winrt::IInspectable const& value)
-{
-    winrt::IVectorView<winrt::ITransferTask> ItemSource =
-        winrt::unbox_value_or<winrt::IVectorView<winrt::ITransferTask>>(
-            value, winrt::IVectorView<winrt::ITransferTask>(nullptr));
-
-    return winrt::box_value(
-        (nullptr == ItemSource || 0 == ItemSource.Size())
-        ? winrt::Visibility::Visible
-        : winrt::Visibility::Collapsed);
-}
-
-winrt::IInspectable ConvertUint64ByteSizeToString(
-    winrt::IInspectable const& value)
-{
-    return winrt::box_value(
-        M2ConvertByteSizeToString(winrt::unbox_value_or<uint64_t>(value, 0)));
-}
-
-winrt::IInspectable ConvertUint64RemainTimeToString(
-    winrt::IInspectable const& value)
-{
-    uint64_t Seconds = winrt::unbox_value_or<uint64_t>(
-        value, static_cast<uint64_t>(-1));
-
-    if (static_cast<uint64_t>(-1) != Seconds)
+    IInspectable ConvertBooleanToNullableBoolean(
+        IInspectable const& value)
     {
-        int Hour = static_cast<int>(Seconds / 3600);
-        int Minute = static_cast<int>(Seconds / 60 % 60);
-        int Second = static_cast<int>(Seconds % 60);
-
-        return winrt::box_value(
-            M2FormatString(L"%d:%02d:%02d", Hour, Minute, Second));
+        return box_value(unbox_value_or<bool>(value, false));
     }
 
-    return winrt::box_value(L"N/A");
-}
-
-template<winrt::TransferTaskStatus TaskStatus>
-winrt::IInspectable ConvertTaskStatusToVisible(
-    winrt::IInspectable const& value)
-{
-    winrt::TransferTaskStatus Status =
-        winrt::unbox_value_or<winrt::TransferTaskStatus>(
-            value, winrt::TransferTaskStatus::Error);
-
-    return winrt::box_value(
-        (TaskStatus == Status)
-        ? winrt::Visibility::Visible
-        : winrt::Visibility::Collapsed);
-}
-
-winrt::IInspectable CustomConverter::Convert(
-    winrt::IInspectable const& value,
-    winrt::TypeName const& targetType,
-    winrt::IInspectable const& parameter,
-    winrt::hstring const& language) const
-{
-    UNREFERENCED_PARAMETER(targetType);
-    UNREFERENCED_PARAMETER(language);
-
-    winrt::hstring ParameterObject =
-        winrt::unbox_value_or<winrt::hstring>(parameter, L"");
-    const wchar_t* Parameter = ParameterObject.data();
-
-    if (0 == wcscmp(Parameter, L"NullableBooleanToBoolean"))
+    IInspectable ConvertUint64ToDouble(
+        IInspectable const& value)
     {
-        return ConvertNullableBooleanToBoolean(value);
+        return box_value(
+            static_cast<double>(unbox_value_or<uint64_t>(value, 0)));
     }
 
-    if (0 == wcscmp(Parameter, L"Uint64ToDouble"))
+    IInspectable ConvertUint64ByteSizeToString(
+        IInspectable const& value)
     {
-        return ConvertUint64ToDouble(value);
+        return box_value(
+            M2ConvertByteSizeToString(unbox_value_or<uint64_t>(value, 0)));
     }
 
-    if (0 == wcscmp(Parameter, L"TaskListEmptyToVisibility"))
+    IInspectable ConvertUint64RemainTimeToString(
+        IInspectable const& value)
     {
-        return ConvertTaskListEmptyToVisibility(value);
+        uint64_t Seconds = unbox_value_or<uint64_t>(
+            value, static_cast<uint64_t>(-1));
+
+        if (static_cast<uint64_t>(-1) != Seconds)
+        {
+            int Hour = static_cast<int>(Seconds / 3600);
+            int Minute = static_cast<int>(Seconds / 60 % 60);
+            int Second = static_cast<int>(Seconds % 60);
+
+            return box_value(
+                M2FormatString(L"%d:%02d:%02d", Hour, Minute, Second));
+        }
+
+        return box_value(L"N/A");
     }
 
-    if (0 == wcscmp(Parameter, L"Uint64ByteSizeToString"))
+    IInspectable ConvertTaskStatusToProgressBarForegroundColor(
+        IInspectable const& value)
     {
-        return ConvertUint64ByteSizeToString(value);
+        using Windows::UI::Colors;
+        using Windows::UI::Xaml::Media::SolidColorBrush;
+
+        SolidColorBrush ProgressBarForegroundColorBrush;
+
+        ProgressBarForegroundColorBrush.Opacity(0.8);
+
+        switch (unbox_value_or<TransferTaskStatus>(
+            value, TransferTaskStatus::Error))
+        {
+        case TransferTaskStatus::Running:
+            ProgressBarForegroundColorBrush.Color(Colors::Green());
+            break;
+        case TransferTaskStatus::Paused:
+            ProgressBarForegroundColorBrush.Color(Colors::Orange());
+            break;
+        case TransferTaskStatus::Error:
+            ProgressBarForegroundColorBrush.Color(Colors::Red());
+            break;
+        default:
+            ProgressBarForegroundColorBrush.Color(Colors::Transparent());
+            break;
+        }
+
+        return ProgressBarForegroundColorBrush;
     }
 
-    if (0 == wcscmp(Parameter, L"Uint64RemainTimeToString"))
+    IInspectable ConvertTaskStatusToRetryButtonVisible(
+        IInspectable const& value)
     {
-        return ConvertUint64RemainTimeToString(value);
+        Visibility RetryButtonVisible = Visibility::Collapsed;
+
+        switch (unbox_value_or<TransferTaskStatus>(
+            value, TransferTaskStatus::Error))
+        {
+        case TransferTaskStatus::Canceled:
+        case TransferTaskStatus::Error:
+            RetryButtonVisible = Visibility::Visible;
+            break;
+        default:
+            break;
+        }
+
+        return box_value(RetryButtonVisible);
     }
 
-    if (0 == wcscmp(Parameter, L"TaskCanceledStatusToVisible"))
+    IInspectable ConvertTaskStatusToResumeButtonVisible(
+        IInspectable const& value)
     {
-        return ConvertTaskStatusToVisible<
-            winrt::TransferTaskStatus::Canceled>(value);
+        TransferTaskStatus Status =
+            unbox_value_or<TransferTaskStatus>(
+                value, TransferTaskStatus::Error);
+
+        return box_value(
+            (TransferTaskStatus::Paused == Status)
+            ? Visibility::Visible
+            : Visibility::Collapsed);
     }
 
-    if (0 == wcscmp(Parameter, L"TaskCompletedStatusToVisible"))
+    IInspectable ConvertTaskStatusToPauseButtonVisible(
+        IInspectable const& value)
     {
-        return ConvertTaskStatusToVisible<
-            winrt::TransferTaskStatus::Completed>(value);
+        TransferTaskStatus Status =
+            unbox_value_or<TransferTaskStatus>(
+                value, TransferTaskStatus::Error);
+
+        return box_value(
+            (TransferTaskStatus::Running == Status)
+            ? Visibility::Visible
+            : Visibility::Collapsed);
     }
 
-    if (0 == wcscmp(Parameter, L"TaskErrorStatusToVisible"))
+    IInspectable ConvertTaskStatusToRunningPausedVisible(
+        IInspectable const& value)
     {
-        return ConvertTaskStatusToVisible<
-            winrt::TransferTaskStatus::Error>(value);
+        Visibility RetryButtonVisible = Visibility::Collapsed;
+
+        switch (unbox_value_or<TransferTaskStatus>(
+            value, TransferTaskStatus::Error))
+        {
+        case TransferTaskStatus::Paused:
+        case TransferTaskStatus::Running:
+            RetryButtonVisible = Visibility::Visible;
+            break;
+        default:
+            break;
+        }
+
+        return box_value(RetryButtonVisible);
     }
 
-    if (0 == wcscmp(Parameter, L"TaskPausedStatusToVisible"))
+    IInspectable CustomConverter::Convert(
+        IInspectable const& value,
+        TypeName const& targetType,
+        IInspectable const& parameter,
+        hstring const& language) const
     {
-        return ConvertTaskStatusToVisible<
-            winrt::TransferTaskStatus::Paused>(value);
+        UNREFERENCED_PARAMETER(targetType);
+        UNREFERENCED_PARAMETER(language);
+
+        hstring ParameterObject =
+            unbox_value_or<hstring>(parameter, L"");
+        const wchar_t* Parameter = ParameterObject.data();
+
+        if (0 == wcscmp(Parameter, L"Uint64ToDouble"))
+        {
+            return ConvertUint64ToDouble(value);
+        }
+
+        if (0 == wcscmp(Parameter, L"Uint64ByteSizeToString"))
+        {
+            return ConvertUint64ByteSizeToString(value);
+        }
+
+        if (0 == wcscmp(Parameter, L"Uint64RemainTimeToString"))
+        {
+            return ConvertUint64RemainTimeToString(value);
+        }
+
+        if (0 == wcscmp(
+            Parameter,
+            L"TaskStatusToProgressBarForegroundColor"))
+        {
+            return ConvertTaskStatusToProgressBarForegroundColor(value);
+        }
+
+        if (0 == wcscmp(
+            Parameter,
+            L"TaskStatusToRetryButtonVisible"))
+        {
+            return ConvertTaskStatusToRetryButtonVisible(value);
+        }
+
+        if (0 == wcscmp(
+            Parameter,
+            L"TaskStatusToResumeButtonVisible"))
+        {
+            return ConvertTaskStatusToResumeButtonVisible(value);
+        }
+
+        if (0 == wcscmp(
+            Parameter,
+            L"TaskStatusToPauseButtonVisible"))
+        {
+            return ConvertTaskStatusToPauseButtonVisible(value);
+        }
+
+        if (0 == wcscmp(
+            Parameter,
+            L"TaskStatusToRunningPausedVisible"))
+        {
+            return ConvertTaskStatusToRunningPausedVisible(value);
+        }
+
+        throw_hresult(E_NOTIMPL);
     }
 
-    if (0 == wcscmp(Parameter, L"TaskQueuedStatusToVisible"))
+    IInspectable CustomConverter::ConvertBack(
+        IInspectable const& value,
+        TypeName const& targetType,
+        IInspectable const& parameter,
+        hstring const& language) const
     {
-        return ConvertTaskStatusToVisible<
-            winrt::TransferTaskStatus::Queued>(value);
+        UNREFERENCED_PARAMETER(targetType);
+        UNREFERENCED_PARAMETER(language);
+
+        hstring ParameterObject =
+            unbox_value_or<hstring>(parameter, L"");
+        const wchar_t* Parameter = ParameterObject.data();
+
+        if (0 == wcscmp(Parameter, L"NullableBooleanToBoolean"))
+        {
+            return ConvertBooleanToNullableBoolean(value);
+        }
+
+        throw_hresult(E_NOTIMPL);
     }
-
-    if (0 == wcscmp(Parameter, L"TaskRunningStatusToVisible"))
-    {
-        return ConvertTaskStatusToVisible<
-            winrt::TransferTaskStatus::Running>(value);
-    }
-
-    winrt::throw_hresult(E_NOTIMPL);
-}
-
-winrt::IInspectable CustomConverter::ConvertBack(
-    winrt::IInspectable const& value,
-    winrt::TypeName const& targetType,
-    winrt::IInspectable const& parameter,
-    winrt::hstring const& language) const
-{
-    UNREFERENCED_PARAMETER(targetType);
-    UNREFERENCED_PARAMETER(language);
-
-    winrt::hstring ParameterObject =
-        winrt::unbox_value_or<winrt::hstring>(parameter, L"");
-    const wchar_t* Parameter = ParameterObject.data();
-
-    if (0 == wcscmp(Parameter, L"NullableBooleanToBoolean"))
-    {
-        return ConvertBooleanToNullableBoolean(value);
-    }
-
-    winrt::throw_hresult(E_NOTIMPL);
 }

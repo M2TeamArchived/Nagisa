@@ -142,7 +142,9 @@ namespace winrt::Assassin::implementation
 
     void TransferTask::UpdateChangedProperties()
     {
-        if (nullptr != this->m_Operation)
+        this->BytesReceivedSpeed(0);
+
+        if (this->m_Operation)
         {
             BackgroundDownloadProgress Progress = this->m_Operation.Progress();
 
@@ -829,12 +831,19 @@ namespace winrt::Assassin::implementation
     {
         M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
+        std::vector<ITransferTask> NeedToRemove;
+
         for (auto& Task : this->m_TaskList)
         {
             if (NAIsFinalTransferTaskStatus(Task.second.Status()))
             {
-                co_await this->RemoveTaskAsync(Task.second);
+                NeedToRemove.push_back(Task.second);
             }
+        }
+
+        for (auto& Task : NeedToRemove)
+        {
+            co_await this->RemoveTaskAsync(Task);
         }
     }
 
