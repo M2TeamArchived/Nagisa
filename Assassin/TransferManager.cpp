@@ -252,30 +252,29 @@ namespace winrt::Assassin::implementation
     // Gets the save file object which to download the file.
     IAsyncOperation<IStorageFile> TransferTask::SaveFile() const
     {
-        try
-        {
-            co_return co_await (co_await this->SaveFolder()).GetFileAsync(
-                this->FileName());
-        }
-        catch (...)
-        {
-            co_return nullptr;
-        }
+        IStorageFile FileObject = nullptr;
+
+        IStorageFolder FolderObject = co_await this->SaveFolder();
+        if (FolderObject)
+            FileObject = co_await FolderObject.GetFileAsync(this->FileName());
+
+        return FileObject;
     }
 
     // Gets the save folder object which to download the file. 
     IAsyncOperation<IStorageFolder> TransferTask::SaveFolder() const
     {
-        try
-        {
-            co_return co_await this->FutureAccessList().GetFolderAsync(
-                unbox_value_or<hstring>(
-                    this->m_TaskConfig.Lookup(L"SaveFolder"), hstring()));
-        }
-        catch (...)
-        {
-            co_return nullptr;
-        }
+        hstring FolderString = unbox_value_or<hstring>(
+            this->m_TaskConfig.Lookup(L"SaveFolder"),
+            hstring());
+
+        IStorageFolder FolderObject = nullptr;
+
+        if (!FolderString.empty())
+            FolderObject = co_await this->FutureAccessList().GetFolderAsync(
+                FolderString);
+            
+        co_return FolderObject;
     }
 
     // Gets the current status of the task.
@@ -475,6 +474,22 @@ namespace winrt::Assassin::implementation
         }
     }
 
+    IAsyncOperation<IStorageFolder> TransferManager::GetFolderObjectInternal(
+        hstring const& FolderStringKey)
+    {
+        hstring FolderString = unbox_value_or<hstring>(
+            this->m_RootContainer.Values().Lookup(FolderStringKey),
+            hstring());
+
+        IStorageFolder FolderObject = nullptr;
+
+        if (!FolderString.empty())
+            FolderObject = co_await this->m_FutureAccessList.GetFolderAsync(
+                FolderString);
+
+        co_return FolderObject;
+    }
+
     /**
      * Creates a new TransferManager object.
      *
@@ -524,28 +539,21 @@ namespace winrt::Assassin::implementation
                 TaskInternal.FutureAccessList(
                     this->m_FutureAccessList);
 
-                try
+                std::map<hstring, DownloadOperation>::iterator iterator =
+                    DownloadsList.find(unbox_value_or<hstring>(
+                        TaskInternal.TaskConfig().Lookup(
+                            L"BackgroundTransferGuid"),
+                        hstring()));
+                if (DownloadsList.end() != iterator)
                 {
-                    std::map<hstring, DownloadOperation>::iterator iterator =
-                        DownloadsList.find(unbox_value_or<hstring>(
-                            TaskInternal.TaskConfig().Lookup(
-                                L"BackgroundTransferGuid"),
-                            hstring()));
-                    if (DownloadsList.end() != iterator)
-                    {
-                        TaskInternal.Operation(iterator->second);
-                    }
-                    else
-                    {
-                        throw_hresult(E_FAIL);
-                    }
+                    TaskInternal.Operation(iterator->second);
 
                     if (TransferTaskStatus::Running == TaskInternal.Status())
                     {
                         TaskInternal.Operation().AttachAsync();
                     }
                 }
-                catch (...)
+                else
                 {
                     if (!NAIsFinalTransferTaskStatus(TaskInternal.Status()))
                     {
@@ -609,35 +617,13 @@ namespace winrt::Assassin::implementation
     // Gets the last used folder.
     IAsyncOperation<IStorageFolder> TransferManager::LastusedFolder()
     {
-        try
-        {
-            co_return co_await this->m_FutureAccessList.GetFolderAsync(
-                unbox_value_or<hstring>(
-                    this->m_RootContainer.Values().Lookup(L"LastusedFolder"),
-                    hstring()));
-        }
-        catch (...)
-        {
-            co_return nullptr;
-            this->m_RootContainer.Values().Remove(L"LastusedFolder");
-        }
+        return this->GetFolderObjectInternal(L"LastusedFolder");
     }
 
     // Gets the default download folder.
     IAsyncOperation<IStorageFolder> TransferManager::DefaultFolder()
     {
-        try
-        {
-            co_return co_await this->m_FutureAccessList.GetFolderAsync(
-                unbox_value_or<hstring>(
-                    this->m_RootContainer.Values().Lookup(L"DefaultFolder"),
-                    hstring()));
-        }
-        catch (...)
-        {
-            co_return nullptr;
-            this->m_RootContainer.Values().Remove(L"DefaultFolder");
-        }
+        return this->GetFolderObjectInternal(L"DefaultFolder");
     }
 
     // Gets the total download bandwidth.
@@ -707,7 +693,7 @@ namespace winrt::Assassin::implementation
         hstring const DesiredFileName,
         IStorageFolder const SaveFolder)
     {
-        co_await resume_background();
+        //co_await resume_background();
 
         M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
@@ -762,7 +748,7 @@ namespace winrt::Assassin::implementation
     IAsyncAction TransferManager::RemoveTaskAsync(
         ITransferTask const Task)
     {
-        co_await resume_background();
+        //co_await resume_background();
 
         M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
 
@@ -773,18 +759,11 @@ namespace winrt::Assassin::implementation
 
         if (TransferTaskStatus::Completed != Task.Status())
         {
-            try
+            IStorageFile SaveFile = co_await Task.SaveFile();
+            if (SaveFile)
             {
-                IStorageFile SaveFile = co_await Task.SaveFile();
-                if (nullptr != SaveFile)
-                {
-                    co_await SaveFile.DeleteAsync(
-                        StorageDeleteOption::PermanentDelete);
-                }
-            }
-            catch (...)
-            {
-
+                co_await SaveFile.DeleteAsync(
+                    StorageDeleteOption::PermanentDelete);
             }
         }
 

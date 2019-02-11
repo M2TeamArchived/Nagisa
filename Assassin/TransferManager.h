@@ -190,6 +190,9 @@ namespace winrt::Assassin::implementation
 
         void NotifyTaskListUpdated();
 
+        IAsyncOperation<IStorageFolder> GetFolderObjectInternal(
+            hstring const& FolderStringKey);
+
     public:
         /**
          * Creates a new TransferManager object.

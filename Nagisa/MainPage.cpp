@@ -135,21 +135,19 @@ namespace winrt::Nagisa::implementation
     {
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
-        try
+        using Windows::ApplicationModel::DataTransfer::Clipboard;
+        using Windows::ApplicationModel::DataTransfer::DataPackage;
+        using Windows::Foundation::Uri;
+
+        ITransferTask Task = this->GetTransferTaskFromEventSender(sender);
+
+        Uri UriObject = Task.SourceUri();
+        if (UriObject)
         {
-            ITransferTask Task = this->GetTransferTaskFromEventSender(sender);
-
-            using Windows::ApplicationModel::DataTransfer::Clipboard;
-            using Windows::ApplicationModel::DataTransfer::DataPackage;
-
             DataPackage data = DataPackage();
-            data.SetText(Task.SourceUri().RawUri());
+            data.SetText(UriObject.RawUri());
 
             Clipboard::SetContent(data);
-        }
-        catch (...)
-        {
-
         }
     }
 
@@ -236,24 +234,22 @@ namespace winrt::Nagisa::implementation
     {
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
-        try
+        using Windows::Storage::IStorageFile;
+        using Windows::Storage::IStorageFolder;
+        using Windows::System::Launcher;
+        using Windows::System::FolderLauncherOptions;
+
+        ITransferTask Task = this->GetTransferTaskFromEventSender(sender);
+
+        IStorageFile FileObject = co_await Task.SaveFile();
+        IStorageFolder FolderObject = co_await Task.SaveFolder();
+
+        if (FileObject && FolderObject)
         {
-            using Windows::System::Launcher;
-            using Windows::System::FolderLauncherOptions;
-
-            ITransferTask Task = this->GetTransferTaskFromEventSender(sender);
-
             FolderLauncherOptions Options = FolderLauncherOptions();
-            Options.ItemsToSelect().Append(
-                co_await Task.SaveFile());
+            Options.ItemsToSelect().Append(FileObject);
 
-            co_await Launcher::LaunchFolderAsync(
-                co_await Task.SaveFolder(),
-                Options);
-        }
-        catch (...)
-        {
-
+            co_await Launcher::LaunchFolderAsync(FolderObject, Options);
         }
     }
 
@@ -309,23 +305,16 @@ namespace winrt::Nagisa::implementation
         UNREFERENCED_PARAMETER(sender);  // Unused parameter.
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
-        try
-        {
-            using Windows::Storage::IStorageFolder;
-            using Windows::System::Launcher;
+        using Windows::Storage::IStorageFolder;
+        using Windows::System::Launcher;
 
-            IStorageFolder Folder =
-                co_await this->m_TransferManager.DefaultFolder();
-            if (!Folder) Folder =
-                co_await this->m_TransferManager.LastusedFolder();
+        IStorageFolder Folder =
+            co_await this->m_TransferManager.DefaultFolder();
+        if (!Folder) Folder =
+            co_await this->m_TransferManager.LastusedFolder();
 
-            if (Folder)
-                co_await Launcher::LaunchFolderAsync(Folder);
-        }
-        catch (...)
-        {
-
-        }
+        if (Folder)
+            co_await Launcher::LaunchFolderAsync(Folder);
     }
 
     IAsyncAction MainPage::SettingsAppBarButton_Click(
