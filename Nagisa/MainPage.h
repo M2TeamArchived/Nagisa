@@ -51,10 +51,10 @@ namespace winrt::Nagisa::implementation
         void TaskList_ContainerContentChanging(
             ListViewBase const& sender,
             ContainerContentChangingEventArgs const& e);
-        IAsyncAction AboutButton_Click(
+        fire_and_forget AboutButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
-        IAsyncAction NewTaskButton_Click(
+        fire_and_forget NewTaskButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
         void CopyLinkMenuItem_Click(
@@ -63,7 +63,7 @@ namespace winrt::Nagisa::implementation
         void SearchAutoSuggestBox_LostFocus(
             IInspectable const& sender,
             RoutedEventArgs const& e);
-        IAsyncAction RetryButton_Click(
+        fire_and_forget RetryButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
         void ResumeButton_Click(
@@ -75,10 +75,10 @@ namespace winrt::Nagisa::implementation
         void CancelMenuItem_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
-        IAsyncAction RemoveMenuItem_Click(
+        fire_and_forget RemoveMenuItem_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
-        IAsyncAction OpenFolderMenuItem_Click(
+        fire_and_forget OpenFolderMenuItem_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
         void StartAllAppBarButton_Click(
@@ -87,16 +87,16 @@ namespace winrt::Nagisa::implementation
         void PauseAllAppBarButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
-        IAsyncAction ClearListAppBarButton_Click(
+        fire_and_forget ClearListAppBarButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
         void SearchAppBarButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
-        IAsyncAction OpenDownloadsFolderAppBarButton_Click(
+        fire_and_forget OpenDownloadsFolderAppBarButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
-        IAsyncAction SettingsAppBarButton_Click(
+        fire_and_forget SettingsAppBarButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
     };

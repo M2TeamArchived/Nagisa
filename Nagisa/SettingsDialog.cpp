@@ -23,7 +23,7 @@ namespace winrt::Nagisa::implementation
         InitializeComponent();
     }
 
-    IAsyncAction SettingsDialog::ContentDialog_Loaded(
+    fire_and_forget SettingsDialog::ContentDialog_Loaded(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -47,7 +47,7 @@ namespace winrt::Nagisa::implementation
                 : L"")));
     }
 
-    IAsyncAction SettingsDialog::CustomDownloadFolderBrowseButton_Click(
+    fire_and_forget SettingsDialog::CustomDownloadFolderBrowseButton_Click(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {

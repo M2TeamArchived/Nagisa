@@ -24,7 +24,7 @@ namespace winrt::Nagisa::implementation
         this->VersionText().Text(TransferManager.Version());
     }
 
-    void AboutDialog::GitHubButtonClick(
+    fire_and_forget AboutDialog::GitHubButtonClick(
         ContentDialog const& sender,
         ContentDialogButtonClickEventArgs const& args)
     {
@@ -33,7 +33,7 @@ namespace winrt::Nagisa::implementation
         using Windows::Foundation::Uri;
         using Windows::System::Launcher;
 
-        Launcher::LaunchUriAsync(
+        co_await Launcher::LaunchUriAsync(
             Uri(L"https://github.com/Project-Nagisa/Nagisa"));
 
         args.Cancel(true);

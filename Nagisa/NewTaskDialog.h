@@ -39,13 +39,13 @@ namespace winrt::Nagisa::implementation
         NewTaskDialog(
             TransferManager const& TransferManager);
 
-        IAsyncAction ContentDialog_Loaded(
+        fire_and_forget ContentDialog_Loaded(
             IInspectable const& sender,
             RoutedEventArgs const& e);
-        IAsyncAction DownloadButtonClick(
+        fire_and_forget DownloadButtonClick(
             ContentDialog const& sender,
             ContentDialogButtonClickEventArgs const& args);
-        IAsyncAction BrowseButtonClick(
+        fire_and_forget BrowseButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
         void DownloadSourceTextBox_LostFocus(

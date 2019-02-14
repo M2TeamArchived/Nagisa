@@ -25,7 +25,7 @@ namespace winrt::Nagisa::implementation
         InitializeComponent();  
     }
 
-    IAsyncAction NewTaskDialog::ContentDialog_Loaded(
+    fire_and_forget NewTaskDialog::ContentDialog_Loaded(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -38,7 +38,7 @@ namespace winrt::Nagisa::implementation
             this->SaveFolderTextBox().Text(this->m_SaveFolder.Path());
     }
 
-    IAsyncAction NewTaskDialog::DownloadButtonClick(
+    fire_and_forget NewTaskDialog::DownloadButtonClick(
         ContentDialog const& sender,
         ContentDialogButtonClickEventArgs const& args)
     {
@@ -70,7 +70,7 @@ namespace winrt::Nagisa::implementation
         }
     }
 
-    IAsyncAction NewTaskDialog::BrowseButtonClick(
+    fire_and_forget NewTaskDialog::BrowseButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {

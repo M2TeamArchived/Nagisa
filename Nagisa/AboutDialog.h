@@ -26,7 +26,7 @@ namespace winrt::Nagisa::implementation
         AboutDialog(
             TransferManager const& TransferManager);
 
-        void GitHubButtonClick(
+        fire_and_forget GitHubButtonClick(
             ContentDialog const& sender,
             ContentDialogButtonClickEventArgs const& args);
     };

@@ -107,7 +107,7 @@ namespace winrt::Nagisa::implementation
             : Visibility::Collapsed);
     }
 
-    IAsyncAction MainPage::AboutButton_Click(
+    fire_and_forget MainPage::AboutButton_Click(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -118,7 +118,7 @@ namespace winrt::Nagisa::implementation
             make<AboutDialog>(this->m_TransferManager));
     }
 
-    IAsyncAction MainPage::NewTaskButton_Click(
+    fire_and_forget MainPage::NewTaskButton_Click(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -164,7 +164,7 @@ namespace winrt::Nagisa::implementation
         this->SearchAppBarButton().Visibility(Visibility::Visible);
     }
 
-    IAsyncAction MainPage::RetryButton_Click(
+    fire_and_forget MainPage::RetryButton_Click(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -218,7 +218,7 @@ namespace winrt::Nagisa::implementation
         }
     }
 
-    IAsyncAction MainPage::RemoveMenuItem_Click(
+    fire_and_forget MainPage::RemoveMenuItem_Click(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -228,7 +228,7 @@ namespace winrt::Nagisa::implementation
             this->GetTransferTaskFromEventSender(sender));
     }
 
-    IAsyncAction MainPage::OpenFolderMenuItem_Click(
+    fire_and_forget MainPage::OpenFolderMenuItem_Click(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -273,7 +273,7 @@ namespace winrt::Nagisa::implementation
         this->m_TransferManager.PauseAllTasks();
     }
 
-    IAsyncAction MainPage::ClearListAppBarButton_Click(
+    fire_and_forget MainPage::ClearListAppBarButton_Click(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -298,7 +298,7 @@ namespace winrt::Nagisa::implementation
         this->SearchAutoSuggestBox().Focus(FocusState::Programmatic);
     }
 
-    IAsyncAction MainPage::OpenDownloadsFolderAppBarButton_Click(
+    fire_and_forget MainPage::OpenDownloadsFolderAppBarButton_Click(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -317,7 +317,7 @@ namespace winrt::Nagisa::implementation
             co_await Launcher::LaunchFolderAsync(Folder);
     }
 
-    IAsyncAction MainPage::SettingsAppBarButton_Click(
+    fire_and_forget MainPage::SettingsAppBarButton_Click(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
