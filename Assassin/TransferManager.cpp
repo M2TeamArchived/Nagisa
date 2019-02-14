@@ -258,7 +258,7 @@ namespace winrt::Assassin::implementation
         if (FolderObject)
             FileObject = co_await FolderObject.GetFileAsync(this->FileName());
 
-        return FileObject;
+        co_return FileObject;
     }
 
     // Gets the save folder object which to download the file. 
