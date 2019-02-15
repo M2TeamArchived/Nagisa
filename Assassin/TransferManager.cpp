@@ -411,7 +411,7 @@ namespace winrt::Assassin::implementation
     {
         UNREFERENCED_PARAMETER(source);  // Unused parameter.
 
-        M2::AutoTryCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+        M2::AutoTrySRWSharedLock Lock(this->m_TaskListUpdateLock);
 
         if (Lock.IsLocked())
         {
@@ -499,7 +499,7 @@ namespace winrt::Assassin::implementation
         bool EnableUINotify) :
         m_EnableUINotify(EnableUINotify)
     {
-        M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+        M2::AutoSRWExclusiveLock Lock(this->m_TaskListUpdateLock);
 
         this->m_Downloader = BackgroundDownloader();
 
@@ -577,7 +577,7 @@ namespace winrt::Assassin::implementation
      */
     TransferManager::~TransferManager()
     {
-        M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+        M2::AutoSRWExclusiveLock Lock(this->m_TaskListUpdateLock);
 
         if (this->m_NotifyTimer)
         {
@@ -641,7 +641,7 @@ namespace winrt::Assassin::implementation
     // Gets the task list.
     IVectorView<ITransferTask> TransferManager::Tasks()
     {
-        M2::AutoTryCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+        M2::AutoTrySRWSharedLock Lock(this->m_TaskListUpdateLock);
 
         IVectorView<ITransferTask> Result = nullptr;
 
@@ -695,7 +695,7 @@ namespace winrt::Assassin::implementation
     {
         //co_await resume_background();
 
-        M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+        M2::AutoSRWExclusiveLock Lock(this->m_TaskListUpdateLock);
 
         IStorageFile SaveFile = co_await SaveFolder.CreateFileAsync(
             DesiredFileName,
@@ -750,7 +750,7 @@ namespace winrt::Assassin::implementation
     {
         //co_await resume_background();
 
-        M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+        M2::AutoSRWExclusiveLock Lock(this->m_TaskListUpdateLock);
 
         if (!NAIsFinalTransferTaskStatus(Task.Status()))
         {
@@ -781,7 +781,7 @@ namespace winrt::Assassin::implementation
      */
     void TransferManager::ResumeAllTasks()
     {
-        M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+        M2::AutoSRWSharedLock Lock(this->m_TaskListUpdateLock);
 
         for (auto& Task : this->m_TaskList)
         {
@@ -794,7 +794,7 @@ namespace winrt::Assassin::implementation
      */
     void TransferManager::PauseAllTasks()
     {
-        M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+        M2::AutoSRWSharedLock Lock(this->m_TaskListUpdateLock);
 
         for (auto& Task : this->m_TaskList)
         {
@@ -808,7 +808,7 @@ namespace winrt::Assassin::implementation
      */
     IAsyncAction TransferManager::ClearTaskListAsync()
     {
-        M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateCS);
+        M2::AutoSRWSharedLock Lock(this->m_TaskListUpdateLock);
 
         std::vector<ITransferTask> NeedToRemove;
 
