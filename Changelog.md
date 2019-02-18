@@ -16,6 +16,7 @@
 - Introduce the new user interface. (Partially contributed by 鳶一雨音.)
 - Improve the user experience. (Thanks to Yue Yin.)
 - Implement the project entirely using C++/WinRT.
+- Add "(PREVIEW)" mark because this project is in early stages of development.
 
 ### Nagisa 0.3 [Build 62]
 - Add Multi-language Support: Spanish. (Contributed by Jhovany200.)
