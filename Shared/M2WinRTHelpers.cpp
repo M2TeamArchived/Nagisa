@@ -43,8 +43,8 @@ GUID M2CreateGuid()
 /// Returns true if successful, or false otherwise.
 /// </returns>
 bool M2FindSubString(
-    winrt::hstring SourceString,
-    winrt::hstring SubString,
+    winrt::hstring const& SourceString,
+    winrt::hstring const& SubString,
     bool IgnoreCase)
 {
     return (::FindNLSStringEx(
@@ -124,7 +124,7 @@ namespace M2
     }
 
     void NotifyPropertyChangedBase::PropertyChanged(
-        winrt::event_token const & token)
+        winrt::event_token const& token)
     {
         this->m_PropertyChanged.remove(token);
     }

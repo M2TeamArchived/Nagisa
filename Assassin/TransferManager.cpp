@@ -206,20 +206,17 @@ namespace winrt::Assassin::implementation
 
     void TransferTask::NotifyPropertyChanged()
     {
-        M2ExecuteOnUIThread([this]()
+        if (this->m_Operation)
         {
-            if (nullptr != this->m_Operation)
+            this->RaisePropertyChanged(L"Status");
+            if (TransferTaskStatus::Running == this->Status())
             {
-                this->RaisePropertyChanged(L"Status");
-                if (TransferTaskStatus::Running == this->Status())
-                {
-                    this->RaisePropertyChanged(L"BytesReceived");
-                    this->RaisePropertyChanged(L"TotalBytesToReceive");
-                    this->RaisePropertyChanged(L"BytesReceivedSpeed");
-                    this->RaisePropertyChanged(L"RemainTime");
-                }
+                this->RaisePropertyChanged(L"BytesReceived");
+                this->RaisePropertyChanged(L"TotalBytesToReceive");
+                this->RaisePropertyChanged(L"BytesReceivedSpeed");
+                this->RaisePropertyChanged(L"RemainTime");
             }
-        });
+        }
     }
 
     // Gets the Guid string of the task.
@@ -321,16 +318,17 @@ namespace winrt::Assassin::implementation
      */
     void TransferTask::Pause()
     {
-        if (TransferTaskStatus::Running == this->Status())
+        try
         {
-            if (nullptr != this->m_Operation)
-            {
+            if (TransferTaskStatus::Running != this->Status())
+                throw;
+
+            if (this->m_Operation)
                 this->m_Operation.Pause();
-            }
-            else
-            {
-                this->Status(TransferTaskStatus::Error);
-            }
+        }
+        catch (...)
+        {
+            this->Status(TransferTaskStatus::Error);
         }
     }
 
@@ -339,17 +337,20 @@ namespace winrt::Assassin::implementation
      */
     void TransferTask::Resume()
     {
-        if (TransferTaskStatus::Paused == this->Status())
+        try
         {
-            if (nullptr != this->m_Operation)
+            if (TransferTaskStatus::Paused != this->Status())
+                throw;
+
+            if (this->m_Operation)
             {
                 this->m_Operation.Resume();
                 this->m_Operation.AttachAsync();
             }
-            else
-            {
-                this->Status(TransferTaskStatus::Error);
-            }
+        }
+        catch (...)
+        {
+            this->Status(TransferTaskStatus::Error);
         }
     }
 
@@ -358,16 +359,17 @@ namespace winrt::Assassin::implementation
      */
     void TransferTask::Cancel()
     {
-        if (!NAIsFinalTransferTaskStatus(this->Status()))
+        try
         {
-            if (nullptr != this->m_Operation)
-            {
+            if (NAIsFinalTransferTaskStatus(this->Status()))
+                throw;
+
+            if (this->m_Operation)
                 this->m_Operation.AttachAsync().Cancel();
-            }
-            else
-            {
-                this->Status(TransferTaskStatus::Error);
-            }
+        }
+        catch (...)
+        {
+            this->Status(TransferTaskStatus::Error);
         }
     }
 
@@ -389,17 +391,15 @@ namespace winrt::Assassin::implementation
             this->m_TotalDownloadBandwidth +=
                 TaskInternal.BytesReceivedSpeed();
             this->m_TotalUploadBandwidth += 0;
-
-            if (this->m_EnableUINotify)
-            {
-                TaskInternal.NotifyPropertyChanged();
-            }
         }
-
+        
         if (this->m_EnableUINotify)
         {
             M2ExecuteOnUIThread([this]()
             {
+                for (auto& Task : this->m_TaskList)
+                    Task.second.try_as<TransferTask>()->NotifyPropertyChanged();
+
                 this->RaisePropertyChanged(L"TotalDownloadBandwidth");
                 this->RaisePropertyChanged(L"TotalUploadBandwidth");
             });

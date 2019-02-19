@@ -208,14 +208,7 @@ namespace winrt::Nagisa::implementation
     {
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
-        try
-        {
-            this->GetTransferTaskFromEventSender(sender).Cancel();
-        }
-        catch (...)
-        {
-
-        }
+        this->GetTransferTaskFromEventSender(sender).Cancel();
     }
 
     fire_and_forget MainPage::RemoveMenuItem_Click(

@@ -57,8 +57,8 @@ GUID M2CreateGuid();
 /// Returns true if successful, or false otherwise.
 /// </returns>
 bool M2FindSubString(
-    winrt::hstring SourceString,
-    winrt::hstring SubString,
+    winrt::hstring const& SourceString,
+    winrt::hstring const& SubString,
     bool IgnoreCase);
 
 /// <summary>
