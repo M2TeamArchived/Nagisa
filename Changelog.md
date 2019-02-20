@@ -7,7 +7,7 @@
 
 ## Changelog
 
-### Nagisa 0.4 [Build 151] - (Developing)
+### Nagisa 0.4 [Build 158]
 - Improve several implementations.
 - Remove OpenSSL static library binaries.
 - Remove AppVeyor CI support because we can't use C++/WinRT in the AppVeyor CI 
