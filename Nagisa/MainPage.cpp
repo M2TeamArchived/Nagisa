@@ -22,7 +22,8 @@ using namespace Windows::UI::Xaml;
 namespace winrt::Nagisa::implementation
 {
     MainPage::MainPage() :
-        m_TransferManager(Assassin::TransferManager(true))
+        m_TransferManager(Assassin::TransferManager(true)),
+        m_UISettings(UISettings())
     {
         InitializeComponent();
     }
@@ -55,6 +56,51 @@ namespace winrt::Nagisa::implementation
             ).DataContext().try_as<ITransferTask>();
     }
 
+    void MainPage::UpdateTitleBarColor()
+    {
+        using Windows::UI::Color;
+        using Windows::UI::Colors;
+        using Windows::UI::ViewManagement::ApplicationView;
+        using Windows::UI::ViewManagement::ApplicationViewTitleBar;
+        using Windows::UI::Xaml::Application;
+        using Windows::UI::Xaml::ApplicationTheme;
+
+        bool IsDarkMode =
+            Application::Current().RequestedTheme() == ApplicationTheme::Dark;
+
+        Color Black = Colors::Black();
+        Color DarkGray = Colors::DarkGray();
+        Color Transparent = Colors::Transparent();
+        Color White = Colors::White();
+
+        ApplicationViewTitleBar titleBar =
+            ApplicationView::GetForCurrentView().TitleBar();
+
+        //Change titlebar button colors to match DimButton style
+        titleBar.ButtonBackgroundColor(Transparent);
+        titleBar.ButtonForegroundColor(IsDarkMode ? White : Black);
+        titleBar.ButtonHoverBackgroundColor(DarkGray);
+        titleBar.ButtonHoverForegroundColor(IsDarkMode ? White : Black);
+        titleBar.ButtonInactiveBackgroundColor(Transparent);
+        titleBar.ButtonInactiveForegroundColor(DarkGray);
+        titleBar.ButtonPressedBackgroundColor(DarkGray);
+        titleBar.ButtonPressedForegroundColor(IsDarkMode ? White : Black);
+    }
+
+    void MainPage::ColorValuesChanged(
+        UISettings const& sender,
+        IInspectable const& e)
+    {
+        UNREFERENCED_PARAMETER(sender);  // Unused parameter.
+        UNREFERENCED_PARAMETER(e);   // Unused parameter.
+
+        using winrt::Windows::UI::Core::CoreDispatcherPriority;
+
+        this->Dispatcher().RunAsync(
+            CoreDispatcherPriority::Normal,
+            { this, &MainPage::UpdateTitleBarColor });
+    }
+
     void MainPage::Page_Loaded(
         IInspectable const& sender,
         RoutedEventArgs const& e)
@@ -64,31 +110,20 @@ namespace winrt::Nagisa::implementation
 
         using Windows::ApplicationModel::Core::CoreApplication;
         using Windows::UI::Colors;
-        using Windows::UI::ViewManagement::ApplicationView;
-        using Windows::UI::ViewManagement::ApplicationViewTitleBar;
-        using Windows::UI::Xaml::Application;
-        using Windows::UI::Xaml::Media::SolidColorBrush;
-        using Windows::UI::Xaml::ResourceDictionary;
+        using Windows::UI::Xaml::Media::SolidColorBrush; 
         using Windows::UI::Xaml::Visibility;
         using Windows::UI::Xaml::Window;
 
-        //Extend main grid to titlebar
+        // Extend main grid to titlebar
         CoreApplication::GetCurrentView().TitleBar().ExtendViewIntoTitleBar(
             true);
-        ApplicationViewTitleBar titleBar =
-            ApplicationView::GetForCurrentView().TitleBar();
-        ResourceDictionary GlobalResources =
-            Application::Current().Resources();
-        //Change titlebar button colors to match DimButton style
-        titleBar.ButtonBackgroundColor(Colors::Transparent());
-        titleBar.ButtonInactiveBackgroundColor(Colors::Transparent());
-        titleBar.ButtonPressedBackgroundColor(GlobalResources.Lookup(box_value(
-            L"SystemControlHighlightListMediumBrush")).try_as<SolidColorBrush>(
-                ).Color());
-        titleBar.ButtonHoverBackgroundColor(GlobalResources.Lookup(box_value(
-            L"SystemControlHighlightListLowBrush")).try_as<SolidColorBrush>(
-                ).Color());
-        //Set real titlebar area
+
+        // Color settings.
+        this->UpdateTitleBarColor();
+        this->m_UISettings.ColorValuesChanged(
+            {this, &MainPage::ColorValuesChanged });
+        
+        // Set real titlebar area
         Window::Current().SetTitleBar(this->realTitle());
 
         this->SearchAutoSuggestBox().Visibility(Visibility::Collapsed);

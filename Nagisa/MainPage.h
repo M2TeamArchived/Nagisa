@@ -17,6 +17,7 @@ namespace winrt::Nagisa::implementation
     using Assassin::TransferManager;
     using Assassin::ITransferTask;
     using Windows::Foundation::IAsyncOperation;
+    using Windows::UI::ViewManagement::UISettings;
     using Windows::UI::Xaml::RoutedEventArgs;
     using Windows::UI::Xaml::Controls::AutoSuggestBox;
     using Windows::UI::Xaml::Controls::AutoSuggestBoxQuerySubmittedEventArgs;
@@ -33,12 +34,19 @@ namespace winrt::Nagisa::implementation
     {
     private:
         TransferManager m_TransferManager = nullptr;
+        UISettings m_UISettings = nullptr;
 
         IAsyncOperation<ContentDialogResult> ShowContentDialogAsync(
             ContentDialog const& Dialog);
 
         ITransferTask GetTransferTaskFromEventSender(
             IInspectable const& sender);
+
+        void UpdateTitleBarColor();
+
+        void ColorValuesChanged(
+            UISettings const& sender,
+            IInspectable const& e);
 
     public:
         MainPage();

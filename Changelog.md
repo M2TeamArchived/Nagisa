@@ -7,14 +7,14 @@
 
 ## Changelog
 
-### Nagisa 0.4 [Build 158]
+### Nagisa 0.4 [Build 158] - [Developing]
 - Improve several implementations.
 - Remove OpenSSL static library binaries.
 - Remove AppVeyor CI support because we can't use C++/WinRT in the AppVeyor CI 
   environment currently.
 - Decided to upgrade the system requirement to Windows 10, version 1703. 
 - Introduce the new user interface. (Partially contributed by 鳶一雨音.)
-- Improve the user experience. (Thanks to Yue Yin.)
+- Improve the user experience. (Thanks to Yue Yin, 桃之夭夭 and 落樱.)
 - Implement the project entirely using C++/WinRT.
 - Add "(PREVIEW)" mark because this project is in early stages of development.
 
