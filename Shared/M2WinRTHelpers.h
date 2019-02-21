@@ -21,6 +21,7 @@ License: The MIT License
 
 #include <map>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace winrt
@@ -85,7 +86,7 @@ namespace M2
 
     protected:
         void RaisePropertyChanged(
-            winrt::hstring PropertyName);
+            std::wstring_view const& PropertyName);
 
     public:
         NotifyPropertyChangedBase() = default;

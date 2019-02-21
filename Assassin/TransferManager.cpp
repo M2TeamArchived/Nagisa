@@ -34,6 +34,33 @@ namespace winrt::Assassin::implementation
             TransferTaskStatus::Error == Status);
     }
 
+    hstring TransferTask::ReadHString(
+        std::wstring_view const& KeyName) const
+    {
+        return unbox_value_or<hstring>(
+            this->m_TaskConfig.Lookup(KeyName), hstring());
+    }
+
+    uint64_t TransferTask::ReadUInt64(
+        std::wstring_view const& KeyName) const
+    {
+        return unbox_value_or<uint64_t>(this->m_TaskConfig.Lookup(KeyName), 0);
+    }
+
+    void TransferTask::WriteHString(
+        std::wstring_view const& KeyName,
+        hstring const& Value)
+    {
+        this->m_TaskConfig.Insert(KeyName, box_value(Value));
+    }
+
+    void TransferTask::WriteUInt64(
+        std::wstring_view const& KeyName,
+        uint64_t const& Value)
+    {
+        this->m_TaskConfig.Insert(KeyName, box_value(Value));
+    }
+
     DownloadOperation TransferTask::Operation() const
     {
         return this->m_Operation;
@@ -76,28 +103,21 @@ namespace winrt::Assassin::implementation
     void TransferTask::SourceUri(
         Uri const& value)
     {
-        this->m_TaskConfig.Insert(
-            L"SourceUri",
-            box_value(value.RawUri()));
+        this->WriteHString(L"SourceUri", value.RawUri());
     }
 
     void TransferTask::FileName(
         hstring const& value)
     {
-        this->m_TaskConfig.Insert(
-            L"FileName",
-            box_value(value));
+        this->WriteHString(L"FileName", value);
     }
 
     void TransferTask::SaveFolder(
         IStorageFolder const& value)
     {
-        if (value)
-        {
-            this->m_TaskConfig.Insert(
-                L"SaveFolder",
-                box_value(this->m_FutureAccessList.Add(value)));
-        }
+        if (!value) return;
+
+        this->WriteHString(L"SaveFolder", this->m_FutureAccessList.Add(value));
     }
 
     void TransferTask::Status(
@@ -111,33 +131,25 @@ namespace winrt::Assassin::implementation
     void TransferTask::BytesReceived(
         uint64_t const& value)
     {
-        this->m_TaskConfig.Insert(
-            L"BytesReceived",
-            box_value(value));
+        this->WriteUInt64(L"BytesReceived", value);
     }
 
     void TransferTask::BytesReceivedSpeed(
         uint64_t const& value)
     {
-        this->m_TaskConfig.Insert(
-            L"BytesReceivedSpeed",
-            box_value(value));
+        this->WriteUInt64(L"BytesReceivedSpeed", value);
     }
 
     void TransferTask::RemainTime(
         uint64_t const& value)
     {
-        this->m_TaskConfig.Insert(
-            L"RemainTime",
-            box_value(value));
+        this->WriteUInt64(L"RemainTime", value);
     }
 
     void TransferTask::TotalBytesToReceive(
         uint64_t const& value)
     {
-        this->m_TaskConfig.Insert(
-            L"TotalBytesToReceive",
-            box_value(value));
+        this->WriteUInt64(L"TotalBytesToReceive", value);
     }
 
     void TransferTask::UpdateChangedProperties()
@@ -230,8 +242,7 @@ namespace winrt::Assassin::implementation
     {
         try
         {
-            return Uri(unbox_value_or<hstring>(
-                this->m_TaskConfig.Lookup(L"SourceUri"), hstring()));
+            return Uri(this->ReadHString(L"SourceUri"));
         }
         catch (...)
         {
@@ -242,8 +253,7 @@ namespace winrt::Assassin::implementation
     // Gets the file name which to download the file.
     hstring TransferTask::FileName() const
     {
-        return unbox_value_or<hstring>(
-            this->m_TaskConfig.Lookup(L"FileName"), hstring());
+        return this->ReadHString(L"FileName");
     }
 
     // Gets the save file object which to download the file.
@@ -261,9 +271,7 @@ namespace winrt::Assassin::implementation
     // Gets the save folder object which to download the file. 
     IAsyncOperation<IStorageFolder> TransferTask::SaveFolder() const
     {
-        hstring FolderString = unbox_value_or<hstring>(
-            this->m_TaskConfig.Lookup(L"SaveFolder"),
-            hstring());
+        hstring FolderString = this->ReadHString(L"SaveFolder");
 
         IStorageFolder FolderObject = nullptr;
 
@@ -287,30 +295,26 @@ namespace winrt::Assassin::implementation
     // value may be smaller than in the previous progress report.
     uint64_t TransferTask::BytesReceived() const
     {
-        return unbox_value_or<uint64_t>(
-            this->m_TaskConfig.Lookup(L"BytesReceived"), 0);
+        return this->ReadUInt64(L"BytesReceived");
     }
 
     // Gets the speed of bytes received in one second.
     uint64_t TransferTask::BytesReceivedSpeed() const
     {
-        return unbox_value_or<uint64_t>(
-            this->m_TaskConfig.Lookup(L"BytesReceivedSpeed"), 0);
+        return this->ReadUInt64(L"BytesReceivedSpeed");
     }
 
     // Gets the remain time, in seconds.
     uint64_t TransferTask::RemainTime() const
     {
-        return unbox_value_or<uint64_t>(
-            this->m_TaskConfig.Lookup(L"RemainTime"), 0);
+        return this->ReadUInt64(L"RemainTime");
     }
 
     // Gets the total number of bytes of data to download. If this number
     // is unknown, this value is set to 0.
     uint64_t TransferTask::TotalBytesToReceive() const
     {
-        return unbox_value_or<uint64_t>(
-            this->m_TaskConfig.Lookup(L"TotalBytesToReceive"), 0);
+        return this->ReadUInt64(L"TotalBytesToReceive");
     }
 
     /**
@@ -490,14 +494,29 @@ namespace winrt::Assassin::implementation
         co_return FolderObject;
     }
 
-    /**
-     * Creates a new TransferManager object.
-     *
-     * @param EnableUINotify Enable the UI notify timer if true.
-     */
-    TransferManager::TransferManager(
-        bool EnableUINotify) :
-        m_EnableUINotify(EnableUINotify)
+    IAsyncAction TransferManager::RemoveTaskInternalAsync(
+        ITransferTask const Task)
+    {
+        if (!NAIsFinalTransferTaskStatus(Task.Status()))
+        {
+            Task.Cancel();
+        }
+
+        if (TransferTaskStatus::Completed != Task.Status())
+        {
+            IStorageFile SaveFile = co_await Task.SaveFile();
+            if (SaveFile)
+            {
+                co_await SaveFile.DeleteAsync(
+                    StorageDeleteOption::PermanentDelete);
+            }
+        }
+
+        this->m_TaskList.erase(Task.Guid());
+        this->m_TasksContainer.Values().Remove(Task.Guid());
+    }
+
+    fire_and_forget TransferManager::Initialize()
     {
         M2::AutoSRWExclusiveLock Lock(this->m_TaskListUpdateLock);
 
@@ -515,61 +534,70 @@ namespace winrt::Assassin::implementation
                 L"Tasks",
                 ApplicationDataCreateDisposition::Always);
 
-        M2::CThread([this]()
+        std::map<hstring, DownloadOperation> DownloadsList;
+
+        for (DownloadOperation Item
+            : co_await this->m_Downloader.GetCurrentDownloadsAsync())
         {
-            std::map<hstring, DownloadOperation> DownloadsList;
+            DownloadsList.insert(std::pair(to_hstring(Item.Guid()), Item));
+        }
 
-            for (DownloadOperation Item
-                : this->m_Downloader.GetCurrentDownloadsAsync().get())
+        for (IKeyValuePair<hstring, IInspectable> Download
+            : this->m_TasksContainer.Values())
+        {
+            ITransferTask Task = make<TransferTask>();
+
+            TransferTask& TaskInternal = *Task.try_as<TransferTask>();
+
+            TaskInternal.Guid(
+                Download.Key());
+            TaskInternal.TaskConfig(
+                Download.Value().try_as<ApplicationDataCompositeValue>());
+            TaskInternal.FutureAccessList(
+                this->m_FutureAccessList);
+
+            std::map<hstring, DownloadOperation>::iterator iterator =
+                DownloadsList.find(unbox_value_or<hstring>(
+                    TaskInternal.TaskConfig().Lookup(
+                        L"BackgroundTransferGuid"),
+                    hstring()));
+            if (DownloadsList.end() != iterator)
             {
-                DownloadsList.insert(std::pair(to_hstring(Item.Guid()), Item));
+                TaskInternal.Operation(iterator->second);
+
+                if (TransferTaskStatus::Running == TaskInternal.Status())
+                {
+                    TaskInternal.Operation().AttachAsync();
+                }
+            }
+            else
+            {
+                if (!NAIsFinalTransferTaskStatus(TaskInternal.Status()))
+                {
+                    TaskInternal.Status(TransferTaskStatus::Error);
+                }
             }
 
-            for (IKeyValuePair<hstring, IInspectable> Download
-                : this->m_TasksContainer.Values())
-            {
-                ITransferTask Task = make<TransferTask>();
-
-                TransferTask& TaskInternal = *Task.try_as<TransferTask>();
-
-                TaskInternal.Guid(
-                    Download.Key());
-                TaskInternal.TaskConfig(
-                    Download.Value().try_as<ApplicationDataCompositeValue>());
-                TaskInternal.FutureAccessList(
-                    this->m_FutureAccessList);
-
-                std::map<hstring, DownloadOperation>::iterator iterator =
-                    DownloadsList.find(unbox_value_or<hstring>(
-                        TaskInternal.TaskConfig().Lookup(
-                            L"BackgroundTransferGuid"),
-                        hstring()));
-                if (DownloadsList.end() != iterator)
-                {
-                    TaskInternal.Operation(iterator->second);
-
-                    if (TransferTaskStatus::Running == TaskInternal.Status())
-                    {
-                        TaskInternal.Operation().AttachAsync();
-                    }
-                }
-                else
-                {
-                    if (!NAIsFinalTransferTaskStatus(TaskInternal.Status()))
-                    {
-                        TaskInternal.Status(TransferTaskStatus::Error);
-                    }
-                }
-
-                this->m_TaskList.insert(std::pair(Task.Guid(), Task));
-            }
-        }).Wait();
+            this->m_TaskList.insert(std::pair(Task.Guid(), Task));
+        }
 
         using Windows::System::Threading::TimerElapsedHandler;
 
         this->m_NotifyTimer = ThreadPoolTimer::CreatePeriodicTimer(
             { this, &TransferManager::NotifyTimerTick },
             std::chrono::seconds(1));
+    }
+
+    /**
+     * Creates a new TransferManager object.
+     *
+     * @param EnableUINotify Enable the UI notify timer if true.
+     */
+    TransferManager::TransferManager(
+        bool EnableUINotify) :
+        m_EnableUINotify(EnableUINotify)
+    {
+        this->Initialize();
     }
 
     /**
@@ -693,7 +721,6 @@ namespace winrt::Assassin::implementation
         hstring const DesiredFileName,
         IStorageFolder const SaveFolder)
     {
-        //co_await resume_background();
 
         M2::AutoSRWExclusiveLock Lock(this->m_TaskListUpdateLock);
 
@@ -748,27 +775,9 @@ namespace winrt::Assassin::implementation
     IAsyncAction TransferManager::RemoveTaskAsync(
         ITransferTask const Task)
     {
-        //co_await resume_background();
-
         M2::AutoSRWExclusiveLock Lock(this->m_TaskListUpdateLock);
 
-        if (!NAIsFinalTransferTaskStatus(Task.Status()))
-        {
-            Task.Cancel();
-        }
-
-        if (TransferTaskStatus::Completed != Task.Status())
-        {
-            IStorageFile SaveFile = co_await Task.SaveFile();
-            if (SaveFile)
-            {
-                co_await SaveFile.DeleteAsync(
-                    StorageDeleteOption::PermanentDelete);
-            }
-        }
-
-        this->m_TaskList.erase(Task.Guid());
-        this->m_TasksContainer.Values().Remove(Task.Guid());
+        co_await this->RemoveTaskInternalAsync(Task);
 
         this->NotifyTaskListUpdated();
 
@@ -808,7 +817,7 @@ namespace winrt::Assassin::implementation
      */
     IAsyncAction TransferManager::ClearTaskListAsync()
     {
-        M2::AutoSRWSharedLock Lock(this->m_TaskListUpdateLock);
+        M2::AutoSRWExclusiveLock Lock(this->m_TaskListUpdateLock);
 
         std::vector<ITransferTask> NeedToRemove;
 
@@ -822,8 +831,13 @@ namespace winrt::Assassin::implementation
 
         for (auto& Task : NeedToRemove)
         {
-            co_await this->RemoveTaskAsync(Task);
+            co_await this->RemoveTaskInternalAsync(Task);
         }
+
+        this->NotifyTaskListUpdated();
+
+        // Asynchronous call return.
+        co_return;
     }
 
     /**

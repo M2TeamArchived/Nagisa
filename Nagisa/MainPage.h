@@ -17,7 +17,10 @@ namespace winrt::Nagisa::implementation
     using Assassin::TransferManager;
     using Assassin::ITransferTask;
     using Windows::Foundation::IAsyncOperation;
+    using Windows::UI::ViewManagement::ApplicationView;
+    using Windows::UI::ViewManagement::ApplicationViewTitleBar;
     using Windows::UI::ViewManagement::UISettings;
+    using Windows::UI::Xaml::Application;
     using Windows::UI::Xaml::RoutedEventArgs;
     using Windows::UI::Xaml::Controls::AutoSuggestBox;
     using Windows::UI::Xaml::Controls::AutoSuggestBoxQuerySubmittedEventArgs;
@@ -35,6 +38,8 @@ namespace winrt::Nagisa::implementation
     private:
         TransferManager m_TransferManager = nullptr;
         UISettings m_UISettings = nullptr;
+        Application m_CurrentApplication = nullptr;
+        ApplicationViewTitleBar m_ApplicationViewTitleBar = nullptr;
 
         IAsyncOperation<ContentDialogResult> ShowContentDialogAsync(
             ContentDialog const& Dialog);
@@ -43,6 +48,8 @@ namespace winrt::Nagisa::implementation
             IInspectable const& sender);
 
         void UpdateTitleBarColor();
+
+        void InitializeCustomTitleBar();
 
         void ColorValuesChanged(
             UISettings const& sender,

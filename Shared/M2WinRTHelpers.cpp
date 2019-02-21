@@ -111,7 +111,7 @@ winrt::hstring M2ConvertByteSizeToString(
 namespace M2
 {
     void NotifyPropertyChangedBase::RaisePropertyChanged(
-        winrt::hstring PropertyName)
+        std::wstring_view const& PropertyName)
     {
         this->m_PropertyChanged(
             *this, winrt::PropertyChangedEventArgs(PropertyName));

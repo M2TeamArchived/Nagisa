@@ -23,7 +23,10 @@ namespace winrt::Nagisa::implementation
 {
     MainPage::MainPage() :
         m_TransferManager(Assassin::TransferManager(true)),
-        m_UISettings(UISettings())
+        m_UISettings(UISettings()),
+        m_CurrentApplication(Application::Current()),
+        m_ApplicationViewTitleBar(
+            ApplicationView::GetForCurrentView().TitleBar())
     {
         InitializeComponent();
     }
@@ -50,9 +53,7 @@ namespace winrt::Nagisa::implementation
     ITransferTask MainPage::GetTransferTaskFromEventSender(
         IInspectable const& sender)
     {
-        using Windows::UI::Xaml::FrameworkElement;
-
-        return sender.try_as<FrameworkElement>(
+        return sender.try_as<Windows::UI::Xaml::FrameworkElement>(
             ).DataContext().try_as<ITransferTask>();
     }
 
@@ -60,31 +61,51 @@ namespace winrt::Nagisa::implementation
     {
         using Windows::UI::Color;
         using Windows::UI::Colors;
-        using Windows::UI::ViewManagement::ApplicationView;
-        using Windows::UI::ViewManagement::ApplicationViewTitleBar;
-        using Windows::UI::Xaml::Application;
-        using Windows::UI::Xaml::ApplicationTheme;
+        
+        Color ButtonForegroundColor =
+            (this->m_CurrentApplication.RequestedTheme()
+                != Windows::UI::Xaml::ApplicationTheme::Dark)
+            ? Colors::Black()
+            : Colors::White();
 
-        bool IsDarkMode =
-            Application::Current().RequestedTheme() == ApplicationTheme::Dark;
+        this->m_ApplicationViewTitleBar.ButtonForegroundColor(
+            ButtonForegroundColor);
+        this->m_ApplicationViewTitleBar.ButtonHoverForegroundColor(
+            ButtonForegroundColor); 
+        this->m_ApplicationViewTitleBar.ButtonPressedForegroundColor(
+            ButtonForegroundColor);
+    }
 
-        Color Black = Colors::Black();
+    void MainPage::InitializeCustomTitleBar()
+    {
+        using Windows::ApplicationModel::Core::CoreApplication;
+        using Windows::UI::Color;
+        using Windows::UI::Colors;
+        using Windows::UI::Xaml::Window;
+
+        // Extend main grid to titlebar
+        CoreApplication::GetCurrentView().TitleBar().ExtendViewIntoTitleBar(
+            true);
+
+        // Color settings.
         Color DarkGray = Colors::DarkGray();
         Color Transparent = Colors::Transparent();
-        Color White = Colors::White();
+        this->m_ApplicationViewTitleBar.ButtonBackgroundColor(
+            Transparent);
+        this->m_ApplicationViewTitleBar.ButtonHoverBackgroundColor(
+            DarkGray);
+        this->m_ApplicationViewTitleBar.ButtonInactiveBackgroundColor(
+            Transparent);
+        this->m_ApplicationViewTitleBar.ButtonInactiveForegroundColor(
+            DarkGray);
+        this->m_ApplicationViewTitleBar.ButtonPressedBackgroundColor(
+            DarkGray);
+        this->UpdateTitleBarColor();
+        this->m_UISettings.ColorValuesChanged(
+            { this, &MainPage::ColorValuesChanged });
 
-        ApplicationViewTitleBar titleBar =
-            ApplicationView::GetForCurrentView().TitleBar();
-
-        //Change titlebar button colors to match DimButton style
-        titleBar.ButtonBackgroundColor(Transparent);
-        titleBar.ButtonForegroundColor(IsDarkMode ? White : Black);
-        titleBar.ButtonHoverBackgroundColor(DarkGray);
-        titleBar.ButtonHoverForegroundColor(IsDarkMode ? White : Black);
-        titleBar.ButtonInactiveBackgroundColor(Transparent);
-        titleBar.ButtonInactiveForegroundColor(DarkGray);
-        titleBar.ButtonPressedBackgroundColor(DarkGray);
-        titleBar.ButtonPressedForegroundColor(IsDarkMode ? White : Black);
+        // Set real titlebar area
+        Window::Current().SetTitleBar(this->realTitle());
     }
 
     void MainPage::ColorValuesChanged(
@@ -108,24 +129,9 @@ namespace winrt::Nagisa::implementation
         UNREFERENCED_PARAMETER(sender);  // Unused parameter.
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
-        using Windows::ApplicationModel::Core::CoreApplication;
-        using Windows::UI::Colors;
-        using Windows::UI::Xaml::Media::SolidColorBrush; 
+        this->InitializeCustomTitleBar();
+
         using Windows::UI::Xaml::Visibility;
-        using Windows::UI::Xaml::Window;
-
-        // Extend main grid to titlebar
-        CoreApplication::GetCurrentView().TitleBar().ExtendViewIntoTitleBar(
-            true);
-
-        // Color settings.
-        this->UpdateTitleBarColor();
-        this->m_UISettings.ColorValuesChanged(
-            {this, &MainPage::ColorValuesChanged });
-        
-        // Set real titlebar area
-        Window::Current().SetTitleBar(this->realTitle());
-
         this->SearchAutoSuggestBox().Visibility(Visibility::Collapsed);
     }
 

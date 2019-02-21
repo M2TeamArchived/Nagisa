@@ -55,6 +55,20 @@ namespace winrt::Assassin::implementation
         ULONGLONG m_TickCount = 0;
         hstring m_Guid;
 
+        hstring ReadHString(
+            std::wstring_view const& KeyName) const;
+
+        uint64_t ReadUInt64(
+            std::wstring_view const& KeyName) const;
+
+        void WriteHString(
+            std::wstring_view const& KeyName,
+            hstring const& Value);
+
+        void WriteUInt64(
+            std::wstring_view const& KeyName,
+            uint64_t const& Value);
+
     public:
 
         DownloadOperation Operation() const;
@@ -192,6 +206,11 @@ namespace winrt::Assassin::implementation
 
         IAsyncOperation<IStorageFolder> GetFolderObjectInternal(
             hstring const& FolderStringKey);
+
+        IAsyncAction RemoveTaskInternalAsync(
+            ITransferTask const Task);
+
+        fire_and_forget Initialize();
 
     public:
         /**
