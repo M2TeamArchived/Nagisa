@@ -10,6 +10,8 @@
 
 namespace Assassin
 {
+    typedef Windows.UI.Xaml.Data.INotifyPropertyChanged INotifyPropertyChanged;
+
     enum TransferTaskStatus
     {
         Canceled = 0,
@@ -22,7 +24,7 @@ namespace Assassin
 
     [uuid(B70ACDED-7354-3082-BF73-D931D80C047B)]
     interface ITransferTask : IInspectable
-        requires Windows.UI.Xaml.Data.INotifyPropertyChanged
+        requires INotifyPropertyChanged
     {
         // The Guid string of the task.
         String Guid { get; };
