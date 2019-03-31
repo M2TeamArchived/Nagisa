@@ -325,7 +325,7 @@ namespace winrt::Assassin::implementation
         try
         {
             if (TransferTaskStatus::Running != this->Status())
-                throw;
+                return;
 
             if (this->m_Operation)
                 this->m_Operation.Pause();
@@ -344,7 +344,7 @@ namespace winrt::Assassin::implementation
         try
         {
             if (TransferTaskStatus::Paused != this->Status())
-                throw;
+                return;
 
             if (this->m_Operation)
             {
@@ -366,7 +366,7 @@ namespace winrt::Assassin::implementation
         try
         {
             if (NAIsFinalTransferTaskStatus(this->Status()))
-                throw;
+                return;
 
             if (this->m_Operation)
                 this->m_Operation.AttachAsync().Cancel();

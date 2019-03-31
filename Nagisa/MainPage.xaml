@@ -183,7 +183,7 @@
           <Grid Margin="8">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="44" />
-              <ColumnDefinition Width="*" MinWidth="160" />
+              <ColumnDefinition Width="*" />
               <ColumnDefinition Width="2*" />
               <ColumnDefinition Width="44" />
               <ColumnDefinition Width="44" />
