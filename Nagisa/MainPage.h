@@ -90,7 +90,7 @@ namespace winrt::Nagisa::implementation
         void CancelMenuItem_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
-        fire_and_forget RemoveMenuItem_Click(
+        void RemoveMenuItem_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
         fire_and_forget OpenFolderMenuItem_Click(
@@ -102,7 +102,7 @@ namespace winrt::Nagisa::implementation
         void PauseAllAppBarButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
-        fire_and_forget ClearListAppBarButton_Click(
+        void ClearListAppBarButton_Click(
             IInspectable const& sender,
             RoutedEventArgs const& e);
         void SearchAppBarButton_Click(

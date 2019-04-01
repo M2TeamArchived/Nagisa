@@ -20,6 +20,8 @@
 #include <winrt\Windows.Storage.AccessCache.h>
 #include <winrt\Windows.System.Threading.h>
 
+#include <queue>
+
 namespace winrt::Assassin::implementation
 {
     using Assassin::ITransferTask;
@@ -38,6 +40,17 @@ namespace winrt::Assassin::implementation
     using Windows::Storage::IStorageFile;
     using Windows::Storage::IStorageFolder;
     using Windows::System::Threading::ThreadPoolTimer;
+
+    enum class TransferManagerEvent : int32_t
+    {
+        UpdateTaskList,
+        UpdateSearchFilter,
+        AddTask,
+        RemoveTask,
+        ResumeAllTasks,
+        PauseAllTasks,
+        ClearTaskList
+    };
 
     bool NAIsFinalTransferTaskStatus(
         TransferTaskStatus Status) noexcept;
@@ -179,8 +192,8 @@ namespace winrt::Assassin::implementation
         BackgroundDownloader m_Downloader = nullptr;
         ThreadPoolTimer m_NotifyTimer = nullptr;
 
-        M2::CSRWLock m_TaskListUpdateLock;
-        std::map<hstring, ITransferTask> m_TaskList;
+        M2::CCriticalSection m_TaskListUpdateLock;
+        std::vector<ITransferTask> m_TaskList;
 
         ApplicationDataContainer m_RootContainer = nullptr;
         ApplicationDataContainer m_TasksContainer = nullptr;
@@ -191,8 +204,6 @@ namespace winrt::Assassin::implementation
         uint64_t m_TotalUploadBandwidth = 0;
 
         hstring m_SearchFilter;
-
-        void UpdateTransferTaskStatusWithoutLock();
 
         void NotifyTimerTick(
             ThreadPoolTimer const& source);
@@ -273,9 +284,8 @@ namespace winrt::Assassin::implementation
          * Removes a task to the task list.
          *
          * @param Task The task object.
-         * @return The asynchronous object used to wait.
          */
-        IAsyncAction RemoveTaskAsync(
+        void RemoveTask(
             ITransferTask const Task);
 
         /**
@@ -290,9 +300,8 @@ namespace winrt::Assassin::implementation
 
         /**
          * Clears the task list.
-         * @return The asynchronous object used to wait.
          */
-        IAsyncAction ClearTaskListAsync();
+        void ClearTaskList();
 
         /**
          * Set the default folder.

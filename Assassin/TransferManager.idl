@@ -19,7 +19,8 @@ namespace Assassin
         Error = 2,
         Paused = 3,
         Queued = 4,
-        Running = 5
+        Running = 5,
+        Removed = 6
     };
 
     [uuid(B70ACDED-7354-3082-BF73-D931D80C047B)]
@@ -127,9 +128,8 @@ namespace Assassin
          * Removes a task to the task list.
          *
          * @param Task The task object.
-         * @return The asynchronous object used to wait.
          */
-        Windows.Foundation.IAsyncAction RemoveTaskAsync(
+        void RemoveTask(
             ITransferTask Task);
 
         /**
@@ -144,9 +144,8 @@ namespace Assassin
 
         /**
          * Clears the task list.
-         * @return The asynchronous object used to wait.
          */
-        Windows.Foundation.IAsyncAction ClearTaskListAsync();
+        void ClearTaskList();
 
         /**
          * Set the default folder.

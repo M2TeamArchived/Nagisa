@@ -217,7 +217,7 @@ namespace winrt::Nagisa::implementation
         auto FileName = Task.FileName();
         auto SaveFolder = co_await Task.SaveFolder();
 
-        co_await this->m_TransferManager.RemoveTaskAsync(Task);
+        this->m_TransferManager.RemoveTask(Task);
 
         co_await this->m_TransferManager.AddTaskAsync(
             SourceUri,
@@ -252,13 +252,13 @@ namespace winrt::Nagisa::implementation
         this->GetTransferTaskFromEventSender(sender).Cancel();
     }
 
-    fire_and_forget MainPage::RemoveMenuItem_Click(
+    void MainPage::RemoveMenuItem_Click(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
-        co_await this->m_TransferManager.RemoveTaskAsync(
+        this->m_TransferManager.RemoveTask(
             this->GetTransferTaskFromEventSender(sender));
     }
 
@@ -307,14 +307,14 @@ namespace winrt::Nagisa::implementation
         this->m_TransferManager.PauseAllTasks();
     }
 
-    fire_and_forget MainPage::ClearListAppBarButton_Click(
+    void MainPage::ClearListAppBarButton_Click(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
         UNREFERENCED_PARAMETER(sender);  // Unused parameter.
         UNREFERENCED_PARAMETER(e);   // Unused parameter.
 
-        co_await this->m_TransferManager.ClearTaskListAsync();
+        this->m_TransferManager.ClearTaskList();
     }
 
     void MainPage::SearchAppBarButton_Click(
