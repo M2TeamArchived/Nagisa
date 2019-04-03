@@ -260,34 +260,41 @@ namespace winrt::Assassin::implementation
     // Gets the save file object which to download the file.
     IAsyncOperation<IStorageFile> TransferTask::SaveFile() const
     {
-        IStorageFile FileObject = nullptr;
-
         try
         {
+            IStorageFile FileObject = nullptr;
+
             IStorageFolder FolderObject = co_await this->SaveFolder();
             if (FolderObject)
                 FileObject = co_await FolderObject.GetFileAsync(this->FileName());
+
+            co_return FileObject;
         }
         catch (...)
         {
-
+            co_return nullptr;
         }
-
-        co_return FileObject;
     }
 
     // Gets the save folder object which to download the file. 
     IAsyncOperation<IStorageFolder> TransferTask::SaveFolder() const
     {
-        hstring FolderString = this->ReadHString(L"SaveFolder");
+        try
+        {
+            hstring FolderString = this->ReadHString(L"SaveFolder");
 
-        IStorageFolder FolderObject = nullptr;
+            IStorageFolder FolderObject = nullptr;
 
-        if (!FolderString.empty())
-            FolderObject = co_await this->FutureAccessList().GetFolderAsync(
-                FolderString);
-            
-        co_return FolderObject;
+            if (!FolderString.empty())
+                FolderObject = co_await this->FutureAccessList().GetFolderAsync(
+                    FolderString);
+
+            co_return FolderObject;
+        }
+        catch (...)
+        {
+            co_return nullptr;
+        }
     }
 
     // Gets the current status of the task.
@@ -385,7 +392,7 @@ namespace winrt::Assassin::implementation
         }
     }
 
-    void TransferManager::NotifyTimerTick(
+    fire_and_forget TransferManager::NotifyTimerTick(
         ThreadPoolTimer const& source)
     {
         UNREFERENCED_PARAMETER(source);  // Unused parameter.
@@ -406,7 +413,7 @@ namespace winrt::Assassin::implementation
             if (TransferTaskStatus::Removed == TaskInternal.Status())
             {
                 TaskListChanged = true;
-                this->RemoveTaskInternalAsync(Task).get();
+                co_await this->RemoveTaskInternalAsync(Task);
                 this->m_TaskList.erase(it);
                 continue;
             }
@@ -440,6 +447,8 @@ namespace winrt::Assassin::implementation
         {
             this->NotifyTaskListUpdated();
         }
+
+        co_return;
     }
 
     void TransferManager::CreateBackgroundWorker()

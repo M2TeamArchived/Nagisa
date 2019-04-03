@@ -205,7 +205,7 @@ namespace winrt::Assassin::implementation
 
         hstring m_SearchFilter;
 
-        void NotifyTimerTick(
+        fire_and_forget NotifyTimerTick(
             ThreadPoolTimer const& source);
 
         void CreateBackgroundWorker();
