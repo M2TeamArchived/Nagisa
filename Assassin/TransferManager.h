@@ -213,15 +213,15 @@ namespace winrt::Assassin::implementation
         void LastusedFolder(
             IStorageFolder const& value);
 
-        void NotifyTaskListUpdated();
-
         IAsyncOperation<IStorageFolder> GetFolderObjectInternal(
             hstring const& FolderStringKey);
 
-        IAsyncAction RemoveTaskInternalAsync(
-            ITransferTask const Task);
-
         fire_and_forget Initialize();
+
+        bool TaskListChangedSignal = false;
+        bool ResumeAllTasksSignal = false;
+        bool PauseAllTasksSignal = false;
+        bool ClearTaskListSignal = false;
 
     public:
         /**

@@ -400,8 +400,6 @@ namespace winrt::Assassin::implementation
 
         M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateLock);
 
-        bool TaskListChanged = false;
-
         this->m_TotalDownloadBandwidth = 0;
         this->m_TotalUploadBandwidth = 0;
 
@@ -411,13 +409,41 @@ namespace winrt::Assassin::implementation
 
             TransferTask& TaskInternal = *Task.try_as<TransferTask>();
 
-            if (TransferTaskStatus::Removed == TaskInternal.Status())
+            if (this->ClearTaskListSignal)
             {
-                TaskListChanged = true;
-                co_await this->RemoveTaskInternalAsync(Task);
+                if (NAIsFinalTransferTaskStatus(TaskInternal.Status()))
+                    TaskInternal.Status(TransferTaskStatus::Removed);
+            }
+
+            TransferTaskStatus RemovedTaskStatus = TaskInternal.Status();
+            if (TransferTaskStatus::Removed == RemovedTaskStatus)
+            {
+                this->TaskListChangedSignal = true;
+
+                if (!NAIsFinalTransferTaskStatus(RemovedTaskStatus))
+                    TaskInternal.Cancel();
+
+                if (TransferTaskStatus::Completed != RemovedTaskStatus)
+                {
+                    IStorageFile SaveFile = co_await TaskInternal.SaveFile();
+                    if (SaveFile)
+                    {
+                        co_await SaveFile.DeleteAsync(
+                            StorageDeleteOption::PermanentDelete);
+                    }
+                }
+
+                this->m_TasksContainer.Values().Remove(TaskInternal.Guid());
+
                 this->m_TaskList.erase(it);
                 continue;
             }
+
+            if (this->ResumeAllTasksSignal)
+                TaskInternal.Resume();
+
+            if (this->PauseAllTasksSignal)
+                TaskInternal.Pause();
 
             TaskInternal.UpdateChangedProperties();
 
@@ -432,6 +458,16 @@ namespace winrt::Assassin::implementation
             ++it;
         }
 
+        if (this->ResumeAllTasksSignal)
+            this->ResumeAllTasksSignal = false;
+
+        if (this->PauseAllTasksSignal)
+            this->PauseAllTasksSignal = false;
+
+        if (this->ClearTaskListSignal)
+            this->ClearTaskListSignal = false;
+
+
         if (this->m_EnableUINotify)
         {
             auto Operation = M2ExecuteOnUIThread([this]()
@@ -441,13 +477,14 @@ namespace winrt::Assassin::implementation
 
                     this->RaisePropertyChanged(L"TotalDownloadBandwidth");
                     this->RaisePropertyChanged(L"TotalUploadBandwidth");
+
+                    if (this->TaskListChangedSignal)
+                    {
+                        this->RaisePropertyChanged(L"Tasks");
+                        this->TaskListChangedSignal = false;
+                    }
                 });
             UNREFERENCED_PARAMETER(Operation);
-        }
-
-        if (TaskListChanged)
-        {
-            this->NotifyTaskListUpdated();
         }
 
         co_return;
@@ -497,18 +534,6 @@ namespace winrt::Assassin::implementation
         }
     }
 
-    void TransferManager::NotifyTaskListUpdated()
-    {
-        if (this->m_EnableUINotify)
-        {
-            auto Operation = M2ExecuteOnUIThread([this]()
-                {
-                    this->RaisePropertyChanged(L"Tasks");
-                });
-            UNREFERENCED_PARAMETER(Operation);
-        }
-    }
-
     IAsyncOperation<IStorageFolder> TransferManager::GetFolderObjectInternal(
         hstring const& FolderStringKey)
     {
@@ -523,27 +548,6 @@ namespace winrt::Assassin::implementation
                 FolderString);
 
         co_return FolderObject;
-    }
-
-    IAsyncAction TransferManager::RemoveTaskInternalAsync(
-        ITransferTask const Task)
-    {
-        if (!NAIsFinalTransferTaskStatus(Task.Status()))
-        {
-            Task.Cancel();
-        }
-
-        if (TransferTaskStatus::Completed != Task.Status())
-        {
-            IStorageFile SaveFile = co_await Task.SaveFile();
-            if (SaveFile)
-            {
-                co_await SaveFile.DeleteAsync(
-                    StorageDeleteOption::PermanentDelete);
-            }
-        }
-
-        this->m_TasksContainer.Values().Remove(Task.Guid());
     }
 
     fire_and_forget TransferManager::Initialize()
@@ -612,11 +616,13 @@ namespace winrt::Assassin::implementation
             this->m_TaskList.push_back(Task);
         }
 
+        this->TaskListChangedSignal = true;
+
         using Windows::System::Threading::TimerElapsedHandler;
 
         this->m_NotifyTimer = ThreadPoolTimer::CreatePeriodicTimer(
             { this, &TransferManager::NotifyTimerTick },
-            std::chrono::seconds(1));
+            std::chrono::milliseconds(500));
     }
 
     /**
@@ -670,7 +676,7 @@ namespace winrt::Assassin::implementation
     {
         this->m_SearchFilter = value;
 
-        this->NotifyTaskListUpdated();
+        this->TaskListChangedSignal = true;
     }
 
     // Gets the last used folder.
@@ -782,7 +788,7 @@ namespace winrt::Assassin::implementation
         auto Operation = TaskInternal.Operation().StartAsync();
         UNREFERENCED_PARAMETER(Operation);
 
-        this->NotifyTaskListUpdated();
+        this->TaskListChangedSignal = true;
 
         // Asynchronous call return.
         co_return;
@@ -809,10 +815,8 @@ namespace winrt::Assassin::implementation
     {
         M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateLock);
 
-        for (auto& Task : this->m_TaskList)
-        {
-            Task.Resume();
-        }
+        this->PauseAllTasksSignal = false;
+        this->ResumeAllTasksSignal = true;
     }
 
     /**
@@ -822,10 +826,8 @@ namespace winrt::Assassin::implementation
     {
         M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateLock);
 
-        for (auto& Task : this->m_TaskList)
-        {
-            Task.Pause();
-        }
+        this->ResumeAllTasksSignal = false;
+        this->PauseAllTasksSignal = true;
     }
 
     /**
@@ -835,15 +837,7 @@ namespace winrt::Assassin::implementation
     {
         M2::AutoCriticalSectionLock Lock(this->m_TaskListUpdateLock);
 
-        for (auto& Task : this->m_TaskList)
-        {
-            TransferTask& TaskInternal = *Task.try_as<TransferTask>();
-            
-            if (NAIsFinalTransferTaskStatus(TaskInternal.Status()))
-            {
-                TaskInternal.Status(TransferTaskStatus::Removed);
-            }
-        }
+        this->ClearTaskListSignal = true;
     }
 
     /**
