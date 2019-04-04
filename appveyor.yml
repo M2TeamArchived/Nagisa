@@ -1,0 +1,13 @@
+﻿version: CI Build {Build}
+image: Visual Studio 2019 Preview
+configuration:
+- Debug
+- Release
+platform:
+- x86
+- x64
+- ARM
+- ARM64
+build:
+  project: Nagisa.sln
+  verbosity: normal

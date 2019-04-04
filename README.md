@@ -1,10 +1,11 @@
 ﻿![Logo](Logo.png)
 # Nagisa - An open source file transfer utility on Universal Windows Platform.
- 
-[![release.badge]][release.link]
-[![latestdownloads.badge]][latestdownloads.link]
-[![totaldownloads.badge]][totaldownloads.link]
-[![license.badge]][license.link]
+
+[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/github//Project-Nagisa/Nagisa?branch=master&svg=true)](https://ci.appveyor.com/project/MouriNaruto/nagisa/branch/master)
+[![Latest release](https://img.shields.io/github/release/Project-Nagisa/Nagisa.svg)](https://github.com/Project-Nagisa/Nagisa/releases/latest)
+[![Latest release downloads](https://img.shields.io/github/downloads/Project-Nagisa/Nagisa/latest/total.svg)](https://github.com/Project-Nagisa/Nagisa/releases/latest)
+[![Total downloads](https://img.shields.io/github/downloads/Project-Nagisa/Nagisa/total.svg)](https://github.com/Project-Nagisa/Nagisa/releases)
+[![License](https://img.shields.io/github/license/Project-Nagisa/Nagisa.svg)](LICENSE)
 
 ![Screenshot](Screenshot.png)
 
@@ -74,12 +75,3 @@ License. For more information, please read [Nagisa's License](LICENSE).
 - [Nagisa's Windows Store](https://www.microsoft.com/store/apps/9NFW53N9MFJR)
 - [Nagisa's Code of Conduct](CODE_OF_CONDUCT.md)
 - [Contributing to Nagisa](CONTRIBUTING.md)
-
-[release.badge]: https://img.shields.io/github/release/Project-Nagisa/Nagisa.svg
-[release.link]: https://github.com/Project-Nagisa/Nagisa/releases/latest
-[latestdownloads.badge]: https://img.shields.io/github/downloads/Project-Nagisa/Nagisa/latest/total.svg
-[latestdownloads.link]: https://github.com/Project-Nagisa/Nagisa/releases/latest
-[totaldownloads.badge]: https://img.shields.io/github/downloads/Project-Nagisa/Nagisa/total.svg
-[totaldownloads.link]: https://github.com/Project-Nagisa/Nagisa/releases
-[license.badge]: https://img.shields.io/github/license/Project-Nagisa/Nagisa.svg
-[license.link]: LICENSE
