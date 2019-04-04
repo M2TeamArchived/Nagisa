@@ -321,7 +321,8 @@ namespace M2
             LeaveCriticalSection(&this->m_CriticalSection);
         }
 
-        _Acquires_lock_(m_CriticalSection) bool TryLock()
+        _When_(return, _Acquires_exclusive_lock_(m_CriticalSection))
+            bool TryLock()
         {
             return TryEnterCriticalSection(&this->m_CriticalSection);
         }
@@ -438,14 +439,14 @@ namespace M2
         CSRWLock* m_SRWLock;
 
     public:
-        _Acquires_lock_(m_pCriticalSection) AutoSRWExclusiveLock(
+        _Acquires_lock_(m_SRWLock) AutoSRWExclusiveLock(
             CSRWLock& SRWLock) :
             m_SRWLock(&SRWLock)
         {
             m_SRWLock->ExclusiveLock();
         }
 
-        _Releases_lock_(m_pCriticalSection) ~AutoSRWExclusiveLock()
+        _Releases_lock_(m_SRWLock) ~AutoSRWExclusiveLock()
         {
             m_SRWLock->ExclusiveUnlock();
         }
@@ -464,14 +465,14 @@ namespace M2
         bool m_IsLocked = false;
 
     public:
-        _Acquires_lock_(m_pCriticalSection) AutoTrySRWExclusiveLock(
+        _Acquires_lock_(m_SRWLock) AutoTrySRWExclusiveLock(
             CSRWLock& SRWLock) :
             m_SRWLock(&SRWLock)
         {
             this->m_IsLocked = m_SRWLock->TryExclusiveLock();
         }
 
-        _Releases_lock_(m_pCriticalSection) ~AutoTrySRWExclusiveLock()
+        _Releases_lock_(m_SRWLock) ~AutoTrySRWExclusiveLock()
         {
             m_SRWLock->ExclusiveUnlock();
         }
@@ -494,14 +495,14 @@ namespace M2
         CSRWLock* m_SRWLock;
 
     public:
-        _Acquires_lock_(m_pCriticalSection) AutoSRWSharedLock(
+        _Acquires_lock_(m_SRWLock) AutoSRWSharedLock(
             CSRWLock& SRWLock) :
             m_SRWLock(&SRWLock)
         {
             m_SRWLock->SharedLock();
         }
 
-        _Releases_lock_(m_pCriticalSection) ~AutoSRWSharedLock()
+        _Releases_lock_(m_SRWLock) ~AutoSRWSharedLock()
         {
             m_SRWLock->SharedUnlock();
         }
@@ -520,14 +521,14 @@ namespace M2
         bool m_IsLocked = false;
 
     public:
-        _Acquires_lock_(m_pCriticalSection) AutoTrySRWSharedLock(
+        _Acquires_lock_(m_SRWLock) AutoTrySRWSharedLock(
             CSRWLock& SRWLock) :
             m_SRWLock(&SRWLock)
         {
             this->m_IsLocked = m_SRWLock->TrySharedLock();
         }
 
-        _Releases_lock_(m_pCriticalSection) ~AutoTrySRWSharedLock()
+        _Releases_lock_(m_SRWLock) ~AutoTrySRWSharedLock()
         {
             m_SRWLock->SharedUnlock();
         }
@@ -653,7 +654,7 @@ std::string M2MakeUTF8String(const std::wstring& UTF16String);
  * @return The calling thread's last-error code which is converted to an
  *         HRESULT value.
  */
-HRESULT M2GetLastError();
+HRESULT M2GetLastHRESULTError();
 
 /**
  * Retrieves the calling thread's last-error code value if you can be sure that
@@ -690,19 +691,35 @@ HRESULT M2GetLastHRESULTErrorKnownFailedCall();
  *                   in the low-order word; the high-order word must be zero.
  * @return HRESULT. If the function succeeds, the return value is S_OK.
  */
+HRESULT M2GetProcAddress(
+    _Out_ FARPROC* lpProcAddress,
+    _In_ HMODULE hModule,
+    _In_ LPCSTR lpProcName);
+
+/**
+ * Retrieves the address of an exported function or variable from the specified
+ * dynamic-link library (DLL).
+ *
+ * @param lpProcAddress The address of the exported function or variable.
+ * @param hModule A handle to the DLL module that contains the function or
+ *                variable. The LoadLibrary, LoadLibraryEx, LoadPackagedLibrary
+ *                or GetModuleHandle function returns this handle. This
+ *                function does not retrieve addresses from modules that were
+ *                loaded using the LOAD_LIBRARY_AS_DATAFILE flag. For more
+ *                information, see LoadLibraryEx.
+ * @param lpProcName The function or variable name, or the function's ordinal
+ *                   value. If this parameter is an ordinal value, it must be
+ *                   in the low-order word; the high-order word must be zero.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ */
 template<typename ProcedureType>
 inline HRESULT M2GetProcAddress(
     _Out_ ProcedureType& lpProcAddress,
     _In_ HMODULE hModule,
     _In_ LPCSTR lpProcName)
 {
-    HRESULT M2GetProcAddress(
-        _Out_ FARPROC& lpProcAddress,
-        _In_ HMODULE hModule,
-        _In_ LPCSTR lpProcName);
-
     return M2GetProcAddress(
-        reinterpret_cast<FARPROC&>(lpProcAddress), hModule, lpProcName);
+        reinterpret_cast<FARPROC*>(&lpProcAddress), hModule, lpProcName);
 }
 
 /**
@@ -866,5 +883,265 @@ HRESULT M2GetFileAllocationSize(
 HRESULT M2GetFileSize(
     _In_ HANDLE FileHandle,
     _Out_ PULONGLONG FileSize);
+
+/**
+ * Enables or disables privileges in the specified access token. Enabling or
+ * disabling privileges in an access token requires TOKEN_ADJUST_PRIVILEGES
+ * access.
+ *
+ * @param TokenHandle A handle to the access token that contains the privileges
+ *                    to be modified. The handle must have
+ *                    TOKEN_ADJUST_PRIVILEGES access to the token. If the
+ *                    PreviousState parameter is not NULL, the handle must also
+ *                    have TOKEN_QUERY access.
+ * @param DisableAllPrivileges Specifies whether the function disables all of
+ *                             the token's privileges. If this value is TRUE,
+ *                             the function disables all privileges and ignores
+ *                             the NewState parameter. If it is FALSE, the
+ *                             function modifies privileges based on the
+ *                             information pointed to by the NewState
+ *                             parameter.
+ * @param NewState A pointer to a TOKEN_PRIVILEGES structure that specifies an
+ *                 array of privileges and their attributes. If
+ *                 DisableAllPrivileges is TRUE, the function ignores this
+ *                 parameter.
+ * @param BufferLength Specifies the size, in bytes, of the buffer pointed to
+ *                     by the PreviousState parameter. This parameter can be
+ *                     zero if the PreviousState parameter is NULL.
+ * @param PreviousState A pointer to a buffer that the function fills with a
+ *                      TOKEN_PRIVILEGES structure that contains the previous
+ *                      state of any privileges that the function modifies.
+ *                      This parameter can be NULL.
+ * @param ReturnLength A pointer to a variable that receives the required size,
+ *                     in bytes, of the buffer pointed to by the PreviousState
+ *                     parameter. This parameter can be NULL if PreviousState
+ *                     is NULL.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ * @remark For more information, see AdjustTokenPrivileges.
+ */
+HRESULT M2AdjustTokenPrivileges(
+    _In_ HANDLE TokenHandle,
+    _In_ BOOL DisableAllPrivileges,
+    _In_opt_ PTOKEN_PRIVILEGES NewState,
+    _In_ DWORD BufferLength,
+    _Out_opt_ PTOKEN_PRIVILEGES PreviousState,
+    _Out_opt_ PDWORD ReturnLength);
+
+/**
+ * The source type of access token associated with a process.
+ */
+typedef enum _M2_PROCESS_ACCESS_TOKEN_SOURCE_TYPE
+{
+    Current,
+    Handle,
+    ProcessId
+} M2_PROCESS_TOKEN_SOURCE_TYPE, *PM2_PROCESS_TOKEN_SOURCE_TYPE;
+
+/**
+ * The source information of access token associated with a process.
+ */
+typedef struct _M2_PROCESS_ACCESS_TOKEN_SOURCE
+{
+    M2_PROCESS_TOKEN_SOURCE_TYPE Type;
+
+    // When Type == M2_PROCESS_ACCESS_TOKEN_SOURCE::Handle.
+    HANDLE ProcessHandle;
+
+    // When Type == M2_PROCESS_ACCESS_TOKEN_SOURCE::PID.
+    DWORD ProcessId;
+
+} M2_PROCESS_ACCESS_TOKEN_SOURCE, *PM2_PROCESS_ACCESS_TOKEN_SOURCE;
+
+/**
+ * Opens the access token associated with a process.
+ *
+ * @param TokenHandle A pointer to a handle that identifies the newly opened
+ *                    access token when the function returns.
+ * @param TokenSource The source information of access token associated with a
+ *                    process.
+ * @param DesiredAccess Specifies an access mask that specifies the requested
+ *                      types of access to the access token. These requested
+ *                      access types are compared with the discretionary access
+ *                      control list (DACL) of the token to determine which
+ *                      accesses are granted or denied.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ */
+HRESULT M2OpenProcessToken(
+    _Out_ PHANDLE TokenHandle,
+    _In_ PM2_PROCESS_ACCESS_TOKEN_SOURCE TokenSource,
+    _In_ DWORD DesiredAccess);
+
+/**
+ * Allocates a block of memory from the default heap of the calling process.
+ * The allocated memory will be initialized to zero. The allocated memory is
+ * not movable.
+ *
+ * @param AllocatedMemoryBlock A pointer to the allocated memory block.
+ * @param MemoryBlockSize The number of bytes to be allocated.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ */
+HRESULT M2AllocMemory(
+    _Out_ PVOID* AllocatedMemoryBlock,
+    _In_ SIZE_T MemoryBlockSize);
+
+/**
+ * Reallocates a block of memory from the default heap of the calling process.
+ * If the reallocation request is for a larger size, the additional region of
+ * memory beyond the original size be initialized to zero. This function
+ * enables you to resize a memory block and change other memory block
+ * properties. The allocated memory is not movable.
+ *
+ * @param NewAllocatedMemoryBlock A pointer to the allocated memory block.
+ * @param OldAllocatedMemoryBlock A pointer to the block of memory that the
+ *                                function reallocates. This pointer is
+ *                                returned by an earlier call to the
+ *                                M2AllocMemory or M2ReAllocMemory function.
+ * @param NewMemoryBlockSize The new size of the memory block, in bytes. A
+ *                           memory block's size can be increased or decreased
+ *                           by using this function.
+ * @return HRESULT. If the function succeeds, the return value is S_OK. If the
+ *         function fails, the original memory is not freed, and the original
+ *         handle and pointer are still valid.
+ */
+HRESULT M2ReAllocMemory(
+    _Out_ PVOID* NewAllocatedMemoryBlock,
+    _In_ PVOID OldAllocatedMemoryBlock,
+    _In_ SIZE_T NewMemoryBlockSize);
+
+/**
+ * Frees a memory block allocated from a heap by the M2AllocMemory and
+ * M2ReAllocMemory function.
+ *
+ * @param AllocatedMemoryBlock A pointer to the memory block to be freed. This
+ * pointer is returned by the M2AllocMemory or M2ReAllocMemory function. If
+ * this pointer is nullptr, the behavior is undefined.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ */
+HRESULT M2FreeMemory(
+    _In_ PVOID AllocatedMemoryBlock);
+
+namespace M2
+{
+    /**
+     * The handle definer for memory block allocated by the M2AllocMemory and
+     * M2ReAllocMemory function..
+     */
+#pragma region CM2Memory
+
+    template<typename TMemory>
+    struct CM2MemoryDefiner
+    {
+        static inline TMemory GetInvalidValue()
+        {
+            return nullptr;
+        }
+
+        static inline void Close(TMemory Object)
+        {
+            M2FreeMemory(Object);
+        }
+    };
+
+    template<typename TMemoryBlock>
+    class CM2Memory :
+        public CObject<TMemoryBlock, CM2MemoryDefiner<TMemoryBlock>>
+    {
+
+    };
+
+#pragma endregion
+}
+
+/**
+ * Retrieves a specified type of information about an access token. The calling
+ * process must have appropriate access rights to obtain the information.
+ *
+ * @param TokenHandle A handle to an access token from which information is
+ *                    retrieved.
+ * @param TokenInformationClass Specifies a value from the
+ *                              TOKEN_INFORMATION_CLASS enumerated type to
+ *                              identify the type of information the function
+ *                              retrieves.
+ * @param TokenInformation A pointer to a buffer the function fills with the
+ *                         requested information.
+ * @param TokenInformationLength Specifies the size, in bytes, of the buffer
+ *                               pointed to by the TokenInformation parameter.
+ * @param ReturnLength A pointer to a variable that receives the number of
+ *                     bytes needed for the buffer pointed to by the
+ *                     TokenInformation parameter.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ * @remark For more information, see GetTokenInformation.
+ */
+HRESULT M2GetTokenInformation(
+    _In_ HANDLE TokenHandle,
+    _In_ TOKEN_INFORMATION_CLASS TokenInformationClass,
+    _Out_opt_ LPVOID TokenInformation,
+    _In_ DWORD TokenInformationLength,
+    _Out_ PDWORD ReturnLength);
+
+/**
+ * Retrieves a specified type of information about an access token. The calling
+ * process must have appropriate access rights to obtain the information.
+ *
+ * @param OutputInformation A pointer to a buffer the function fills with the
+ *                          requested information. When you have finished using
+ *                          the information, free it by calling the
+ *                          M2FreeMemory function. You should also set the
+ *                          pointer to NULL.
+ * @param TokenHandle A handle to an access token from which information is
+ *                    retrieved.
+ * @param TokenInformationClass Specifies a value from the
+ *                              TOKEN_INFORMATION_CLASS enumerated type to
+ *                              identify the type of information the function
+ *                              retrieves.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ * @remark For more information, see GetTokenInformation.
+ */
+HRESULT M2GetTokenInformation(
+    _Out_ PVOID* OutputInformation,
+    _In_ HANDLE TokenHandle,
+    _In_ TOKEN_INFORMATION_CLASS TokenInformationClass);
+
+/**
+ * Retrieves a specified type of information about an access token. The calling
+ * process must have appropriate access rights to obtain the information.
+ *
+ * @param OutputInformation A pointer to a buffer the function fills with the
+ *                          requested information. When you have finished using
+ *                          the information, free it by calling the
+ *                          M2FreeMemory function. You should also set the
+ *                          pointer to NULL.
+ * @param TokenHandle A handle to an access token from which information is
+ *                    retrieved.
+ * @param TokenInformationClass Specifies a value from the
+ *                              TOKEN_INFORMATION_CLASS enumerated type to
+ *                              identify the type of information the function
+ *                              retrieves.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ * @remark For more information, see GetTokenInformation.
+ */
+template<typename InformationType>
+HRESULT M2GetTokenInformation(
+    _Out_ InformationType& OutputInformation,
+    _In_ HANDLE TokenHandle,
+    _In_ TOKEN_INFORMATION_CLASS TokenInformationClass)
+{
+    return M2GetTokenInformation(
+        reinterpret_cast<PVOID*>(&OutputInformation),
+        TokenHandle,
+        TokenInformationClass);
+}
+
+/**
+ * Expands environment-variable strings and replaces them with the values
+ * defined for the current user.
+ *
+ * @param ExpandedString The expanded string.
+ * @param VariableName The environment-variable string you need to expand.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ */
+HRESULT M2ExpandEnvironmentStrings(
+    std::wstring& ExpandedString,
+    const std::wstring& VariableName);
 
 #endif // _M2_BASE_HELPERS_
