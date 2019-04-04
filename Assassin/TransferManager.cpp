@@ -364,7 +364,8 @@ namespace winrt::Assassin::implementation
             if (this->m_Operation)
             {
                 this->m_Operation.Resume();
-                this->m_Operation.AttachAsync();
+                auto Operation = this->m_Operation.AttachAsync();
+                UNREFERENCED_PARAMETER(Operation);
             }
         }
         catch (...)
@@ -433,14 +434,15 @@ namespace winrt::Assassin::implementation
 
         if (this->m_EnableUINotify)
         {
-            M2ExecuteOnUIThread([this]()
-            {
-                for (auto& Task : this->m_TaskList)
-                    Task.try_as<TransferTask>()->NotifyPropertyChanged();
+            auto Operation = M2ExecuteOnUIThread([this]()
+                {
+                    for (auto& Task : this->m_TaskList)
+                        Task.try_as<TransferTask>()->NotifyPropertyChanged();
 
-                this->RaisePropertyChanged(L"TotalDownloadBandwidth");
-                this->RaisePropertyChanged(L"TotalUploadBandwidth");
-            });
+                    this->RaisePropertyChanged(L"TotalDownloadBandwidth");
+                    this->RaisePropertyChanged(L"TotalUploadBandwidth");
+                });
+            UNREFERENCED_PARAMETER(Operation);
         }
 
         if (TaskListChanged)
@@ -499,10 +501,11 @@ namespace winrt::Assassin::implementation
     {
         if (this->m_EnableUINotify)
         {
-            M2ExecuteOnUIThread([this]()
-            {
-                this->RaisePropertyChanged(L"Tasks");
-            });
+            auto Operation = M2ExecuteOnUIThread([this]()
+                {
+                    this->RaisePropertyChanged(L"Tasks");
+                });
+            UNREFERENCED_PARAMETER(Operation);
         }
     }
 
@@ -594,7 +597,8 @@ namespace winrt::Assassin::implementation
 
                 if (TransferTaskStatus::Running == TaskInternal.Status())
                 {
-                    TaskInternal.Operation().AttachAsync();
+                    auto Operation = TaskInternal.Operation().AttachAsync();
+                    UNREFERENCED_PARAMETER(Operation);
                 }
             }
             else
@@ -775,7 +779,8 @@ namespace winrt::Assassin::implementation
 
         this->m_TaskList.push_back(Task);
 
-        TaskInternal.Operation().StartAsync();
+        auto Operation = TaskInternal.Operation().StartAsync();
+        UNREFERENCED_PARAMETER(Operation);
 
         this->NotifyTaskListUpdated();
 
