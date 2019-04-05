@@ -1,15 +1,12 @@
-﻿version: CI Build {Build}
+version: CI Build {Build}
 image: Visual Studio 2017
 configuration:
 - Debug
 - Release
-platform:
-- x86
-- x64
-- ARM
-- ARM64
 before_build:
 - cmd: nuget restore
 build:
   project: Nagisa.sln
   verbosity: normal
+artifacts:
+- path: Output\AppPackage
