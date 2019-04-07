@@ -192,7 +192,7 @@ namespace winrt::Assassin::implementation
         BackgroundDownloader m_Downloader = nullptr;
         ThreadPoolTimer m_NotifyTimer = nullptr;
 
-        M2::CCriticalSection m_TaskListUpdateLock;
+        M2::CSRWLock m_TaskListUpdateLock;
         std::vector<ITransferTask> m_TaskList;
 
         ApplicationDataContainer m_RootContainer = nullptr;
