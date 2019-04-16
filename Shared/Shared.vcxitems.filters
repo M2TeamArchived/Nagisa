@@ -2,33 +2,33 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)NagisaVersion.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)M2BaseHelpers.h">
-      <Filter>M2BaseHelpers</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)M2WinRTHelpers.h">
       <Filter>M2WinRTHelpers</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)M2BindableVectorView.h">
       <Filter>M2BindableVectorView</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)M2WindowsHelpers.h">
+      <Filter>M2WindowsHelpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)M2BaseHelpers.cpp">
-      <Filter>M2BaseHelpers</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)M2WinRTHelpers.cpp">
       <Filter>M2WinRTHelpers</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)M2WindowsHelpers.cpp">
+      <Filter>M2WindowsHelpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="M2BaseHelpers">
-      <UniqueIdentifier>{6af92f5b-dad7-493f-afcc-d5e77843041d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="M2WinRTHelpers">
       <UniqueIdentifier>{b3b1bee4-4092-4f48-9dae-bf4e2e7d1681}</UniqueIdentifier>
     </Filter>
     <Filter Include="M2BindableVectorView">
       <UniqueIdentifier>{78afae1a-9360-4efe-8955-fb0ec1074064}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="M2WindowsHelpers">
+      <UniqueIdentifier>{4fdbc2ed-b285-4a18-b26f-6030f7441e43}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
