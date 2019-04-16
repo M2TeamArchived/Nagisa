@@ -12,4 +12,5 @@
 
 #include "NagisaVersion.h"
 
-#include "M2WinRTHelpers.h"
+#include <winrt\Windows.Foundation.h>
+#include "M2WindowsHelpers.h"

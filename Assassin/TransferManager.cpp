@@ -11,8 +11,6 @@
 #include "pch.h"
 #include "TransferManager.h"
 
-#include "M2BindableVectorView.h"
-
 namespace winrt::Assassin::implementation
 {
     using Windows::Foundation::Collections::IKeyValuePair;

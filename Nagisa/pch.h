@@ -29,6 +29,6 @@
 
 #include "winrt\Assassin.h"
 
-#include "M2WinRTHelpers.h"
+#include "M2WindowsHelpers.h"
 
 #include "CustomConverter.h"
