@@ -15,6 +15,10 @@
 
 #include <Windows.h>
 
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
+#include <ShellScalingApi.h>
+#endif
+
 #include <map>
 #include <memory>
 #include <string>
@@ -1244,6 +1248,21 @@ HRESULT M2CoCreateInstance(
     _In_ LPCWSTR lpszIID,
     _Out_ LPVOID* ppv);
 
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
+
+/**
+ * Determines whether the interface id have the correct interface name.
+ *
+ * @param InterfaceID A pointer to the string representation of the IID.
+ * @param InterfaceName A pointer to the interface name string.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ */
+HRESULT M2CoCheckInterfaceName(
+    _In_ LPCWSTR InterfaceID,
+    _In_ LPCWSTR InterfaceName);
+
+#endif
+
 #ifdef CPPWINRT_VERSION
 
 /**
@@ -1575,6 +1594,28 @@ HRESULT M2LoadResource(
     _In_ LPCWSTR lpType,
     _In_ LPCWSTR lpName);
 
+/**
+ * Loads the specified module with the optimization of the mitigation of DLL
+ * preloading attacks into the address space of the calling process safely. The
+ * specified module may cause other modules to be loaded.
+ *
+ * @param ModuleHandle If the function succeeds, this parameter's value is a
+ *                     handle to the loaded module. You should read the
+ *                     documentation about LoadLibraryEx API for further
+ *                     information.
+ * @param LibraryFileName A string that specifies the file name of the module
+ *                        to load. You should read the documentation about
+ *                        LoadLibraryEx API for further information.
+ * @param Flags The action to be taken when loading the module. You should read
+ *              the documentation about LoadLibraryEx API for further
+ *              information.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ */
+HRESULT M2LoadLibraryEx(
+    _Out_ HMODULE* ModuleHandle,
+    _In_ LPCWSTR LibraryFileName,
+    _In_ DWORD Flags);
+
 #endif
 
 #pragma endregion
@@ -1660,6 +1701,24 @@ HRESULT M2RegSetValue(
     _In_ DWORD dwType,
     _In_opt_ CONST BYTE* lpData,
     _In_ DWORD cbData);
+
+/**
+ * Retrieves the string type data for the specified value name associated with
+ * an open registry key.
+ *
+ * @param hKey A handle to an open registry key.
+ * @param lpValueName The name of the registry value.
+ * @param lpData A pointer to a buffer that receives the value's data. When you
+ *               have finished using the information, free it by calling the
+ *               M2FreeMemory function. You should also set the pointer to
+ *               NULL.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ * @remark For more information, see RegQueryValueEx.
+ */
+HRESULT M2RegQueryStringValue(
+    _Out_ LPWSTR* lpData,
+    _In_ HKEY hKey,
+    _In_opt_ LPCWSTR lpValueName);
 
 namespace M2
 {
@@ -1755,6 +1814,15 @@ HRESULT M2ExpandEnvironmentStrings(
     std::wstring& ExpandedString,
     const std::wstring& VariableName);
 
+/**
+ * Retrieves the path of the system directory.
+ *
+ * @param SystemFolderPath The string of the path of the system directory.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ */
+HRESULT M2GetSystemDirectory(
+    std::wstring& SystemFolderPath);
+
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 /**
@@ -1766,6 +1834,34 @@ HRESULT M2ExpandEnvironmentStrings(
  */
 HRESULT M2GetWindowsDirectory(
     std::wstring& WindowsFolderPath);
+
+/**
+ * Enables the Per-Monitor DPI Aware for the specified dialog using the
+ * internal API from Windows.
+ *
+ * @return INT. If failed. returns -1.
+ * @remarks You need to use this function in Windows 10 Threshold 1 or Windows
+ *          10 Threshold 2.
+ */
+INT M2EnablePerMonitorDialogScaling();
+
+/**
+ * Queries the dots per inch (dpi) of a display.
+ *
+ * @param hmonitor Handle of the monitor being queried.
+ * @param dpiType The type of DPI being queried. Possible values are from the
+ *                MONITOR_DPI_TYPE enumeration.
+ * @param dpiX The value of the DPI along the X axis. This value always refers
+ *             to the horizontal edge, even when the screen is rotated.
+ * @param dpiY The value of the DPI along the Y axis. This value always refers
+ *             to the vertical edge, even when the screen is rotated.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ */
+HRESULT M2GetDpiForMonitor(
+    _In_ HMONITOR hmonitor,
+    _In_ MONITOR_DPI_TYPE dpiType,
+    _Out_ UINT* dpiX,
+    _Out_ UINT* dpiY);
 
 #endif
 

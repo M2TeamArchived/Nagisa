@@ -12,6 +12,10 @@
 
 #include "M2WindowsHelpers.h"
 
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
+#include <VersionHelpers.h>
+#endif
+
 #include <assert.h>
 #include <process.h>
 
@@ -1193,6 +1197,50 @@ HRESULT M2CoCreateInstance(
     return hr;
 }
 
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
+
+/**
+ * Determines whether the interface id have the correct interface name.
+ *
+ * @param InterfaceID A pointer to the string representation of the IID.
+ * @param InterfaceName A pointer to the interface name string.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ */
+HRESULT M2CoCheckInterfaceName(
+    _In_ LPCWSTR InterfaceID,
+    _In_ LPCWSTR InterfaceName)
+{
+    HKEY hKey = nullptr;
+    HRESULT hr = M2RegCreateKey(
+        HKEY_CLASSES_ROOT,
+        (std::wstring(L"Interface\\") + InterfaceID).c_str(),
+        0,
+        nullptr,
+        0,
+        KEY_READ,
+        nullptr,
+        &hKey,
+        nullptr);
+    if (SUCCEEDED(hr))
+    {
+        wchar_t* InterfaceTypeName = nullptr;
+        hr = M2RegQueryStringValue(&InterfaceTypeName, hKey, nullptr);
+        if (SUCCEEDED(hr))
+        {
+            if (0 != _wcsicmp(InterfaceTypeName, InterfaceName))
+            {
+                hr = E_NOINTERFACE;
+            }
+        }
+
+        RegCloseKey(hKey);
+    }
+
+    return hr;
+}
+
+#endif
+
 #ifdef CPPWINRT_VERSION
 
 /**
@@ -1700,6 +1748,53 @@ HRESULT M2LoadResource(
     return S_OK;
 }
 
+/**
+ * Loads the specified module with the optimization of the mitigation of DLL
+ * preloading attacks into the address space of the calling process safely. The
+ * specified module may cause other modules to be loaded.
+ *
+ * @param ModuleHandle If the function succeeds, this parameter's value is a
+ *                     handle to the loaded module. You should read the
+ *                     documentation about LoadLibraryEx API for further
+ *                     information.
+ * @param LibraryFileName A string that specifies the file name of the module
+ *                        to load. You should read the documentation about
+ *                        LoadLibraryEx API for further information.
+ * @param Flags The action to be taken when loading the module. You should read
+ *              the documentation about LoadLibraryEx API for further
+ *              information.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ */
+HRESULT M2LoadLibraryEx(
+    _Out_ HMODULE* ModuleHandle,
+    _In_ LPCWSTR LibraryFileName,
+    _In_ DWORD Flags)
+{
+    HRESULT hr = M2LoadLibrary(ModuleHandle, LibraryFileName, nullptr, Flags);
+    if (SUCCEEDED(hr))
+    {
+        if ((Flags & LOAD_LIBRARY_SEARCH_SYSTEM32) &&
+            (hr == __HRESULT_FROM_WIN32(ERROR_INVALID_PARAMETER)))
+        {
+            if (!wcschr(LibraryFileName, L'\\'))
+            {
+                std::wstring SystemDirectoryPath;
+                hr = M2GetSystemDirectory(SystemDirectoryPath);
+                if (SUCCEEDED(hr))
+                {
+                    hr = M2LoadLibrary(
+                        ModuleHandle,
+                        (SystemDirectoryPath + LibraryFileName).c_str(),
+                        nullptr,
+                        Flags);
+                }
+            }
+        }
+    }
+
+    return hr;
+}
+
 #endif
 
 #pragma endregion
@@ -1814,6 +1909,58 @@ HRESULT M2RegSetValue(
         dwType,
         lpData,
         cbData));
+}
+
+/**
+ * Retrieves the string type data for the specified value name associated with
+ * an open registry key.
+ *
+ * @param hKey A handle to an open registry key.
+ * @param lpValueName The name of the registry value.
+ * @param lpData A pointer to a buffer that receives the value's data. When you
+ *               have finished using the information, free it by calling the
+ *               M2FreeMemory function. You should also set the pointer to
+ *               NULL.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ * @remark For more information, see RegQueryValueEx.
+ */
+HRESULT M2RegQueryStringValue(
+    _Out_ LPWSTR* lpData,
+    _In_ HKEY hKey,
+    _In_opt_ LPCWSTR lpValueName)
+{
+    *lpData = nullptr;
+
+    DWORD cbData = 0;
+    HRESULT hr = M2RegQueryValue(
+        hKey,
+        lpValueName,
+        nullptr,
+        nullptr,
+        nullptr,
+        &cbData);
+    if (SUCCEEDED(hr))
+    {
+        hr = M2AllocMemory(reinterpret_cast<PVOID*>(lpData), cbData);
+        if (SUCCEEDED(hr))
+        {
+            DWORD Type = 0;
+            hr = M2RegQueryValue(
+                hKey,
+                lpValueName,
+                nullptr,
+                &Type,
+                reinterpret_cast<LPBYTE>(*lpData),
+                &cbData);
+            if (SUCCEEDED(hr) && REG_SZ != Type)
+                hr = __HRESULT_FROM_WIN32(ERROR_ILLEGAL_ELEMENT_ADDRESS);
+
+            if (FAILED(hr))
+                hr = M2FreeMemory(*lpData);
+        }
+    }
+
+    return hr;
 }
 
 #endif
@@ -1982,6 +2129,54 @@ HRESULT M2ExpandEnvironmentStrings(
     return hr;
 }
 
+/**
+ * Retrieves the path of the system directory.
+ *
+ * @param SystemFolderPath The string of the path of the system directory.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ */
+HRESULT M2GetSystemDirectory(
+    std::wstring& SystemFolderPath)
+{
+    HRESULT hr = S_OK;
+
+    do
+    {
+        UINT Length = GetSystemDirectoryW(
+            nullptr,
+            0);
+        if (0 == Length)
+        {
+            hr = M2GetLastHRESULTErrorKnownFailedCall();
+            break;
+        }
+
+        SystemFolderPath.resize(Length - 1);
+
+        Length = GetSystemDirectoryW(
+            &SystemFolderPath[0],
+            static_cast<UINT>(Length));
+        if (0 == Length)
+        {
+            hr = M2GetLastHRESULTErrorKnownFailedCall();
+            break;
+        }
+        if (SystemFolderPath.size() != Length)
+        {
+            hr = E_UNEXPECTED;
+            break;
+        }
+
+    } while (false);
+
+    if (FAILED(hr))
+    {
+        SystemFolderPath.clear();
+    }
+
+    return hr;
+}
+
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 
 /**
@@ -2028,6 +2223,72 @@ HRESULT M2GetWindowsDirectory(
     if (FAILED(hr))
     {
         WindowsFolderPath.clear();
+    }
+
+    return hr;
+}
+
+/**
+ * Enables the Per-Monitor DPI Aware for the specified dialog using the
+ * internal API from Windows.
+ *
+ * @return INT. If failed. returns -1.
+ * @remarks You need to use this function in Windows 10 Threshold 1 or Windows
+ *          10 Threshold 2.
+ */
+INT M2EnablePerMonitorDialogScaling()
+{
+    // Fix for Windows Vista and Server 2008.
+    if (!IsWindowsVersionOrGreater(10, 0, 0)) return -1;
+
+    typedef INT(WINAPI * PFN_EnablePerMonitorDialogScaling)();
+
+    HMODULE hModule = nullptr;
+    PFN_EnablePerMonitorDialogScaling pFunc = nullptr;
+
+    hModule = GetModuleHandleW(L"user32.dll");
+    if (!hModule) return -1;
+
+    if (FAILED(M2GetProcAddress(
+        pFunc, hModule, reinterpret_cast<LPCSTR>(2577))))
+        return -1;
+
+    return pFunc();
+}
+
+/**
+ * Queries the dots per inch (dpi) of a display.
+ *
+ * @param hmonitor Handle of the monitor being queried.
+ * @param dpiType The type of DPI being queried. Possible values are from the
+ *                MONITOR_DPI_TYPE enumeration.
+ * @param dpiX The value of the DPI along the X axis. This value always refers
+ *             to the horizontal edge, even when the screen is rotated.
+ * @param dpiY The value of the DPI along the Y axis. This value always refers
+ *             to the vertical edge, even when the screen is rotated.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ */
+HRESULT M2GetDpiForMonitor(
+    _In_ HMONITOR hmonitor,
+    _In_ MONITOR_DPI_TYPE dpiType,
+    _Out_ UINT* dpiX,
+    _Out_ UINT* dpiY)
+{
+    HMODULE hModule = nullptr;
+    HRESULT hr = M2LoadLibraryEx(
+        &hModule,
+        L"SHCore.dll",
+        LOAD_LIBRARY_SEARCH_SYSTEM32);
+    if (SUCCEEDED(hr))
+    {
+        decltype(GetDpiForMonitor)* pFunc = nullptr;
+        hr = M2GetProcAddress(pFunc, hModule, "GetDpiForMonitor");
+        if (SUCCEEDED(hr))
+        {
+            hr = pFunc(hmonitor, dpiType, dpiX, dpiY);
+        }
+
+        FreeLibrary(hModule);
     }
 
     return hr;
