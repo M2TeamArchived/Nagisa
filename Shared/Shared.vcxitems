@@ -14,10 +14,12 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)M2WindowsBaseHelpers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)M2WindowsHelpers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)NagisaVersion.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)M2WindowsBaseHelpers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)M2WindowsHelpers.cpp" />
   </ItemGroup>
 </Project>

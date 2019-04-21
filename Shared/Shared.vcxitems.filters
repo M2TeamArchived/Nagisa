@@ -5,15 +5,24 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)M2WindowsHelpers.h">
       <Filter>M2WindowsHelpers</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)M2WindowsBaseHelpers.h">
+      <Filter>M2WindowsBaseHelpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)M2WindowsHelpers.cpp">
       <Filter>M2WindowsHelpers</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)M2WindowsBaseHelpers.cpp">
+      <Filter>M2WindowsBaseHelpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="M2WindowsHelpers">
       <UniqueIdentifier>{4fdbc2ed-b285-4a18-b26f-6030f7441e43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="M2WindowsBaseHelpers">
+      <UniqueIdentifier>{086a05d5-4708-4168-ae5e-26de26c1e6de}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
