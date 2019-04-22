@@ -59,6 +59,16 @@ HRESULT M2AdjustTokenPrivileges(
     _Out_opt_ PDWORD ReturnLength);
 
 /**
+ * Closes an open object handle.
+ *
+ * @param hObject A valid handle to an open object.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ * @remark For more information, see CloseHandle.
+ */
+HRESULT M2CloseHandle(
+    _In_ HANDLE hObject);
+
+/**
  * Creates a single uninitialized object of the class associated with a
  * specified CLSID.
  *
@@ -194,6 +204,19 @@ HRESULT M2DeviceIoControl(
     _Inout_opt_ LPOVERLAPPED lpOverlapped);
 
 #endif
+
+/**
+ * Frees the loaded dynamic-link library (DLL) module and, if necessary,
+ * decrements its reference count. When the reference count reaches zero, the
+ * module is unloaded from the address space of the calling process and the
+ * handle is no longer valid.
+ *
+ * @param hLibModule A handle to the loaded library module.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ * @remark For more information, see FreeLibrary.
+ */
+HRESULT M2FreeLibrary(
+    _In_ HMODULE hLibModule);
 
 /**
  * Retrieves file information for the specified file.

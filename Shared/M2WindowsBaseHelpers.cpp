@@ -70,6 +70,19 @@ HRESULT M2AdjustTokenPrivileges(
 }
 
 /**
+ * Closes an open object handle.
+ *
+ * @param hObject A valid handle to an open object.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ * @remark For more information, see CloseHandle.
+ */
+HRESULT M2CloseHandle(
+    _In_ HANDLE hObject)
+{
+    return CloseHandle(hObject) ? S_OK : M2GetLastError(TRUE, nullptr);
+}
+
+/**
  * Creates a single uninitialized object of the class associated with a
  * specified CLSID.
  *
@@ -165,7 +178,8 @@ HRESULT M2CreateFile(
         dwFlagsAndAttributes,
         hTemplateFile);
 
-    return M2GetLastError((INVALID_HANDLE_VALUE == *lpFileHandle), nullptr);
+    return (INVALID_HANDLE_VALUE != *lpFileHandle)
+        ? S_OK : M2GetLastError(TRUE, nullptr);
 }
 
 #endif
@@ -212,7 +226,7 @@ HRESULT M2CreateThread(
         dwCreationFlags,
         reinterpret_cast<unsigned*>(lpThreadId)));
 
-    return M2GetLastError(!(*lpThreadHandle), nullptr);
+    return (*lpThreadHandle) ? S_OK : M2GetLastError(TRUE, nullptr);
 }
 
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
@@ -260,10 +274,26 @@ HRESULT M2DeviceIoControl(
         lpBytesReturned,
         lpOverlapped);
 
-    return M2GetLastError(!Result, nullptr);
+    return Result ? S_OK : M2GetLastError(TRUE, nullptr);
 }
 
 #endif
+
+/**
+ * Frees the loaded dynamic-link library (DLL) module and, if necessary,
+ * decrements its reference count. When the reference count reaches zero, the
+ * module is unloaded from the address space of the calling process and the
+ * handle is no longer valid.
+ *
+ * @param hLibModule A handle to the loaded library module.
+ * @return HRESULT. If the function succeeds, the return value is S_OK.
+ * @remark For more information, see FreeLibrary.
+ */
+HRESULT M2FreeLibrary(
+    _In_ HMODULE hLibModule)
+{
+    return FreeLibrary(hLibModule) ? S_OK : M2GetLastError(TRUE, nullptr);
+}
 
 /**
  * Retrieves file information for the specified file.
@@ -291,7 +321,7 @@ HRESULT M2GetFileInformation(
         lpFileInformation,
         dwBufferSize);
 
-    return M2GetLastError(!Result, nullptr);
+    return Result ? S_OK : M2GetLastError(TRUE, nullptr);
 }
 
 /**
@@ -343,7 +373,7 @@ HRESULT M2GetProcAddress(
     _In_ LPCSTR lpProcName)
 {
     *lpProcAddress = GetProcAddress(hModule, lpProcName);
-    return M2GetLastError(!(*lpProcAddress), nullptr);
+    return (*lpProcAddress) ? S_OK : M2GetLastError(TRUE, nullptr);
 }
 
 /**
@@ -401,7 +431,7 @@ HRESULT M2GetTokenInformation(
         TokenInformationLength,
         ReturnLength);
 
-    return M2GetLastError(!Result, nullptr);
+    return Result ? S_OK : M2GetLastError(TRUE, nullptr);
 }
 
 /**
@@ -441,7 +471,7 @@ HRESULT M2HeapFree(
     _In_ LPVOID lpMem)
 {
     BOOL Result = HeapFree(hHeap, dwFlags, lpMem);
-    return M2GetLastError(!Result, nullptr);
+    return Result ? S_OK : M2GetLastError(TRUE, nullptr);
 }
 
 /**
@@ -493,7 +523,7 @@ HRESULT M2LoadLibrary(
     _In_ DWORD dwFlags)
 {
     *phLibModule = LoadLibraryExW(lpLibFileName, hFile, dwFlags);
-    return M2GetLastError(!(*phLibModule), nullptr);
+    return (*phLibModule) ? S_OK : M2GetLastError(TRUE, nullptr);
 }
 
 #endif
@@ -646,5 +676,5 @@ HRESULT M2SetFileInformation(
         lpFileInformation,
         dwBufferSize);
 
-    return M2GetLastError(!Result, nullptr);
+    return Result ? S_OK : M2GetLastError(TRUE, nullptr);
 }
