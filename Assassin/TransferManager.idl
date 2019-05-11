@@ -76,6 +76,7 @@ namespace Assassin
         void Cancel();
     }
 
+    [default_interface]
     runtimeclass TransferManager :
         Windows.Foundation.IClosable,
         Windows.UI.Xaml.Data.INotifyPropertyChanged
