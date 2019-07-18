@@ -1,5 +1,5 @@
-version: CI Build {Build}
-image: Visual Studio 2017
+﻿version: CI Build {Build}
+image: Visual Studio 2019
 configuration:
 - Debug
 - Release
