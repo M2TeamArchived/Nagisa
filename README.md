@@ -1,5 +1,4 @@
-﻿![Logo](Logo.png)
-# Nagisa - An open source file transfer utility on Universal Windows Platform.
+﻿# ![Logo](Logo.png) Nagisa - An open source file transfer utility on Universal Windows Platform.
 
 [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/github//Project-Nagisa/Nagisa?branch=master&svg=true)](https://ci.appveyor.com/project/MouriNaruto/nagisa/branch/master)
 [![Latest release](https://img.shields.io/github/release/Project-Nagisa/Nagisa.svg)](https://github.com/Project-Nagisa/Nagisa/releases/latest)
